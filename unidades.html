@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="styles/components.css">
   <link rel="stylesheet" href="styles/layouts.css">
   <link rel="stylesheet" href="styles/pages.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous">
   <script>try{var t=localStorage.getItem('laserco_theme')||'default';document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
 <body>
@@ -45,16 +46,16 @@
         <button type="submit" class="btn btn-primary btn-lg">Buscar unidade</button>
       </form>
 
-      <div class="unidades-map" id="unidades-map" aria-label="Mapa das unidades Laser & Co">
+      <div class="unidades-map-wrap">
+        <div id="unidades-map" class="unidades-map" aria-label="Mapa das unidades Laser & Co"></div>
         <div class="map-overlay-info">
           <span id="map-counter">70</span> unidades em 15 estados
         </div>
-        <!-- Pins serão inseridos via JS -->
       </div>
 
       <div id="search-result" hidden style="margin-bottom: var(--sp-5); padding: var(--sp-4); background: var(--color-surface); border: 1px solid var(--color-border-accent); border-radius: var(--radius-md);"></div>
 
-      <div class="grid grid-3" style="margin-bottom: var(--sp-5);">
+      <div class="grid grid-2" style="margin-bottom: var(--sp-5);">
         <div>
           <div class="eyebrow">Filtrar por UF</div>
           <select class="select" id="uf-filter" aria-label="Filtrar por estado">
@@ -67,10 +68,6 @@
             <option value="">Todas as cidades</option>
           </select>
         </div>
-        <div>
-          <div class="eyebrow">Total exibido</div>
-          <div style="font-family: var(--font-serif); font-size: var(--fs-2xl); color: var(--color-accent);"><span id="total-shown">0</span> unidades</div>
-        </div>
       </div>
 
       <div class="unidades-grid" id="unidades-grid"></div>
@@ -81,6 +78,7 @@
 
 <div data-include="footer"></div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
 <script src="scripts/data.js"></script>
 <script src="scripts/analytics.js"></script>
 <script src="scripts/cep.js"></script>
