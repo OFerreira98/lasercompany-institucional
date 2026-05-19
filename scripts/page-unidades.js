@@ -11,41 +11,54 @@
   const markers = {};
 
   function brandPinIcon() {
-    // SVG inline pin dourado com glow
+    // SVG inline pin dourado com glow (maior pra ter mais presenca no mapa)
     const html = `
       <span class="laser-pin">
-        <svg viewBox="0 0 24 32" width="28" height="36" aria-hidden="true">
-          <path d="M12 0C5.4 0 0 5.4 0 12c0 8.5 12 20 12 20s12-11.5 12-20C24 5.4 18.6 0 12 0z" fill="#C8A064" stroke="#1A0404" stroke-width="1"/>
-          <circle cx="12" cy="12" r="4.5" fill="#1A0404"/>
+        <svg viewBox="0 0 24 32" width="38" height="50" aria-hidden="true">
+          <path d="M12 0C5.4 0 0 5.4 0 12c0 8.5 12 20 12 20s12-11.5 12-20C24 5.4 18.6 0 12 0z" fill="#C8A064" stroke="#1A0404" stroke-width="1.2"/>
+          <circle cx="12" cy="12" r="4.8" fill="#1A0404"/>
+          <circle cx="12" cy="12" r="2" fill="#C8A064"/>
         </svg>
       </span>
     `;
     return L.divIcon({
       html,
       className: 'laser-pin-icon',
-      iconSize: [28, 36],
-      iconAnchor: [14, 36],
-      popupAnchor: [0, -32],
+      iconSize: [38, 50],
+      iconAnchor: [19, 50],
+      popupAnchor: [0, -46],
     });
   }
+
+  // Bounds aproximados do Brasil (Norte, Oeste, Sul, Leste)
+  const BRASIL_BOUNDS = L.latLngBounds(
+    [5.3, -74.0],   // canto Noroeste
+    [-34.0, -33.5]  // canto Sudeste
+  );
 
   function initMap() {
     const el = document.getElementById('unidades-map');
     if (!el || !window.L) return;
 
     map = L.map(el, {
-      center: [-15.5, -50],   // centro aproximado do Brasil
-      zoom: 4,
       scrollWheelZoom: false,
       zoomControl: true,
       attributionControl: true,
+      maxBounds: BRASIL_BOUNDS,
+      maxBoundsViscosity: 1.0,
+      minZoom: 4,
+      maxZoom: 12,
     });
+
+    // Enquadra somente o Brasil
+    map.fitBounds(BRASIL_BOUNDS, { padding: [10, 10] });
 
     // CartoDB Dark Matter para combinar com o tema vinho do site
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; OpenStreetMap &copy; CARTO',
       subdomains: 'abcd',
       maxZoom: 19,
+      bounds: BRASIL_BOUNDS,
     }).addTo(map);
 
     const icon = brandPinIcon();
@@ -80,10 +93,7 @@
       group.addLayer(m);
     });
 
-    if (group.getLayers().length > 0) {
-      map.fitBounds(group.getBounds().pad(0.15));
-    }
-
+    // Mapa permanece enquadrado no Brasil ate o usuario buscar/filtrar
     document.getElementById('map-counter').textContent = window.LaserData.unidades.length;
   }
 
@@ -117,13 +127,17 @@
       cidades.map(c => `<option value="${c}">${c}</option>`).join('');
   }
 
-  /* Imagem placeholder fixa (mesmo asset para toda unidade até receber as fotos reais) */
-  function unidadeCardImage(u) {
-    // Roda entre 3 imagens para que vizinhas não fiquem idênticas
-    const imgs = ['assets/img/estetica.jpg', 'assets/img/depilacao.jpg', 'assets/img/ultrassom.jpg'];
+  /* Placeholder de localizacao no card (gradiente da marca + pin) — ate
+     receber as fotos reais de fachada de cada unidade. */
+  function unidadeCardStyle(u) {
     let hash = 0;
     for (let i = 0; i < u.id.length; i++) hash = u.id.charCodeAt(i) + ((hash << 5) - hash);
-    return imgs[Math.abs(hash) % imgs.length];
+    const hue = Math.abs(hash) % 30 + 20;
+    const sat = 30 + (Math.abs(hash) % 20);
+    return `background:
+      radial-gradient(circle at 30% 30%, hsla(${hue}, ${sat}%, 60%, 0.35), transparent 55%),
+      radial-gradient(circle at 75% 75%, hsla(${hue + 15}, ${sat + 10}%, 45%, 0.4), transparent 50%),
+      linear-gradient(135deg, var(--color-bg-elevated), var(--color-bg-alt));`;
   }
 
   function renderGrid(unidades) {
@@ -138,13 +152,12 @@
     grid.innerHTML = unidades.map(u => {
       const msg = `Olá ${u.nome}! Vim pelo site da Laser & Co e gostaria de mais informações.`;
       const waUrl = window.LaserCEP.whatsappUrl(u, msg);
-      const img = unidadeCardImage(u);
       return `
         <article class="unidade-card" data-id="${u.id}">
-          <div class="unidade-card-image" style="background-image: url('${img}');" aria-hidden="true">
+          <div class="unidade-card-image" style="${unidadeCardStyle(u)}" aria-hidden="true">
             <span class="unidade-card-uf-badge">${u.uf}</span>
             <button type="button" class="unidade-card-pin" data-focus="${u.id}" aria-label="Ver no mapa">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
             </button>
           </div>
           <div class="unidade-card-body">
@@ -183,11 +196,16 @@
       if (inResult) m.addTo(map);
       else map.removeLayer(m);
     });
-    if (result.length > 0 && map) {
-      const visible = result.map(u => markers[u.id]).filter(Boolean);
-      if (visible.length > 0) {
-        const g = L.featureGroup(visible);
-        map.fitBounds(g.getBounds().pad(0.2));
+    if (map) {
+      // Se nenhum filtro aplicado, volta a enquadrar o Brasil inteiro
+      if (!uf && !cidade) {
+        map.fitBounds(BRASIL_BOUNDS, { padding: [10, 10] });
+      } else if (result.length > 0) {
+        const visible = result.map(u => markers[u.id]).filter(Boolean);
+        if (visible.length > 0) {
+          const g = L.featureGroup(visible);
+          map.fitBounds(g.getBounds().pad(0.2));
+        }
       }
     }
   }
