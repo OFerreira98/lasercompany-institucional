@@ -89,12 +89,9 @@
       </div>
       <div class="footer-col">
         <div class="footer-franchise-card">
-          <div class="footer-franchise-avatar" aria-hidden="true">
-            <div class="footer-franchise-avatar-img"></div>
-          </div>
           <span class="footer-franchise-eyebrow">Seja um franqueado</span>
           <h4 class="footer-franchise-title">Invista no <span class="italic">setor que mais cresce</span> no Brasil.</h4>
-          <p class="footer-franchise-text">Solicite uma apresentação agora mesmo.</p>
+          <p class="footer-franchise-text">A maior rede de laser estético do Brasil. Solicite uma apresentação completa agora mesmo.</p>
           <a href="franqueado.html" class="btn btn-primary btn-lg btn-arrow">Quero ser um franqueado</a>
         </div>
       </div>
