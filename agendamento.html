@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1A0404">
+  <meta name="description" content="Agende sua avaliação grátis na unidade Laser & Co da sua região.">
+  <title>Agendamento | Laser & Co</title>
+  <link rel="icon" type="image/png" href="assets/logos/avatar-andco-redondo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="stylesheet" href="styles/layouts.css">
+  <link rel="stylesheet" href="styles/pages.css">
+  <script>try{var t=localStorage.getItem('laserco_theme')||'default';document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body>
+
+<script src="scripts/layout.js"></script>
+<div data-include="header"></div>
+
+<main>
+
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow eyebrow-centered">Avaliação grátis</span>
+      <h1 class="page-hero-title">Agende em <span class="italic">três passos.</span></h1>
+      <p class="page-hero-sub">Escolha o procedimento, deixe seus dados e fale com a unidade Laser &amp; Co da sua região no WhatsApp.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="agendamento-shell">
+
+        <!-- Indicador de etapas -->
+        <ol class="stepper" aria-label="Progresso do agendamento">
+          <li class="stepper-step active" data-step="1">
+            <span class="stepper-num">1</span>
+            <span class="stepper-label">Procedimento</span>
+          </li>
+          <span class="stepper-line"></span>
+          <li class="stepper-step" data-step="2">
+            <span class="stepper-num">2</span>
+            <span class="stepper-label">Identificação</span>
+          </li>
+          <span class="stepper-line"></span>
+          <li class="stepper-step" data-step="3">
+            <span class="stepper-num">3</span>
+            <span class="stepper-label">WhatsApp da unidade</span>
+          </li>
+        </ol>
+
+        <!-- ETAPA 1 — Procedimento -->
+        <section class="agendamento-step active" id="step-1" aria-label="Etapa 1: Escolher procedimento">
+          <h2 class="section-title" style="font-size: var(--fs-2xl); text-align: center; margin-bottom: var(--sp-5);">
+            Qual procedimento você <span class="italic">tem interesse?</span>
+          </h2>
+
+          <div class="proc-segment-tabs" id="proc-segment-tabs">
+            <button type="button" class="pill active" data-segment="estetica">Estética a Laser</button>
+            <button type="button" class="pill" data-segment="depilacao">Depilação a Laser</button>
+            <button type="button" class="pill" data-segment="ultrassom">Ultrassom</button>
+          </div>
+
+          <div class="proc-options-list" id="proc-options-list" role="listbox" aria-label="Lista de procedimentos"></div>
+
+          <div class="agendamento-actions">
+            <a href="index.html" class="btn btn-ghost">← Voltar ao início</a>
+            <button type="button" class="btn btn-primary btn-arrow" id="step-1-next" disabled>Continuar</button>
+          </div>
+        </section>
+
+        <!-- ETAPA 2 — Identificação -->
+        <section class="agendamento-step" id="step-2" aria-label="Etapa 2: Seus dados">
+          <h2 class="section-title" style="font-size: var(--fs-2xl); text-align: center; margin-bottom: var(--sp-3);">
+            Só precisamos de <span class="italic">três dados.</span>
+          </h2>
+          <p class="section-sub" style="text-align: center; margin-bottom: var(--sp-6);">Nome, WhatsApp e CEP. Em segundos te conectamos à unidade certa.</p>
+
+          <div id="step-2-procedimento-info" class="alert alert-success" style="margin-bottom: var(--sp-5);">
+            <strong style="color: var(--color-accent);">Procedimento selecionado:</strong> <span id="step-2-proc-name">—</span>
+          </div>
+
+          <form id="step-2-form" novalidate>
+            <div class="field">
+              <label for="ag-nome" class="field-label">Nome <span class="required">*</span></label>
+              <input type="text" id="ag-nome" name="nome" class="input" placeholder="Como podemos te chamar?" required>
+              <div class="field-error">Por favor, informe seu nome.</div>
+            </div>
+            <div class="field">
+              <label for="ag-whatsapp" class="field-label">WhatsApp <span class="required">*</span></label>
+              <input type="tel" id="ag-whatsapp" name="whatsapp" class="input" placeholder="(11) 99999-9999" inputmode="tel" data-mask="phone" required>
+              <div class="field-error">Informe um WhatsApp válido.</div>
+            </div>
+            <div class="field">
+              <label for="ag-cep" class="field-label">CEP <span class="required">*</span></label>
+              <input type="text" id="ag-cep" name="cep" class="input" placeholder="00000-000" inputmode="numeric" maxlength="9" data-mask="cep" required>
+              <div class="field-error">Informe um CEP válido (8 dígitos).</div>
+              <p class="field-hint">Usamos o CEP apenas para encontrar a unidade Laser &amp; Co mais próxima de você.</p>
+            </div>
+
+            <div class="agendamento-actions">
+              <button type="button" class="btn btn-ghost" id="step-2-back">← Voltar</button>
+              <button type="submit" class="btn btn-primary btn-arrow" id="step-2-next">Encontrar minha unidade</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- ETAPA 3 — Roteamento WhatsApp -->
+        <section class="agendamento-step" id="step-3" aria-label="Etapa 3: Sua unidade">
+          <div id="step-3-content"></div>
+        </section>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div data-include="footer"></div>
+
+<script src="scripts/data.js"></script>
+<script src="scripts/analytics.js"></script>
+<script src="scripts/cep.js"></script>
+<script src="scripts/theme.js"></script>
+<script src="scripts/main.js"></script>
+<script src="scripts/popup.js"></script>
+<script src="scripts/whatsapp.js"></script>
+<script src="scripts/chatbot.js"></script>
+<script src="scripts/page-agendamento.js"></script>
+</body>
+</html>

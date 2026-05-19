@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1A0404">
+  <meta name="description" content="Conheça os procedimentos da Laser & Co: Estética a Laser, Depilação a Laser e Ultrassom Microfocado.">
+  <title>Procedimentos | Laser & Co</title>
+  <link rel="icon" type="image/png" href="assets/logos/avatar-andco-redondo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="stylesheet" href="styles/layouts.css">
+  <link rel="stylesheet" href="styles/pages.css">
+  <script>try{var t=localStorage.getItem('laserco_theme')||'default';document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body>
+
+<script src="scripts/layout.js"></script>
+<div data-include="header"></div>
+
+<main>
+
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow eyebrow-centered">Tudo o que a rede oferece</span>
+      <h1 class="page-hero-title">Tecnologia premium em <span class="italic">três frentes.</span></h1>
+      <p class="page-hero-sub">Estética a Laser, Depilação a Laser e Ultrassom Microfocado. Escolha o segmento e conheça cada protocolo.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+      <!-- Abas -->
+      <nav class="tabs" id="proc-tabs" role="tablist" aria-label="Segmentos de procedimentos">
+        <button class="tab active" role="tab" data-tab="estetica" aria-selected="true">Estética a Laser</button>
+        <button class="tab" role="tab" data-tab="depilacao" aria-selected="false">Depilação a Laser</button>
+        <button class="tab" role="tab" data-tab="ultrassom" aria-selected="false">Ultrassom</button>
+      </nav>
+
+      <!-- Painéis -->
+      <div class="tab-panel active" id="panel-estetica" role="tabpanel">
+        <div class="procedimentos-grid" id="grid-estetica"></div>
+      </div>
+      <div class="tab-panel" id="panel-depilacao" role="tabpanel">
+        <div class="procedimentos-grid" id="grid-depilacao"></div>
+      </div>
+      <div class="tab-panel" id="panel-ultrassom" role="tabpanel">
+        <div class="procedimentos-grid" id="grid-ultrassom"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tecnologia / Lasers -->
+  <section class="section section-alt">
+    <div class="container">
+      <header class="section-header reveal">
+        <span class="eyebrow eyebrow-centered">Tecnologia</span>
+        <h2 class="section-title">Os <span class="italic">quatro lasers</span> + ultrassom</h2>
+        <p class="section-sub">A combinação certa de tecnologias para tratar cada caso. Um diferencial real da Laser &amp; Co frente à concorrência.</p>
+      </header>
+      <div class="tech-grid" id="tech-grid"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container-narrow">
+      <div class="cta-final-card">
+        <span class="eyebrow eyebrow-centered">Falta o último passo</span>
+        <h2 class="cta-final-title">Vamos agendar sua <span class="italic">avaliação grátis?</span></h2>
+        <p class="cta-final-sub">Em segundos, você é conectado à unidade Laser &amp; Co da sua região.</p>
+        <div class="cta-final-actions">
+          <a href="agendamento.html" class="btn btn-primary btn-lg btn-arrow">Agendar agora</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div data-include="footer"></div>
+
+<!-- Modal de procedimento individual -->
+<div class="modal-overlay" id="proc-modal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <button class="popup-close" id="proc-modal-close" aria-label="Fechar" style="position: absolute; top: 1rem; right: 1rem;">×</button>
+    <div id="proc-modal-content"></div>
+  </div>
+</div>
+
+<script src="scripts/data.js"></script>
+<script src="scripts/analytics.js"></script>
+<script src="scripts/cep.js"></script>
+<script src="scripts/theme.js"></script>
+<script src="scripts/main.js"></script>
+<script src="scripts/popup.js"></script>
+<script src="scripts/whatsapp.js"></script>
+<script src="scripts/chatbot.js"></script>
+<script src="scripts/page-procedimentos.js"></script>
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1A0404">
+  <meta name="description" content="Laser & Co: a primeira rede do Brasil que une laser e ultrassom. Procedimentos premium, acessíveis a todos. Avaliação gratuita.">
+  <title>Laser & Co | Estética premium, acessível a todos</title>
+
+  <link rel="icon" type="image/png" href="assets/logos/avatar-andco-redondo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="stylesheet" href="styles/layouts.css">
+  <link rel="stylesheet" href="styles/pages.css">
+
+  <script>
+    try {
+      var t = localStorage.getItem('laserco_theme') || 'default';
+      document.documentElement.setAttribute('data-theme', t);
+    } catch(e) {}
+  </script>
+</head>
+<body>
+
+<script src="scripts/layout.js"></script>
+<div data-include="header"></div>
+
+<main>
+
+  <!-- ============ SEÇÃO 1 — HERO (reduzido) ============ -->
+  <section class="hero hero-compact">
+    <div class="hero-bg" aria-hidden="true">
+      <div class="hero-bg-image" style="background-image: url('assets/img/hero.jpg');"></div>
+      <div class="hero-bg-overlay"></div>
+    </div>
+    <div class="laser-beam laser-beam-animated" style="top: 38%; left: 0; right: 0;" aria-hidden="true"></div>
+
+    <div class="container hero-content">
+      <div class="hero-grid">
+        <div class="hero-text">
+          <div class="glass-pill reveal">
+            <span class="dot"></span>
+            Estética &amp; Depilação a Laser e Ultrassom
+          </div>
+
+          <h1 class="hero-title reveal reveal-delay-1">
+            Estética premium, <br><span class="italic">acessível a todos.</span>
+          </h1>
+
+          <p class="hero-sub reveal reveal-delay-2">
+            Laser, depilação e ultrassom em uma só rede. Procedimentos premium com parcelamento em até 12x sem juros.
+          </p>
+
+          <div class="hero-actions reveal reveal-delay-3">
+            <a href="agendamento.html" class="btn btn-primary btn-lg btn-pulse btn-arrow">Agendar avaliação grátis</a>
+            <a href="#sobre" class="btn btn-ghost btn-lg">Conhecer a rede</a>
+          </div>
+        </div>
+
+        <div class="hero-logo-floating reveal reveal-delay-4" aria-hidden="true">
+          <img src="assets/logos/avatar-andco-transparente.png" alt="">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SEÇÃO 2 — SOBRE A EMPRESA ============ -->
+  <section class="section" id="sobre">
+    <div class="container">
+      <div class="sobre-grid">
+        <div class="reveal">
+          <span class="eyebrow">Sobre a Laser &amp; Co</span>
+          <h2 class="section-title section-title-left">
+            Uma <span class="italic">nova era</span> da beleza.
+          </h2>
+          <p class="sobre-lead">
+            A Laser &amp; Co é a primeira rede do Brasil a unir laser e ultrassom sob uma mesma marca. Nascemos para <strong class="text-accent">democratizar o acesso à estética premium</strong>, com naturalidade e cuidado em cada sessão.
+          </p>
+          <p class="sobre-text">
+            Trabalhamos com as tecnologias mais avançadas do mercado: Alexandrite, ND-YAG, Erbium, Q-Switched e Ultrassom Ultracel. Em mais de 70 unidades pelo Brasil, nossa equipe é treinada na <strong>Laser Academy</strong>, o centro próprio de capacitação da rede.
+          </p>
+        </div>
+        <div class="sobre-stats reveal reveal-delay-1">
+          <div class="stat-block">
+            <span class="stat-num">+70</span>
+            <span class="stat-label">Unidades pelo Brasil</span>
+          </div>
+          <div class="stat-block">
+            <span class="stat-num">15</span>
+            <span class="stat-label">Estados de presença</span>
+          </div>
+          <div class="stat-block">
+            <span class="stat-num">5</span>
+            <span class="stat-label">Tecnologias premium</span>
+          </div>
+          <div class="stat-block">
+            <span class="stat-num">12x</span>
+            <span class="stat-label">Sem juros no cartão</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SEÇÃO 3 — OS TRÊS SEGMENTOS (FOTOS) ============ -->
+  <section class="section section-alt" id="segmentos">
+    <div class="container">
+      <header class="section-header reveal">
+        <span class="eyebrow eyebrow-centered">Três frentes, uma marca</span>
+        <h2 class="section-title">
+          Tecnologia premium em <span class="italic">3 frentes.</span>
+        </h2>
+        <p class="section-sub">
+          Estética, depilação e ultrassom. Democratizando o acesso a tecnologias antes restritas a clínicas médicas.
+        </p>
+      </header>
+
+      <div class="segments-grid segments-photo">
+        <a href="procedimentos.html?tab=estetica" class="segment-photo-card reveal reveal-delay-1">
+          <div class="segment-photo-img" style="background-image: url('assets/img/estetica.jpg');"></div>
+          <div class="segment-photo-overlay"></div>
+          <div class="segment-photo-body">
+            <span class="segment-photo-tag">21 protocolos</span>
+            <h3 class="segment-photo-title">Estética a Laser</h3>
+            <p class="segment-photo-desc">Rejuvenescimento 4D, melasma, cicatrizes, manchas e remoção de tatuagens.</p>
+            <span class="segment-photo-link">Ver protocolos</span>
+          </div>
+        </a>
+
+        <a href="procedimentos.html?tab=depilacao" class="segment-photo-card reveal reveal-delay-2">
+          <div class="segment-photo-img" style="background-image: url('assets/img/depilacao.jpg');"></div>
+          <div class="segment-photo-overlay"></div>
+          <div class="segment-photo-body">
+            <span class="segment-photo-tag">14+ áreas</span>
+            <h3 class="segment-photo-title">Depilação a Laser</h3>
+            <p class="segment-photo-desc">Alexandrite e ND-YAG. Seguro para todos os fototipos da pele, da branca à negra.</p>
+            <span class="segment-photo-link">Ver áreas</span>
+          </div>
+        </a>
+
+        <a href="procedimentos.html?tab=ultrassom" class="segment-photo-card reveal reveal-delay-3">
+          <div class="segment-photo-img" style="background-image: url('assets/img/ultrassom.jpg');"></div>
+          <div class="segment-photo-overlay"></div>
+          <div class="segment-photo-body">
+            <span class="segment-photo-tag">14 tratamentos</span>
+            <h3 class="segment-photo-title">Ultrassom Ultracel</h3>
+            <p class="segment-photo-desc">Lifting sem cortes. Papada, bichectomia, fox eyes e levantamento facial.</p>
+            <span class="segment-photo-link">Ver tratamentos</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SEÇÃO 4 — PROCEDIMENTOS POPULARES (carrossel infinito) ============ -->
+  <section class="section" id="populares">
+    <div class="container">
+      <header class="section-header reveal">
+        <span class="eyebrow eyebrow-centered">Os queridinhos</span>
+        <h2 class="section-title">O que <span class="italic">todo mundo</span> está fazendo.</h2>
+      </header>
+    </div>
+
+    <div class="marquee-wrapper">
+      <div class="marquee-track" id="populares-marquee"></div>
+    </div>
+
+    <div class="container" style="text-align: center; margin-top: var(--sp-5);">
+      <a href="procedimentos.html" class="btn btn-outline btn-arrow">Ver todos os procedimentos</a>
+    </div>
+  </section>
+
+  <!-- ============ SEÇÃO 5 — FORMAS DE PAGAMENTO / ACESSIBILIDADE ============ -->
+  <section class="section section-alt" id="pagamento">
+    <div class="container">
+      <div class="pagamento-card reveal">
+        <div class="pagamento-text">
+          <span class="eyebrow">Premium, mas pra todo mundo</span>
+          <h2 class="section-title section-title-left">
+            Procedimentos premium, <br><span class="italic">acessíveis a todos.</span>
+          </h2>
+          <p class="pagamento-lead">
+            A gente acredita que estética de qualidade não é privilégio. Por isso, oferecemos as melhores condições do mercado para você cuidar de você.
+          </p>
+        </div>
+        <div class="pagamento-options">
+          <div class="pagamento-option">
+            <div class="pagamento-option-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            </div>
+            <div class="pagamento-option-text">
+              <strong>Cartão de crédito</strong>
+              <span>Aceitamos todos. Parcelamento em até <strong class="text-accent">12x sem juros</strong>.</span>
+            </div>
+          </div>
+          <div class="pagamento-option">
+            <div class="pagamento-option-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <div class="pagamento-option-text">
+              <strong>Boleto bancário</strong>
+              <span>Boleto em até <strong class="text-accent">24x</strong> (consulte as condições).</span>
+            </div>
+          </div>
+          <div class="pagamento-option">
+            <div class="pagamento-option-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+            </div>
+            <div class="pagamento-option-text">
+              <strong>Pix com desconto</strong>
+              <span>Pagamento à vista no Pix com <strong class="text-accent">condição especial</strong>.</span>
+            </div>
+          </div>
+          <div class="pagamento-option">
+            <div class="pagamento-option-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+            </div>
+            <div class="pagamento-option-text">
+              <strong>Avaliação gratuita</strong>
+              <span>Em <strong class="text-accent">todas as unidades</strong>, sem compromisso.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SEÇÃO 6 — COMO FUNCIONA ============ -->
+  <section class="section">
+    <div class="container">
+      <header class="section-header reveal">
+        <span class="eyebrow eyebrow-centered">Como funciona</span>
+        <h2 class="section-title">Em <span class="italic">quatro passos.</span></h2>
+      </header>
+      <div class="steps-grid" id="steps-grid"></div>
+    </div>
+  </section>
+
+  <!-- ============ SEÇÃO 7 — PROVA SOCIAL ============ -->
+  <section class="section section-alt" id="depoimentos">
+    <div class="container">
+      <header class="section-header reveal">
+        <span class="eyebrow eyebrow-centered">Resultados reais</span>
+        <h2 class="section-title">Quem fez, <span class="italic">recomenda.</span></h2>
+        <p class="section-sub demo-content-note">
+          Conteúdo de demonstração. Depoimentos reais entram antes da publicação.
+        </p>
+      </header>
+      <div class="grid grid-2 reveal" id="depoimentos-grid"></div>
+    </div>
+  </section>
+
+  <!-- ============ SEÇÃO 8 — CHAMADA FINAL ============ -->
+  <section class="section">
+    <div class="container container-narrow">
+      <div class="cta-final-card reveal">
+        <span class="eyebrow eyebrow-centered">Sua vez agora</span>
+        <h2 class="cta-final-title">
+          Vamos <span class="italic">começar?</span>
+        </h2>
+        <p class="cta-final-sub">
+          Avaliação grátis, sem compromisso. A unidade Laser &amp; Co da sua região está pronta pra te receber.
+        </p>
+        <div class="cta-final-actions">
+          <a href="agendamento.html" class="btn btn-primary btn-lg btn-arrow">Agendar avaliação grátis</a>
+          <a href="unidades.html" class="btn btn-outline btn-lg">Ver unidades</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div data-include="footer"></div>
+
+<!-- ============ SCRIPTS GLOBAIS ============ -->
+<script src="scripts/data.js"></script>
+<script src="scripts/analytics.js"></script>
+<script src="scripts/cep.js"></script>
+<script src="scripts/theme.js"></script>
+<script src="scripts/main.js"></script>
+<script src="scripts/popup.js"></script>
+<script src="scripts/whatsapp.js"></script>
+<script src="scripts/chatbot.js"></script>
+<script src="scripts/page-index.js"></script>
+</body>
+</html>

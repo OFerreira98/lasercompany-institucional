@@ -1,0 +1,314 @@
+/* ============================================================
+   LASER & CO — TOKENS DE DESIGN
+   ============================================================
+   Toda cor, espaçamento, tipografia e movimento do site
+   se origina aqui. Para trocar o tema, basta trocar o valor
+   das variáveis no atributo [data-theme] do <html>.
+
+   NUNCA escreva cores diretamente no CSS dos componentes —
+   sempre via var(--token).
+
+   Temas disponíveis:
+   - default       (Design System — vinho profundo + dourado quente)
+   - roteiro-dark  (Identidade do roteiro — vinho #3B0E0B + dourado #9A6B1E)
+   - roteiro-light (Versão clara do roteiro — bege + vinho)
+   - outubro-rosa
+   - novembro-azul
+   - setembro-amarelo
+   - dia-das-maes
+   - dia-dos-namorados
+   - dia-dos-pais
+   ============================================================ */
+
+/* ---------- TOKENS UNIVERSAIS (não mudam por tema) ---------- */
+:root {
+  /* Tipografia */
+  --font-serif: 'Cormorant Garamond', 'Playfair Display', 'Didot', Georgia, serif;
+  --font-sans:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-accent:'Manrope', 'Gotham', 'Inter', system-ui, sans-serif;
+
+  /* Escala tipográfica (clamp para responsividade fluida) */
+  --fs-xs:    clamp(0.72rem, 0.7rem + 0.1vw, 0.78rem);
+  --fs-sm:    clamp(0.82rem, 0.78rem + 0.2vw, 0.9rem);
+  --fs-base:  clamp(0.95rem, 0.9rem + 0.25vw, 1.05rem);
+  --fs-lg:    clamp(1.1rem, 1rem + 0.5vw, 1.25rem);
+  --fs-xl:    clamp(1.35rem, 1.2rem + 0.75vw, 1.6rem);
+  --fs-2xl:   clamp(1.7rem, 1.4rem + 1.5vw, 2.4rem);
+  --fs-3xl:   clamp(2.2rem, 1.6rem + 3vw, 3.6rem);
+  --fs-4xl:   clamp(2.8rem, 2rem + 4vw, 5rem);
+  --fs-display:clamp(3.2rem, 2.2rem + 5vw, 6.5rem);
+
+  /* Pesos */
+  --fw-light: 300;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* Letter-spacing */
+  --ls-tight: -0.02em;
+  --ls-snug: -0.01em;
+  --ls-normal: 0;
+  --ls-wide: 0.05em;
+  --ls-wider: 0.12em;
+  --ls-widest: 0.25em;
+
+  /* Espaçamento (escala 4px) */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+  --sp-10: 8rem;
+  --sp-11: 10rem;
+
+  /* Container */
+  --container-max: 1280px;
+  --container-pad: clamp(1rem, 4vw, 3rem);
+
+  /* Bordas e raios */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+  --radius-circle: 50%;
+
+  /* Movimento */
+  --duration-instant: 120ms;
+  --duration-fast: 240ms;
+  --duration-base: 400ms;
+  --duration-slow: 700ms;
+  --duration-slower: 1200ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-in: cubic-bezier(0.65, 0, 0.85, 0.5);
+
+  /* Z-index */
+  --z-base: 1;
+  --z-overlay: 100;
+  --z-header: 500;
+  --z-floating: 700;
+  --z-popup: 900;
+  --z-modal: 1000;
+
+  /* Sombra base (será sobrescrita por tema se necessário) */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.18);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.28);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.38);
+  --shadow-glow: 0 0 32px rgba(200, 160, 100, 0.25);
+}
+
+/* =============================================================
+   TEMA PADRÃO — DESIGN SYSTEM (Vinho profundo + Dourado quente)
+   ============================================================= */
+:root,
+:root[data-theme="default"] {
+  /* Marca - cores raiz */
+  --laser-wine:       #2A0707;
+  --laser-wine-deep:  #1A0404;
+  --laser-wine-soft:  #3A1010;
+  --laser-black:      #0A0606;
+
+  /* Acento — dourado quente */
+  --laser-gold:       #C8A064;
+  --laser-gold-soft:  #D8B883;
+  --laser-gold-deep:  #8E6A3A;
+  --laser-gold-pale:  #E8D4A8;
+  --laser-gold-grad:  linear-gradient(90deg, #8E6A3A 0%, #E8D4A8 25%, #F5E6C4 50%, #C8A064 75%, #8E6A3A 100%);
+
+  /* Neutros */
+  --laser-cream:      #DDD3C0;
+  --laser-cream-warm: #B9AF9C;
+
+  /* Tokens semânticos — superfícies */
+  --color-bg:           var(--laser-wine-deep);
+  --color-bg-alt:       var(--laser-wine);
+  --color-bg-elevated:  var(--laser-wine-soft);
+  --color-surface:      rgba(255, 248, 230, 0.04);
+  --color-surface-hover:rgba(255, 248, 230, 0.08);
+
+  /* Tokens semânticos — texto */
+  --color-text:         #F5F0E6;
+  --color-text-soft:    #DDD3C0;
+  --color-text-muted:   #B9AF9C;
+  --color-text-dim:     rgba(245, 240, 230, 0.5);
+
+  /* Tokens semânticos — acento (a "cor da marca" que muda no sazonal) */
+  --color-accent:       var(--laser-gold);
+  --color-accent-soft:  var(--laser-gold-soft);
+  --color-accent-deep:  var(--laser-gold-deep);
+  --color-accent-pale:  var(--laser-gold-pale);
+  --color-accent-grad:  var(--laser-gold-grad);
+  --color-accent-glow:  rgba(200, 160, 100, 0.35);
+
+  /* Bordas e divisores */
+  --color-border:       rgba(245, 240, 230, 0.12);
+  --color-border-strong:rgba(245, 240, 230, 0.25);
+  --color-border-accent:rgba(200, 160, 100, 0.4);
+
+  /* Estados */
+  --color-success:  #6BC084;
+  --color-warning:  #E8B864;
+  --color-danger:   #D87864;
+  --color-info:     #7BA8D8;
+
+  color-scheme: dark;
+}
+
+/* =============================================================
+   TEMA ROTEIRO — DARK (Vinho #3B0E0B + Dourado #9A6B1E)
+   ============================================================= */
+:root[data-theme="roteiro-dark"] {
+  --color-bg:           #1F0706;
+  --color-bg-alt:       #3B0E0B;
+  --color-bg-elevated:  #4A1810;
+  --color-surface:      rgba(244, 236, 223, 0.05);
+  --color-surface-hover:rgba(244, 236, 223, 0.09);
+
+  --color-text:         #F4ECDF;
+  --color-text-soft:    #D5CCBE;
+  --color-text-muted:   #B7AD9D;
+  --color-text-dim:     rgba(244, 236, 223, 0.5);
+
+  --color-accent:       #C28733;
+  --color-accent-soft:  #D89B45;
+  --color-accent-deep:  #9A6B1E;
+  --color-accent-pale:  #E8C088;
+  --color-accent-grad:  linear-gradient(90deg, #9A6B1E 0%, #E8C088 50%, #9A6B1E 100%);
+  --color-accent-glow:  rgba(154, 107, 30, 0.4);
+
+  --color-border:       rgba(244, 236, 223, 0.14);
+  --color-border-strong:rgba(244, 236, 223, 0.28);
+  --color-border-accent:rgba(154, 107, 30, 0.5);
+
+  color-scheme: dark;
+}
+
+/* =============================================================
+   TEMA ROTEIRO — LIGHT (Bege + vinho + dourado)
+   ============================================================= */
+:root[data-theme="roteiro-light"] {
+  --color-bg:           #F4ECDF;
+  --color-bg-alt:       #D5CCBE;
+  --color-bg-elevated:  #FFFFFF;
+  --color-surface:      rgba(59, 14, 11, 0.04);
+  --color-surface-hover:rgba(59, 14, 11, 0.07);
+
+  --color-text:         #3B0E0B;
+  --color-text-soft:    #6B2418;
+  --color-text-muted:   #8A6B5A;
+  --color-text-dim:     rgba(59, 14, 11, 0.55);
+
+  --color-accent:       #9A6B1E;
+  --color-accent-soft:  #B58432;
+  --color-accent-deep:  #6E4A12;
+  --color-accent-pale:  #C8A064;
+  --color-accent-grad:  linear-gradient(90deg, #6E4A12 0%, #C8A064 50%, #6E4A12 100%);
+  --color-accent-glow:  rgba(154, 107, 30, 0.3);
+
+  --color-border:       rgba(59, 14, 11, 0.15);
+  --color-border-strong:rgba(59, 14, 11, 0.3);
+  --color-border-accent:rgba(154, 107, 30, 0.45);
+
+  --shadow-sm: 0 2px 8px rgba(59, 14, 11, 0.08);
+  --shadow-md: 0 8px 24px rgba(59, 14, 11, 0.12);
+  --shadow-lg: 0 16px 48px rgba(59, 14, 11, 0.18);
+  --shadow-glow: 0 0 32px rgba(154, 107, 30, 0.2);
+
+  color-scheme: light;
+}
+
+/* =============================================================
+   TEMAS SAZONAIS
+   Mantêm a base vinho+dourado da marca; apenas o ACENTO muda.
+   ============================================================= */
+
+/* Outubro Rosa — Câncer de mama */
+:root[data-theme="outubro-rosa"] {
+  --color-accent:       #E08CB4;
+  --color-accent-soft:  #F0B5CF;
+  --color-accent-deep:  #B5527D;
+  --color-accent-pale:  #FAD4E3;
+  --color-accent-grad:  linear-gradient(90deg, #B5527D 0%, #F0B5CF 50%, #B5527D 100%);
+  --color-accent-glow:  rgba(224, 140, 180, 0.4);
+  --color-border-accent:rgba(224, 140, 180, 0.5);
+}
+
+/* Novembro Azul — Câncer de próstata */
+:root[data-theme="novembro-azul"] {
+  --color-accent:       #5B9BD5;
+  --color-accent-soft:  #87B5DF;
+  --color-accent-deep:  #2E6FA8;
+  --color-accent-pale:  #C0D8EE;
+  --color-accent-grad:  linear-gradient(90deg, #2E6FA8 0%, #87B5DF 50%, #2E6FA8 100%);
+  --color-accent-glow:  rgba(91, 155, 213, 0.4);
+  --color-border-accent:rgba(91, 155, 213, 0.5);
+}
+
+/* Setembro Amarelo — Prevenção ao suicídio */
+:root[data-theme="setembro-amarelo"] {
+  --color-accent:       #F5C342;
+  --color-accent-soft:  #F8D778;
+  --color-accent-deep:  #BE9015;
+  --color-accent-pale:  #FBE8B2;
+  --color-accent-grad:  linear-gradient(90deg, #BE9015 0%, #F8D778 50%, #BE9015 100%);
+  --color-accent-glow:  rgba(245, 195, 66, 0.4);
+  --color-border-accent:rgba(245, 195, 66, 0.5);
+}
+
+/* Dia das Mães */
+:root[data-theme="dia-das-maes"] {
+  --color-accent:       #D88FA5;
+  --color-accent-soft:  #ECBACA;
+  --color-accent-deep:  #A6566F;
+  --color-accent-pale:  #F5DCE3;
+  --color-accent-grad:  linear-gradient(90deg, #A6566F 0%, #ECBACA 50%, #A6566F 100%);
+  --color-accent-glow:  rgba(216, 143, 165, 0.4);
+  --color-border-accent:rgba(216, 143, 165, 0.5);
+}
+
+/* Dia dos Namorados */
+:root[data-theme="dia-dos-namorados"] {
+  --color-accent:       #C84B5A;
+  --color-accent-soft:  #DA7882;
+  --color-accent-deep:  #8E2935;
+  --color-accent-pale:  #ECB0B6;
+  --color-accent-grad:  linear-gradient(90deg, #8E2935 0%, #DA7882 50%, #8E2935 100%);
+  --color-accent-glow:  rgba(200, 75, 90, 0.4);
+  --color-border-accent:rgba(200, 75, 90, 0.5);
+}
+
+/* Dia dos Pais */
+:root[data-theme="dia-dos-pais"] {
+  --color-accent:       #5C7F9C;
+  --color-accent-soft:  #87A2BA;
+  --color-accent-deep:  #355974;
+  --color-accent-pale:  #BFD0DD;
+  --color-accent-grad:  linear-gradient(90deg, #355974 0%, #87A2BA 50%, #355974 100%);
+  --color-accent-glow:  rgba(92, 127, 156, 0.4);
+  --color-border-accent:rgba(92, 127, 156, 0.5);
+}
+
+/* =============================================================
+   Acessibilidade — Respeita reduced motion
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 0ms;
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+    --duration-slower: 0ms;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

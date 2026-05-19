@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Laser&Co — Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     LASER&CO — DESIGN SYSTEM
+     Estética: dark editorial, dourado quente, vinho profundo
+     Referência estrutural: Nexara (dark agency template)
+     Referência visual: Brandbook Laser&Co
+     ============================================================ */
+
+  :root {
+    /* ——— CORES BRAND ——— */
+    --laser-wine:        #2A0707;   /* vinho profundo do brandbook */
+    --laser-wine-deep:   #1A0404;   /* fundo principal */
+    --laser-wine-soft:   #3A1010;   /* sub-fundo cards */
+    --laser-black:       #0A0606;   /* preto quente */
+    --laser-ink:         #FFFFFF;
+
+    /* Dourado — elegante (escolhido no brandbook) */
+    --laser-gold:        #C8A064;
+    --laser-gold-soft:   #D8B883;
+    --laser-gold-deep:   #8E6A3A;
+    --laser-gold-pale:   #E8D4A8;
+
+    /* Gradiente dourado clássico (para detalhes "premium") */
+    --laser-gold-grad:   linear-gradient(90deg, #8E6A3A 0%, #E8D4A8 25%, #F5E6C4 50%, #C8A064 75%, #8E6A3A 100%);
+
+    /* Bege / nudes do brandbook */
+    --laser-cream:       #DDD3C0;
+    --laser-cream-warm:  #B9AF9C;   /* RGB 185,175,156 do brandbook */
+    --laser-cream-dark:  #8A8270;
+
+    /* Texto */
+    --text-primary:      #F5F0E6;
+    --text-secondary:    #C9BFAE;
+    --text-muted:        #8A8270;
+    --text-faint:        #4A4239;
+
+    /* Funcionais */
+    --border-soft:       rgba(200, 160, 100, 0.18);
+    --border-medium:     rgba(200, 160, 100, 0.32);
+    --border-strong:     rgba(200, 160, 100, 0.55);
+
+    /* ——— TIPOGRAFIA ——— */
+    --font-serif:        'Cormorant Garamond', 'Times New Roman', serif;  /* Display (combina com letra do logo) */
+    --font-sans:         'Inter', system-ui, sans-serif;                   /* Corpo */
+    --font-accent:       'Manrope', sans-serif;                            /* Labels uppercase */
+
+    /* Escala tipográfica */
+    --fs-xs:    0.75rem;
+    --fs-sm:    0.875rem;
+    --fs-base:  1rem;
+    --fs-lg:    1.125rem;
+    --fs-xl:    1.25rem;
+    --fs-2xl:   1.5rem;
+    --fs-3xl:   2rem;
+    --fs-4xl:   2.75rem;
+    --fs-5xl:   3.75rem;
+    --fs-6xl:   5rem;
+    --fs-display: 7rem;
+
+    /* ——— ESPAÇAMENTO ——— */
+    --sp-1: 0.25rem;
+    --sp-2: 0.5rem;
+    --sp-3: 0.75rem;
+    --sp-4: 1rem;
+    --sp-6: 1.5rem;
+    --sp-8: 2rem;
+    --sp-12: 3rem;
+    --sp-16: 4rem;
+    --sp-24: 6rem;
+
+    /* ——— RAIO ——— */
+    --r-sm:   4px;
+    --r-md:   8px;
+    --r-lg:   16px;
+    --r-xl:   24px;
+    --r-full: 9999px;
+
+    /* ——— SOMBRAS ——— */
+    --shadow-soft:   0 4px 24px -6px rgba(0,0,0,0.5);
+    --shadow-md:     0 12px 32px -8px rgba(0,0,0,0.7);
+    --shadow-lg:     0 24px 48px -12px rgba(0,0,0,0.8), 0 0 0 1px var(--border-soft);
+    --shadow-gold:   0 12px 40px -8px rgba(200, 160, 100, 0.35);
+    --shadow-inset:  inset 0 1px 1px rgba(232, 212, 168, 0.18), inset 0 -2px 8px rgba(0,0,0,0.4);
+
+    /* ——— TRANSIÇÕES ——— */
+    --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ============================================================
+     BASE
+     ============================================================ */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--laser-wine-deep);
+    color: var(--text-primary);
+    line-height: 1.6;
+    font-size: var(--fs-base);
+    overflow-x: hidden;
+  }
+
+  /* Grão sutil de fundo (textura) */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(circle at 20% 15%, rgba(200, 160, 100, 0.06), transparent 40%),
+                      radial-gradient(circle at 80% 80%, rgba(58, 16, 16, 0.4), transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  ::selection { background: rgba(200, 160, 100, 0.3); color: var(--laser-ink); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--laser-black); }
+  ::-webkit-scrollbar-thumb { background: var(--laser-gold-deep); border-radius: var(--r-full); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--laser-gold); }
+
+  /* ============================================================
+     LAYOUT
+     ============================================================ */
+  .ds-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--sp-8);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* TOPBAR */
+  .ds-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(14px);
+    background: rgba(10, 6, 6, 0.7);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .ds-topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sp-4) var(--sp-8);
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .ds-topbar-logo {
+    font-family: var(--font-serif);
+    font-size: var(--fs-xl);
+    letter-spacing: 0.08em;
+    color: var(--laser-gold-soft);
+    font-weight: 500;
+  }
+  .ds-topbar-meta {
+    font-family: var(--font-accent);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--text-muted);
+  }
+
+  /* HERO */
+  .ds-hero {
+    padding: var(--sp-24) var(--sp-8) var(--sp-16);
+    position: relative;
+    text-align: center;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .ds-hero-label {
+    font-family: var(--font-accent);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    color: var(--laser-gold);
+    margin-bottom: var(--sp-6);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-3);
+  }
+  .ds-hero-label::before,
+  .ds-hero-label::after {
+    content: "";
+    width: 32px;
+    height: 1px;
+    background: var(--laser-gold-deep);
+  }
+  .ds-hero-title {
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 8vw, var(--fs-display));
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: var(--sp-6);
+  }
+  .ds-hero-title .gold {
+    background: var(--laser-gold-grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-style: italic;
+    font-weight: 500;
+  }
+  .ds-hero-sub {
+    font-family: var(--font-sans);
+    font-size: var(--fs-lg);
+    color: var(--text-secondary);
+    max-width: 640px;
+    margin: 0 auto var(--sp-8);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* SECTION */
+  .ds-section {
+    padding: var(--sp-24) 0;
+    border-bottom: 1px solid var(--border-soft);
+    position: relative;
+  }
+  .ds-section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-8);
+    margin-bottom: var(--sp-12);
+    padding-bottom: var(--sp-4);
+    border-bottom: 1px dashed var(--border-soft);
+  }
+  .ds-section-head-left { display: flex; align-items: baseline; gap: var(--sp-6); }
+  .ds-section-index {
+    font-family: var(--font-accent);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.3em;
+    color: var(--laser-gold-deep);
+  }
+  .ds-section-title {
+    font-family: var(--font-serif);
+    font-size: var(--fs-3xl);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+  }
+  .ds-section-desc {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    max-width: 380px;
+    text-align: right;
+  }
+
+  /* GROUP */
+  .ds-group { margin-bottom: var(--sp-12); }
+  .ds-group-label {
+    font-family: var(--font-accent);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--laser-gold);
+    margin-bottom: var(--sp-6);
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+  }
+  .ds-group-label::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border-medium), transparent);
+  }
+
+  /* ============================================================
+     1. CORES
+     ============================================================ */
+  .ds-color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--sp-4);
+  }
+  .ds-color {
+    border: 1px solid var(--border-soft);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    background: var(--laser-wine-soft);
+    transition: transform 0.4s var(--ease-out), border-color 0.4s var(--ease-out);
+  }
+  .ds-color:hover {
+    transform: translateY(-3px);
+    border-color: var(--border-medium);
+  }
+  .ds-color-swatch {
+    height: 120px;
+    position: relative;
+  }
+  .ds-color-info {
+    padding: var(--sp-3) var(--sp-4);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .ds-color-name {
+    font-family: var(--font-accent);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-primary);
+  }
+  .ds-color-hex {
+    font-family: 'Courier New', monospace;
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+  }
+
+  /* ============================================================
+     2. TIPOGRAFIA
+     ============================================================ */
+  .ds-type-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: var(--sp-8);
+    padding: var(--sp-6) 0;
+    border-bottom: 1px solid var(--border-soft);
+    align-items: baseline;
+  }
+  .ds-type-row:last-child { border-bottom: none; }
+  .ds-type-meta {
+    font-family: var(--font-accent);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+  }
+  .ds-type-meta span { display: block; color: var(--laser-gold-deep); margin-top: 4px; text-transform: none; letter-spacing: 0; font-family: 'Courier New', monospace; }
+
+  .display-h1 { font-family: var(--font-serif); font-size: var(--fs-6xl); font-weight: 400; line-height: 1; letter-spacing: -0.02em; }
+  .display-h1 em { font-style: italic; color: var(--laser-gold); font-weight: 500; }
+  .display-h2 { font-family: var(--font-serif); font-size: var(--fs-5xl); font-weight: 400; line-height: 1.05; letter-spacing: -0.015em; }
+  .display-h3 { font-family: var(--font-serif); font-size: var(--fs-4xl); font-weight: 500; line-height: 1.1; }
+  .display-h4 { font-family: var(--font-serif); font-size: var(--fs-3xl); font-weight: 500; line-height: 1.2; }
+  .body-lead   { font-family: var(--font-sans);  font-size: var(--fs-lg); line-height: 1.7; color: var(--text-secondary); font-weight: 300; }
+  .body-base   { font-family: var(--font-sans);  font-size: var(--fs-base); line-height: 1.65; color: var(--text-primary); }
+  .body-small  { font-family: var(--font-sans);  font-size: var(--fs-sm); line-height: 1.55; color: var(--text-secondary); }
+  .label-meta  { font-family: var(--font-accent); font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.3em; color: var(--laser-gold); }
+  .caption     { font-family: var(--font-sans);  font-size: var(--fs-xs); color: var(--text-muted); }
+
+  /* ============================================================
+     3. BOTÕES
+     ============================================================ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-3);
+    padding: 0.875rem 1.75rem;
+    font-family: var(--font-accent);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+    border-radius: var(--r-full);
+    cursor: pointer;
+    transition: all 0.35s var(--ease-out);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn:focus-visible { outline: 2px solid var(--laser-gold); outline-offset: 3px; }
+
+  /* PRIMARY — gradiente dourado */
+  .btn-primary {
+    background: linear-gradient(135deg, #8E6A3A 0%, #C8A064 50%, #E8D4A8 100%);
+    color: var(--laser-wine-deep);
+    box-shadow: var(--shadow-gold), var(--shadow-inset);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 50px -8px rgba(200, 160, 100, 0.5), var(--shadow-inset);
+  }
+
+  /* OUTLINE — borda dourada glow */
+  .btn-outline {
+    background: rgba(58, 16, 16, 0.4);
+    color: var(--text-primary);
+    border-color: var(--border-strong);
+    backdrop-filter: blur(6px);
+  }
+  .btn-outline:hover {
+    border-color: var(--laser-gold);
+    color: var(--laser-gold-soft);
+    box-shadow: 0 0 24px rgba(200, 160, 100, 0.25);
+  }
+
+  /* GHOST */
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border-color: var(--border-soft);
+  }
+  .btn-ghost:hover { color: var(--laser-gold); border-color: var(--border-medium); }
+
+  /* SOLID escuro */
+  .btn-dark {
+    background: var(--laser-black);
+    color: var(--laser-gold-pale);
+    border-color: var(--border-medium);
+  }
+  .btn-dark:hover { background: var(--laser-wine-soft); border-color: var(--laser-gold); }
+
+  /* Tamanhos */
+  .btn-sm { padding: 0.55rem 1.1rem; font-size: 0.75rem; }
+  .btn-lg { padding: 1.1rem 2.4rem; font-size: var(--fs-sm); }
+
+  .btn-arrow svg { transition: transform 0.35s var(--ease-out); }
+  .btn:hover .btn-arrow svg { transform: translateX(4px); }
+
+  /* ============================================================
+     4. CARDS
+     ============================================================ */
+  .ds-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--sp-6);
+  }
+  .card {
+    background: linear-gradient(180deg, rgba(58, 16, 16, 0.5) 0%, rgba(10, 6, 6, 0.7) 100%);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--r-lg);
+    padding: var(--sp-8);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.45s var(--ease-out);
+    backdrop-filter: blur(10px);
+  }
+  .card:hover {
+    border-color: var(--border-medium);
+    transform: translateY(-6px);
+    box-shadow: 0 24px 50px -16px rgba(0,0,0,0.7), 0 0 30px -8px rgba(200, 160, 100, 0.18);
+  }
+  .card-icon {
+    width: 48px; height: 48px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: var(--r-md);
+    background: rgba(200, 160, 100, 0.08);
+    border: 1px solid var(--border-soft);
+    color: var(--laser-gold);
+    margin-bottom: var(--sp-6);
+  }
+  .card-title {
+    font-family: var(--font-serif);
+    font-size: var(--fs-2xl);
+    color: var(--text-primary);
+    margin-bottom: var(--sp-3);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .card-body {
+    font-size: var(--fs-sm);
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  .card-foot {
+    margin-top: var(--sp-6);
+    padding-top: var(--sp-4);
+    border-top: 1px dashed var(--border-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-accent);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--laser-gold);
+  }
+
+  /* Card de destaque (premium) */
+  .card-feature {
+    background: linear-gradient(180deg, rgba(200, 160, 100, 0.12) 0%, rgba(58, 16, 16, 0.5) 100%);
+    border-color: var(--border-medium);
+  }
+  .card-feature::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at top right, rgba(200, 160, 100, 0.15), transparent 50%);
+    pointer-events: none;
+  }
+
+  /* ============================================================
+     5. FORMS
+     ============================================================ */
+  .ds-form {
+    display: grid;
+    gap: var(--sp-5);
+    max-width: 520px;
+  }
+  .ds-field { display: flex; flex-direction: column; gap: var(--sp-2); }
+  .ds-field-label {
+    font-family: var(--font-accent);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--laser-gold);
+  }
+  .ds-input,
+  .ds-textarea,
+  .ds-select {
+    width: 100%;
+    background: rgba(10, 6, 6, 0.5);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--r-md);
+    padding: 0.875rem 1rem;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: var(--fs-base);
+    transition: border-color 0.3s var(--ease-out), background 0.3s var(--ease-out);
+  }
+  .ds-input::placeholder,
+  .ds-textarea::placeholder { color: var(--text-faint); }
+  .ds-input:focus,
+  .ds-textarea:focus,
+  .ds-select:focus {
+    outline: none;
+    border-color: var(--laser-gold);
+    background: rgba(10, 6, 6, 0.7);
+    box-shadow: 0 0 0 3px rgba(200, 160, 100, 0.12);
+  }
+  .ds-textarea { min-height: 120px; resize: vertical; }
+
+  /* ============================================================
+     6. BADGES / TAGS
+     ============================================================ */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--r-full);
+    font-family: var(--font-accent);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    line-height: 1;
+  }
+  .badge-gold {
+    background: rgba(200, 160, 100, 0.12);
+    color: var(--laser-gold);
+    border: 1px solid var(--border-medium);
+  }
+  .badge-wine {
+    background: rgba(58, 16, 16, 0.6);
+    color: var(--laser-cream);
+    border: 1px solid var(--border-soft);
+  }
+  .badge-solid {
+    background: var(--laser-gold);
+    color: var(--laser-wine-deep);
+  }
+  .badge-dot::before {
+    content: "";
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 8px currentColor;
+  }
+
+  /* ============================================================
+     7. LOGOS / MARCA
+     ============================================================ */
+  .ds-logo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--sp-6);
+  }
+  .ds-logo-tile {
+    aspect-ratio: 16/10;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--r-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--sp-8);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .ds-logo-tile-light { background: var(--laser-cream); color: var(--laser-wine-deep); }
+  .ds-logo-tile-dark  { background: var(--laser-wine-deep); }
+  .ds-logo-tile-gold  { background: linear-gradient(135deg, #2A0707 0%, #0A0606 100%); }
+  .ds-logo-tile-img {
+    max-width: 70%;
+    max-height: 60%;
+    object-fit: contain;
+  }
+  .ds-logo-tile-caption {
+    position: absolute;
+    bottom: var(--sp-3);
+    left: var(--sp-4);
+    font-family: var(--font-accent);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+  }
+  .ds-logo-tile-light .ds-logo-tile-caption { color: var(--laser-cream-dark); }
+
+  /* Logo "construído" via SVG/texto */
+  .logo-text {
+    font-family: var(--font-serif);
+    font-size: var(--fs-4xl);
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--laser-gold);
+  }
+  .logo-text small {
+    display: block;
+    font-family: var(--font-accent);
+    font-size: 0.6875rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--laser-gold-deep);
+    margin-top: var(--sp-2);
+  }
+
+  /* ============================================================
+     8. PATTERNS — Grid, brackets, dividers
+     ============================================================ */
+  .ds-pattern-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--sp-6);
+  }
+  .pattern-box {
+    aspect-ratio: 4/3;
+    background: var(--laser-black);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--r-md);
+    position: relative;
+    overflow: hidden;
+    padding: var(--sp-6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pattern-label {
+    position: absolute;
+    bottom: var(--sp-3);
+    left: var(--sp-4);
+    font-family: var(--font-accent);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--text-muted);
+    z-index: 2;
+  }
+
+  /* Pattern: grid lines */
+  .pattern-gridlines {
+    background-image:
+      linear-gradient(rgba(200, 160, 100, 0.10) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200, 160, 100, 0.10) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  /* Pattern: diagonal hatch */
+  .pattern-hatch {
+    background-image: repeating-linear-gradient(45deg, rgba(200, 160, 100, 0.18) 0, rgba(200, 160, 100, 0.18) 1px, transparent 1px, transparent 10px);
+  }
+
+  /* Pattern: gold glow */
+  .pattern-glow {
+    background:
+      radial-gradient(circle at 50% 50%, rgba(200, 160, 100, 0.35), transparent 60%),
+      var(--laser-black);
+  }
+
+  /* Pattern: brackets */
+  .pattern-brackets::before,
+  .pattern-brackets::after,
+  .pattern-brackets > .bk1,
+  .pattern-brackets > .bk2 {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--laser-gold);
+  }
+  .pattern-brackets::before { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+  .pattern-brackets::after  { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+  .pattern-brackets .bk1 { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+  .pattern-brackets .bk2 { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+  /* Divider editorial */
+  .divider {
+    display: flex; align-items: center; gap: var(--sp-3);
+    font-family: var(--font-accent);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--laser-gold-deep);
+    margin: var(--sp-8) 0;
+  }
+  .divider::before,
+  .divider::after {
+    content: ""; flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-medium), transparent);
+  }
+
+  /* ============================================================
+     9. EXEMPLO HERO COMPOSTO
+     ============================================================ */
+  .demo-hero {
+    background:
+      radial-gradient(circle at 80% 20%, rgba(200, 160, 100, 0.10), transparent 50%),
+      radial-gradient(circle at 10% 90%, rgba(58, 16, 16, 0.6), transparent 50%),
+      var(--laser-black);
+    border-radius: var(--r-xl);
+    border: 1px solid var(--border-soft);
+    padding: var(--sp-24) var(--sp-12);
+    position: relative;
+    overflow: hidden;
+  }
+  .demo-hero::before,
+  .demo-hero::after,
+  .demo-hero .bk1,
+  .demo-hero .bk2 {
+    content: "";
+    position: absolute;
+    width: 28px; height: 28px;
+    border: 1.5px solid var(--laser-gold);
+  }
+  .demo-hero::before { top: 24px; left: 24px; border-right: none; border-bottom: none; }
+  .demo-hero::after  { top: 24px; right: 24px; border-left: none; border-bottom: none; }
+  .demo-hero .bk1 { bottom: 24px; left: 24px; border-right: none; border-top: none; }
+  .demo-hero .bk2 { bottom: 24px; right: 24px; border-left: none; border-top: none; }
+  .demo-hero-content { max-width: 720px; margin: 0 auto; text-align: center; position: relative; z-index: 2; }
+  .demo-hero h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 6vw, var(--fs-6xl));
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: var(--sp-6) 0;
+  }
+  .demo-hero h1 em {
+    font-style: italic;
+    background: var(--laser-gold-grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 500;
+  }
+  .demo-hero p {
+    color: var(--text-secondary);
+    font-size: var(--fs-lg);
+    line-height: 1.7;
+    margin-bottom: var(--sp-8);
+    font-weight: 300;
+  }
+  .demo-hero-cta { display: inline-flex; gap: var(--sp-4); flex-wrap: wrap; justify-content: center; }
+
+  /* ============================================================
+     10. FOOTER
+     ============================================================ */
+  .ds-footer {
+    padding: var(--sp-16) 0 var(--sp-8);
+    border-top: 1px solid var(--border-soft);
+    background: var(--laser-black);
+    position: relative;
+    z-index: 1;
+  }
+  .ds-footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: var(--sp-8);
+    margin-bottom: var(--sp-12);
+  }
+  .ds-footer-col h4 {
+    font-family: var(--font-accent);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--laser-gold);
+    margin-bottom: var(--sp-4);
+  }
+  .ds-footer-col a {
+    display: block;
+    color: var(--text-secondary);
+    font-size: var(--fs-sm);
+    text-decoration: none;
+    padding: 0.3rem 0;
+    transition: color 0.3s;
+  }
+  .ds-footer-col a:hover { color: var(--laser-gold-soft); }
+  .ds-footer-brand {
+    font-family: var(--font-serif);
+    font-size: var(--fs-3xl);
+    color: var(--laser-gold);
+    margin-bottom: var(--sp-3);
+    letter-spacing: 0.05em;
+  }
+  .ds-footer-tagline {
+    font-family: var(--font-accent);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.35em;
+    color: var(--laser-gold-deep);
+    margin-bottom: var(--sp-4);
+  }
+  .ds-footer-bottom {
+    padding-top: var(--sp-6);
+    border-top: 1px solid var(--border-soft);
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    font-family: var(--font-accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  /* ============================================================
+     RESPONSIVO
+     ============================================================ */
+  @media (max-width: 768px) {
+    .ds-container { padding: 0 var(--sp-4); }
+    .ds-section { padding: var(--sp-16) 0; }
+    .ds-section-head { flex-direction: column; align-items: flex-start; gap: var(--sp-4); }
+    .ds-section-desc { text-align: left; }
+    .ds-type-row { grid-template-columns: 1fr; gap: var(--sp-3); }
+    .ds-footer-grid { grid-template-columns: 1fr 1fr; }
+    .ds-footer-bottom { flex-direction: column; gap: var(--sp-2); text-align: center; }
+    .demo-hero { padding: var(--sp-16) var(--sp-6); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     TOPBAR
+     ============================================================ -->
+<header class="ds-topbar">
+  <div class="ds-topbar-inner">
+    <div class="ds-topbar-logo">Laser&nbsp;&amp;&nbsp;Co.</div>
+    <div class="ds-topbar-meta">Design System · v1.0</div>
+  </div>
+</header>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="ds-hero">
+  <div class="ds-container">
+    <div class="ds-hero-label">Brand &amp; Visual System</div>
+    <h1 class="ds-hero-title">
+      Design System<br>
+      <span class="gold">Laser &amp; Company</span>
+    </h1>
+    <p class="ds-hero-sub">
+      Linguagem visual editorial, dark e dourada. Construída a partir do brandbook oficial
+      e estruturada no padrão de uma agência premium contemporânea.
+    </p>
+    <div style="display: inline-flex; gap: var(--sp-4); flex-wrap: wrap; justify-content: center;">
+      <a href="#cores" class="btn btn-primary btn-lg">
+        Explorar tokens
+        <span class="btn-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+      <a href="#componentes" class="btn btn-outline btn-lg">Ver componentes</a>
+    </div>
+  </div>
+</section>
+
+<main class="ds-container">
+
+<!-- ============================================================
+     1. CORES
+     ============================================================ -->
+<section class="ds-section" id="cores">
+  <div class="ds-section-head">
+    <div class="ds-section-head-left">
+      <span class="ds-section-index">01 / Tokens</span>
+      <h2 class="ds-section-title">Paleta cromática</h2>
+    </div>
+    <p class="ds-section-desc">Vinho profundo, dourado quente e cremes naturais — extraídos diretamente do brandbook Laser&Co.</p>
+  </div>
+
+  <div class="ds-group">
+    <div class="ds-group-label">Vinho · Fundo</div>
+    <div class="ds-color-grid">
+      <div class="ds-color"><div class="ds-color-swatch" style="background:#1A0404"></div><div class="ds-color-info"><span class="ds-color-name">Wine Deep</span><span class="ds-color-hex">#1A0404 · base</span></div></div>
+      <div class="ds-color"><div class="ds-color-swatch" style="background:#2A0707"></div><div class="ds-color-info"><span class="ds-color-name">Wine</span><span class="ds-color-hex">#2A0707 · brandbook</span></div></div>
+      <div class="ds-color"><div class="ds-color-swatch" style="background:#3A1010"></div><div class="ds-color-info"><span class="ds-color-name">Wine Soft</span><span class="ds-color-hex">#3A1010 · cards</span></div></div>
+      <div class="ds-color"><div class="ds-color-swatch" style="background:#0A0606"></div><div class="ds-color-info"><span class="ds-color-name">Black Warm</span><span class="ds-color-hex">#0A0606 · contrast</span></div></div>
+    </div>
+  </div>
+
+  <div class="ds-group">
+    <div class="ds-group-label">Dourado · Acento</div>
+    <div class="ds-color-grid">
+      <div class="ds-color"><div class="ds-color-swatch" style="background:#8E6A3A"></div><div class="ds-color-info"><span class="ds-color-name">Gold Deep</span><span class="ds-color-hex">#8E6A3A</span></div></div>
+      <div class="ds-color"><div class="ds-color-swatch" style="background:#C8A064"></div><div class="ds-color-info"><span class="ds-color-name">Gold</span><span class="ds-color-hex">#C8A064 · primary</span></div></div>
+      <div class="ds-color"><div class="ds-color-swatch" style="background:#D8B883"></div><div class="ds-color-info"><span class="ds-color-name">Gold Soft</span><span class="ds-color-hex">#D8B883</span></div></div>
+      <div class="ds-color"><div class="ds-color-swatch" style="background:#E8D4A8"></div><div class="ds-color-info"><span class="ds-color-name">Gold Pale</span><span class="ds-color-hex">#E8D4A8</span></div></div>
+      <div class="ds-color"><div class="ds-color-swatch" style="background:linear-gradient(90deg,#8E6A3A,#E8D4A8,#F5E6C4,#C8A064,#8E6A3A)"></div><div class="ds-color-info"><span class="ds-color-name">Gold Gradient</span><span class="ds-color-hex">linear · luxo</span></div></div>
+    </div>
+  </div>
+
+  <div class="ds-group">
+    <div class="ds-group-label">Cremes · Neutros</div>
+    <div class="ds-color-grid">
+      <div class="ds-color"><div class="ds-color-swatch" style="background:#DDD3C0"></div><div class="ds-color-info"><span class="ds-color-name">Cream</span><span class="ds-color-hex">#DDD3C0</span></div></div>
+      <div class="ds-color"><div class="ds-color-swatch" style="background:#B9AF9C"></div><div class="ds-color-info"><span class="ds-color-name">Cream Warm</span><span class="ds-color-hex">#B9AF9C · brandbook</span></div></div>
+      <div class="ds-color"><div class="ds-color-swatch" style="background:#8A8270"></div><div class="ds-color-info"><span class="ds-color-name">Cream Dark</span><span class="ds-color-hex">#8A8270</span></div></div>
+      <div class="ds-color"><div class="ds-color-swatch" style="background:#F5F0E6"></div><div class="ds-color-info"><span class="ds-color-name">Ink</span><span class="ds-color-hex">#F5F0E6 · texto</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     2. TIPOGRAFIA
+     ============================================================ -->
+<section class="ds-section" id="tipografia">
+  <div class="ds-section-head">
+    <div class="ds-section-head-left">
+      <span class="ds-section-index">02 / Tokens</span>
+      <h2 class="ds-section-title">Tipografia</h2>
+    </div>
+    <p class="ds-section-desc">Display em serifa Didone (alinhada ao logo) e Inter sans para corpo. Manrope para labels técnicos.</p>
+  </div>
+
+  <div class="ds-type-row">
+    <div class="ds-type-meta">Display H1 <span>Cormorant · 80px</span></div>
+    <div class="display-h1">Estética que <em>transcende</em>.</div>
+  </div>
+  <div class="ds-type-row">
+    <div class="ds-type-meta">Display H2 <span>Cormorant · 60px</span></div>
+    <div class="display-h2">Tecnologia a laser de alta precisão</div>
+  </div>
+  <div class="ds-type-row">
+    <div class="ds-type-meta">Display H3 <span>Cormorant · 44px</span></div>
+    <div class="display-h3">Tratamentos personalizados</div>
+  </div>
+  <div class="ds-type-row">
+    <div class="ds-type-meta">Display H4 <span>Cormorant · 32px</span></div>
+    <div class="display-h4">Conheça nossa metodologia</div>
+  </div>
+  <div class="ds-type-row">
+    <div class="ds-type-meta">Body Lead <span>Inter 300 · 18px</span></div>
+    <div class="body-lead">Soluções estéticas a laser para pele, contorno corporal e bem-estar — em ambiente projetado para acolher e elevar a experiência do cliente.</div>
+  </div>
+  <div class="ds-type-row">
+    <div class="ds-type-meta">Body Base <span>Inter 400 · 16px</span></div>
+    <div class="body-base">Combinamos protocolos clínicos com equipamentos de última geração. Cada procedimento é precedido de avaliação diagnóstica individual.</div>
+  </div>
+  <div class="ds-type-row">
+    <div class="ds-type-meta">Body Small <span>Inter 400 · 14px</span></div>
+    <div class="body-small">Resultados visíveis a partir da primeira sessão. Acompanhamento pós-procedimento incluso em todos os pacotes.</div>
+  </div>
+  <div class="ds-type-row">
+    <div class="ds-type-meta">Label · Meta <span>Manrope · 12px · 0.3em</span></div>
+    <div class="label-meta">Estética a laser premium</div>
+  </div>
+  <div class="ds-type-row">
+    <div class="ds-type-meta">Caption <span>Inter · 12px</span></div>
+    <div class="caption">Av. exemplo, 123 — Bairro · São Paulo · SP</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     3. BOTÕES
+     ============================================================ -->
+<section class="ds-section" id="componentes">
+  <div class="ds-section-head">
+    <div class="ds-section-head-left">
+      <span class="ds-section-index">03 / Componentes</span>
+      <h2 class="ds-section-title">Botões</h2>
+    </div>
+    <p class="ds-section-desc">Quatro variantes em três tamanhos. Primary usa gradiente dourado com peso visual; demais são reservados para hierarquia secundária.</p>
+  </div>
+
+  <div class="ds-group">
+    <div class="ds-group-label">Primary · Gradiente dourado</div>
+    <div style="display: flex; gap: var(--sp-4); flex-wrap: wrap; align-items: center;">
+      <button class="btn btn-primary btn-sm">Agendar avaliação</button>
+      <button class="btn btn-primary">Agendar avaliação</button>
+      <button class="btn btn-primary btn-lg">
+        Agendar avaliação
+        <span class="btn-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="ds-group">
+    <div class="ds-group-label">Outline · Borda dourada</div>
+    <div style="display: flex; gap: var(--sp-4); flex-wrap: wrap; align-items: center;">
+      <button class="btn btn-outline btn-sm">Saiba mais</button>
+      <button class="btn btn-outline">Saiba mais</button>
+      <button class="btn btn-outline btn-lg">Saiba mais</button>
+    </div>
+  </div>
+
+  <div class="ds-group">
+    <div class="ds-group-label">Ghost · Sutil</div>
+    <div style="display: flex; gap: var(--sp-4); flex-wrap: wrap; align-items: center;">
+      <button class="btn btn-ghost btn-sm">Voltar</button>
+      <button class="btn btn-ghost">Voltar</button>
+      <button class="btn btn-ghost btn-lg">Voltar</button>
+    </div>
+  </div>
+
+  <div class="ds-group">
+    <div class="ds-group-label">Dark · Inverso</div>
+    <div style="display: flex; gap: var(--sp-4); flex-wrap: wrap; align-items: center;">
+      <button class="btn btn-dark btn-sm">WhatsApp</button>
+      <button class="btn btn-dark">Contato</button>
+      <button class="btn btn-dark btn-lg">Solicitar orçamento</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     4. CARDS
+     ============================================================ -->
+<section class="ds-section">
+  <div class="ds-section-head">
+    <div class="ds-section-head-left">
+      <span class="ds-section-index">04 / Componentes</span>
+      <h2 class="ds-section-title">Cards de serviço</h2>
+    </div>
+    <p class="ds-section-desc">Blocos modulares para listas de tratamentos, diferenciais e categorias. Hover com elevação e glow dourado.</p>
+  </div>
+
+  <div class="ds-card-grid">
+    <article class="card">
+      <div class="card-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
+      </div>
+      <h3 class="card-title">Depilação a laser</h3>
+      <p class="card-body">Tecnologia de diodo de última geração para todos os tipos de pele e tons. Sessões rápidas e indolores.</p>
+      <div class="card-foot"><span>01 · Tratamento</span><span>→</span></div>
+    </article>
+
+    <article class="card card-feature">
+      <div class="card-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+      </div>
+      <h3 class="card-title">Rejuvenescimento facial</h3>
+      <p class="card-body">Protocolo combinado de laser fracionado, drenagem e ativos premium para resultados visíveis em cada sessão.</p>
+      <div class="card-foot"><span>02 · Destaque</span><span>→</span></div>
+    </article>
+
+    <article class="card">
+      <div class="card-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 7L9 18l-5-5"/></svg>
+      </div>
+      <h3 class="card-title">Contorno corporal</h3>
+      <p class="card-body">Modelagem e firmeza com radiofrequência, criolipólise e protocolos multifocais sob medida.</p>
+      <div class="card-foot"><span>03 · Tratamento</span><span>→</span></div>
+    </article>
+  </div>
+</section>
+
+<!-- ============================================================
+     5. FORMS + BADGES
+     ============================================================ -->
+<section class="ds-section">
+  <div class="ds-section-head">
+    <div class="ds-section-head-left">
+      <span class="ds-section-index">05 / Componentes</span>
+      <h2 class="ds-section-title">Forms &amp; Badges</h2>
+    </div>
+    <p class="ds-section-desc">Inputs no padrão dark com foco dourado glow. Badges para categorias, status e tags editoriais.</p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-12);">
+    <div>
+      <div class="ds-group-label">Formulário · Contato</div>
+      <form class="ds-form" onsubmit="event.preventDefault()">
+        <div class="ds-field">
+          <label class="ds-field-label" for="name">Nome completo</label>
+          <input class="ds-input" id="name" type="text" placeholder="Maria Silva">
+        </div>
+        <div class="ds-field">
+          <label class="ds-field-label" for="email">E-mail</label>
+          <input class="ds-input" id="email" type="email" placeholder="voce@email.com">
+        </div>
+        <div class="ds-field">
+          <label class="ds-field-label" for="srv">Tratamento de interesse</label>
+          <select class="ds-select" id="srv">
+            <option>Depilação a laser</option>
+            <option>Rejuvenescimento</option>
+            <option>Contorno corporal</option>
+            <option>Avaliação personalizada</option>
+          </select>
+        </div>
+        <div class="ds-field">
+          <label class="ds-field-label" for="msg">Mensagem</label>
+          <textarea class="ds-textarea" id="msg" placeholder="Conte-nos sobre seu objetivo..."></textarea>
+        </div>
+        <button class="btn btn-primary" type="submit">Enviar mensagem</button>
+      </form>
+    </div>
+
+    <div>
+      <div class="ds-group-label">Badges · Tags</div>
+      <div style="display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-bottom: var(--sp-8);">
+        <span class="badge badge-gold">Premium</span>
+        <span class="badge badge-gold badge-dot">Novo</span>
+        <span class="badge badge-wine">Tratamento</span>
+        <span class="badge badge-solid">Destaque</span>
+        <span class="badge badge-gold">Estética facial</span>
+        <span class="badge badge-wine">Corporal</span>
+      </div>
+
+      <div class="ds-group-label">Divisor editorial</div>
+      <div class="divider">Capítulo</div>
+      <div class="divider">Filosofia · Método · Resultado</div>
+
+      <div class="ds-group-label" style="margin-top: var(--sp-8);">Sombras &amp; elevação</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4);">
+        <div style="aspect-ratio: 3/2; background: var(--laser-wine-soft); border-radius: var(--r-md); box-shadow: var(--shadow-md); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: var(--fs-xs); font-family: var(--font-accent); text-transform: uppercase; letter-spacing: 0.2em;">md</div>
+        <div style="aspect-ratio: 3/2; background: var(--laser-wine-soft); border-radius: var(--r-md); box-shadow: var(--shadow-gold); display: flex; align-items: center; justify-content: center; color: var(--laser-gold); font-size: var(--fs-xs); font-family: var(--font-accent); text-transform: uppercase; letter-spacing: 0.2em;">gold</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     6. LOGOS
+     ============================================================ -->
+<section class="ds-section">
+  <div class="ds-section-head">
+    <div class="ds-section-head-left">
+      <span class="ds-section-index">06 / Marca</span>
+      <h2 class="ds-section-title">Aplicações da logo</h2>
+    </div>
+    <p class="ds-section-desc">Logos vetorizadas em três contextos de aplicação. Manter área de respiro mínima equivalente à altura do "L".</p>
+  </div>
+
+  <div class="ds-logo-grid">
+    <div class="ds-logo-tile ds-logo-tile-dark">
+      <img class="ds-logo-tile-img" src="assets/logos/logo-bold-dourado.png" alt="Logo bold dourada">
+      <span class="ds-logo-tile-caption">01 · Bold · Dourado · fundo escuro</span>
+    </div>
+    <div class="ds-logo-tile ds-logo-tile-light">
+      <img class="ds-logo-tile-img" src="assets/logos/logo-bold-preto.png" alt="Logo bold preta">
+      <span class="ds-logo-tile-caption">02 · Bold · Preto · fundo claro</span>
+    </div>
+    <div class="ds-logo-tile ds-logo-tile-dark">
+      <img class="ds-logo-tile-img" src="assets/logos/logo-bold-branco.png" alt="Logo bold branca">
+      <span class="ds-logo-tile-caption">03 · Bold · Branco · fundo escuro</span>
+    </div>
+    <div class="ds-logo-tile ds-logo-tile-dark">
+      <img class="ds-logo-tile-img" src="assets/logos/logo-tagline-dourado.png" alt="Logo dourada com tagline">
+      <span class="ds-logo-tile-caption">04 · Inteiro · Dourado · tagline</span>
+    </div>
+    <div class="ds-logo-tile ds-logo-tile-light">
+      <img class="ds-logo-tile-img" src="assets/logos/logo-tagline-preto.png" alt="Logo preta com tagline">
+      <span class="ds-logo-tile-caption">05 · Inteiro · Preto · tagline</span>
+    </div>
+    <div class="ds-logo-tile ds-logo-tile-light">
+      <img class="ds-logo-tile-img" src="assets/logos/logo-simples.png" alt="Logo sem tagline">
+      <span class="ds-logo-tile-caption">06 · Simples · sem tagline</span>
+    </div>
+    <div class="ds-logo-tile ds-logo-tile-gold">
+      <img class="ds-logo-tile-img" style="max-width: 50%;" src="assets/logos/avatar-andco-redondo.png" alt="Avatar &Co redondo">
+      <span class="ds-logo-tile-caption">07 · Avatar · &amp;Co · redondo</span>
+    </div>
+    <div class="ds-logo-tile ds-logo-tile-dark">
+      <img class="ds-logo-tile-img" style="max-width: 45%;" src="assets/logos/avatar-andco-transparente.png" alt="Avatar &Co transparente">
+      <span class="ds-logo-tile-caption">08 · Avatar · &amp;Co · transparente</span>
+    </div>
+    <div class="ds-logo-tile ds-logo-tile-dark">
+      <div class="logo-text">
+        Laser &amp; Co.
+        <small>Estética a Laser</small>
+      </div>
+      <span class="ds-logo-tile-caption">09 · Tipográfica · token CSS</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     7. PATTERNS
+     ============================================================ -->
+<section class="ds-section">
+  <div class="ds-section-head">
+    <div class="ds-section-head-left">
+      <span class="ds-section-index">07 / Decorações</span>
+      <h2 class="ds-section-title">Patterns &amp; Texturas</h2>
+    </div>
+    <p class="ds-section-desc">Recursos visuais editoriais — usados como BG de seções secundárias, ornamentação e respiros.</p>
+  </div>
+
+  <div class="ds-pattern-grid">
+    <div class="pattern-box pattern-gridlines">
+      <span class="pattern-label">Grid lines</span>
+    </div>
+    <div class="pattern-box pattern-hatch">
+      <span class="pattern-label">Diagonal hatch</span>
+    </div>
+    <div class="pattern-box pattern-glow">
+      <span class="pattern-label">Gold glow</span>
+    </div>
+    <div class="pattern-box pattern-brackets">
+      <span class="bk1"></span><span class="bk2"></span>
+      <div style="font-family: var(--font-serif); font-size: var(--fs-2xl); color: var(--laser-gold);">L&amp;Co</div>
+      <span class="pattern-label">Brackets editorial</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     8. EXEMPLO HERO COMPOSTO
+     ============================================================ -->
+<section class="ds-section">
+  <div class="ds-section-head">
+    <div class="ds-section-head-left">
+      <span class="ds-section-index">08 / Aplicação</span>
+      <h2 class="ds-section-title">Hero — exemplo de uso</h2>
+    </div>
+    <p class="ds-section-desc">Combinação de todos os tokens: tipografia display, gradiente dourado, brackets editoriais e CTA primário.</p>
+  </div>
+
+  <div class="demo-hero">
+    <span class="bk1"></span><span class="bk2"></span>
+    <div class="demo-hero-content">
+      <span class="label-meta">Estética a laser premium</span>
+      <h1>Beleza com <em>precisão</em><br>e cuidado autoral</h1>
+      <p>Tratamentos personalizados que aliam tecnologia a laser de alta performance ao acolhimento de um ambiente projetado para você.</p>
+      <div class="demo-hero-cta">
+        <button class="btn btn-primary btn-lg">
+          Agendar avaliação
+          <span class="btn-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </button>
+        <button class="btn btn-outline btn-lg">Conhecer tratamentos</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="ds-footer">
+  <div class="ds-container">
+    <div class="ds-footer-grid">
+      <div class="ds-footer-col">
+        <div class="ds-footer-brand">Laser &amp; Co.</div>
+        <div class="ds-footer-tagline">Estética a Laser</div>
+        <p class="body-small" style="max-width: 280px;">Tecnologia de ponta, cuidado autoral e resultados visíveis. Excelência em estética a laser.</p>
+      </div>
+      <div class="ds-footer-col">
+        <h4>Tratamentos</h4>
+        <a href="#">Depilação a laser</a>
+        <a href="#">Rejuvenescimento</a>
+        <a href="#">Contorno corporal</a>
+        <a href="#">Avaliação</a>
+      </div>
+      <div class="ds-footer-col">
+        <h4>Institucional</h4>
+        <a href="#">Sobre</a>
+        <a href="#">Metodologia</a>
+        <a href="#">Equipe</a>
+        <a href="#">Contato</a>
+      </div>
+      <div class="ds-footer-col">
+        <h4>Contato</h4>
+        <a href="#">WhatsApp</a>
+        <a href="#">Instagram</a>
+        <a href="#">E-mail</a>
+        <a href="#">Localização</a>
+      </div>
+    </div>
+    <div class="ds-footer-bottom">
+      <span>© 2026 Laser &amp; Co. · Todos os direitos reservados</span>
+      <span>Design System · v1.0</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

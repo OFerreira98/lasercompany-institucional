@@ -1,0 +1,33 @@
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Vercel
+.vercel
+
+# Node (caso seja adicionado depois)
+node_modules/
+
+# Pastas de referência locais (não versionar)
+Referencias 1/
+referencia/
+Base visual/
+
+# Claude Code local
+.claude/
+
+# Documentos internos do roteiro
+Roteiro-Site-LaserCo.docx
+Roteiro-Site-LaserCo.txt
