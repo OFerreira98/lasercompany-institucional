@@ -96,6 +96,33 @@ O cliente vai enviar as fotos. Quando chegarem:
 
 ---
 
+## Etapa 2/3 — Backend + painéis (concluído, modo demo; aguarda banco)
+
+Construído de forma autônoma. Detalhes completos em `BACKEND.md`.
+
+- **Páginas:** `painel.html` (login), `painel-franqueador.html` (vê toda a rede),
+  `painel-franqueado.html` (vê só a própria unidade).
+- **API (Vercel Functions, zero-dependência):** `api/auth/login.js`, `api/auth/me.js`,
+  `api/leads.js` (GET lista + POST cria), `api/leads/[id].js` (PATCH status/notas),
+  `api/stats.js`. Libs em `api/_lib/` (`auth.js` HMAC, `http.js`, `store.js`, `seed.js`).
+- **Ponto de troca do banco:** `api/_lib/store.js`. Sem `DATABASE_URL` → memória/demo;
+  com `DATABASE_URL` → Postgres (lazy require `pg`). DDL e passo a passo em `BACKEND.md`.
+- **Cliente:** `scripts/api-client.js` (`LaserAPI`: login/listLeads/updateLead com fallback
+  para localStorage quando não há backend), `scripts/painel-seed.js` (16 leads demo),
+  `scripts/painel-core.js` (`LaserPainel`: guard de sessão, KPIs, filtros, tabela, pipeline
+  de status, modal de detalhe, export CSV), `scripts/page-painel-login.js`. Estilos em
+  `styles/painel.css`.
+- **Integração com o site:** `scripts/analytics.js` → `trackLead()` agora faz POST
+  fire-and-forget para `/api/leads` (não quebra se a API estiver fora). Ponto único: todo
+  lead (popup, agendamento, vagas, contato, franquia, chatbot) já flui para o painel.
+- **Logins de teste:** franqueador@laserco.com.br / vmariana@laserco.com.br /
+  ipanema@laserco.com.br, senha `laser2026` (em `auth.js` e `api-client.js`).
+- **Testado em navegador (modo demo):** login, guard de acesso, filtro por papel
+  (franqueado vê só a unidade), KPIs, modal, troca de status persistida, e lead capturado
+  no site aparecendo no painel. Sem erros de console.
+- **Falta o cliente fazer (ver BACKEND.md):** criar Postgres no Marketplace + `DATABASE_URL`,
+  rodar `npm i pg`, criar a tabela, definir senhas reais + `AUTH_SECRET`, e dar `git push`.
+
 ## Aprendizados técnicos
 
 - Edit `replace_all` de " — " → ", " removia o espaço final (virava ","). Usar PowerShell .NET

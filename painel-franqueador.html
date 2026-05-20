@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1A0404">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Painel do Franqueador | Laser &amp; Co</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="stylesheet" href="styles/painel.css">
+  <script>try{var t=localStorage.getItem('laserco_theme')||'default';document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body class="painel-body">
+
+  <header class="painel-topbar">
+    <a class="painel-topbar-brand" href="painel-franqueador.html">
+      <img src="assets/logos/logo-bold-dourado.png" alt="Laser & Co">
+    </a>
+    <span class="painel-topbar-title">Painel do Franqueador</span>
+    <span class="painel-topbar-spacer"></span>
+    <div class="painel-user">
+      <div class="painel-user-nome" id="painel-user-nome"></div>
+      <div class="painel-user-role" id="painel-user-role"></div>
+    </div>
+    <button class="painel-logout" id="painel-logout" type="button">Sair</button>
+  </header>
+
+  <main class="painel-main">
+    <h1 class="painel-h1">Leads da rede</h1>
+    <p class="painel-sub">Todos os contatos capturados pelo site, de todas as unidades. Filtre, classifique o status e fale com o cliente.</p>
+
+    <div class="painel-mode-banner" id="painel-mode-banner" hidden></div>
+
+    <div class="painel-kpis" id="painel-kpis"></div>
+
+    <div class="painel-toolbar">
+      <div class="painel-filtros" id="painel-filtros"></div>
+      <span class="painel-count" id="painel-count"></span>
+      <button class="painel-export" id="painel-export" type="button">Exportar CSV</button>
+    </div>
+
+    <div id="painel-tabela"></div>
+  </main>
+
+  <div class="painel-modal-overlay" id="painel-detail-modal" role="dialog" aria-modal="true">
+    <div class="painel-modal">
+      <button class="painel-modal-close" id="painel-detail-close" aria-label="Fechar">&times;</button>
+      <div id="painel-detail-content"></div>
+    </div>
+  </div>
+
+  <script src="scripts/data.js"></script>
+  <script src="scripts/analytics.js"></script>
+  <script src="scripts/api-client.js"></script>
+  <script src="scripts/painel-seed.js"></script>
+  <script src="scripts/painel-core.js"></script>
+  <script>LaserPainel.init({ mode: 'franqueador' });</script>
+</body>
+</html>

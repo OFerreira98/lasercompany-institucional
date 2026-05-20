@@ -11,6 +11,22 @@ window.LaserAnalytics = (function() {
   const STORAGE_LEADS = 'laserco_leads';
   const STORAGE_EVENTS = 'laserco_events';
 
+  /* Envia o lead para a API (/api/leads). Silencioso: se não houver
+     backend/banco ainda, o lead segue salvo no localStorage e aparece
+     no painel em modo demo. Quando o banco for ligado, passa a gravar
+     de verdade, sem mudar nada aqui. */
+  function sendToBackend(lead) {
+    try {
+      if (typeof fetch !== 'function') return;
+      fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(lead),
+        keepalive: true,
+      }).catch(function () {});
+    } catch (e) {}
+  }
+
   /* Tipos de lead conforme o roteiro:
      - popup: Conversão A (lead geral via popup)
      - agendamento: Conversão B (agendamento via WhatsApp)
@@ -34,7 +50,9 @@ window.LaserAnalytics = (function() {
     all.unshift(lead);
     try { localStorage.setItem(STORAGE_LEADS, JSON.stringify(all.slice(0, 200))); } catch(e) {}
 
-    // Em produção: POST /api/leads { tipo, dados, origem, url, timestamp }
+    // Envia para o backend (alimenta os painéis franqueador/franqueado).
+    // Fire-and-forget: nunca quebra a página se a API estiver fora.
+    sendToBackend(lead);
     console.info('[LaserAnalytics] Lead registrado:', lead);
 
     // Dispara evento global para que o site possa reagir (ex: mostrar toast)

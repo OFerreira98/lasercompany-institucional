@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1A0404">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Acesso aos Painéis | Laser &amp; Co</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="stylesheet" href="styles/painel.css">
+  <script>try{var t=localStorage.getItem('laserco_theme')||'default';document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body class="painel-body">
+
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-brand">
+        <img src="assets/logos/logo-bold-dourado.png" alt="Laser & Co">
+      </div>
+      <h1 class="login-title">Painéis de Gestão</h1>
+      <p class="login-desc">Acesso restrito da rede Laser &amp; Co. Entre com seu e-mail e senha.</p>
+
+      <form id="login-form" novalidate>
+        <div class="login-erro" id="login-erro" hidden></div>
+        <div class="login-field">
+          <label for="login-email">E-mail</label>
+          <input type="email" id="login-email" class="painel-input" autocomplete="username" placeholder="seu@email.com">
+        </div>
+        <div class="login-field">
+          <label for="login-senha">Senha</label>
+          <input type="password" id="login-senha" class="painel-input" autocomplete="current-password" placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="login-submit">Entrar</button>
+      </form>
+
+      <!-- ACESSOS DE TESTE — remover quando os usuários reais forem cadastrados -->
+      <div class="login-demo">
+        <div class="login-demo-title">Acessos de teste (clique para preencher)</div>
+        <button type="button" class="login-demo-item" data-fill-email="franqueador@laserco.com.br" data-fill-senha="laser2026">
+          <strong>Franqueador</strong> · vê toda a rede<br>franqueador@laserco.com.br / laser2026
+        </button>
+        <button type="button" class="login-demo-item" data-fill-email="vmariana@laserco.com.br" data-fill-senha="laser2026">
+          <strong>Franqueado</strong> · Vila Mariana<br>vmariana@laserco.com.br / laser2026
+        </button>
+        <button type="button" class="login-demo-item" data-fill-email="ipanema@laserco.com.br" data-fill-senha="laser2026">
+          <strong>Franqueado</strong> · Ipanema<br>ipanema@laserco.com.br / laser2026
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="scripts/api-client.js"></script>
+  <script src="scripts/painel-core.js"></script>
+  <script src="scripts/page-painel-login.js"></script>
+</body>
+</html>
