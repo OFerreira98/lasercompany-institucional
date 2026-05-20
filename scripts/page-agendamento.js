@@ -173,8 +173,12 @@
 
       content.innerHTML = `
         <div class="unidade-found-card">
-          <div class="unidade-found-eyebrow">Encontramos sua unidade</div>
+          <div class="unidade-found-eyebrow">Solicitação enviada para sua unidade</div>
           <h2 class="unidade-found-name">${u.nome}</h2>
+          <p class="unidade-found-result">
+            Enviamos sua solicitação de avaliação para a unidade <strong>${u.nome}</strong> (${u.cidade}/${u.uf}).
+            Para garantir seu horário, <strong>confirme agora</strong> pelo WhatsApp. Um atendente da unidade já está pronto para te responder.
+          </p>
           <div class="unidade-found-line">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
             <span>${u.endereco}</span>
@@ -202,7 +206,7 @@
         <div class="agendamento-actions">
           <button type="button" class="btn btn-ghost" id="step-3-back">← Editar dados</button>
           <a href="${waUrl}" target="_blank" rel="noopener" class="btn btn-primary btn-lg btn-arrow" id="step-3-wa-btn" style="flex: 2;">
-            Falar no WhatsApp da unidade
+            Confirmar agendamento no WhatsApp
           </a>
         </div>
       `;
