@@ -2,49 +2,41 @@
    POPUP DE CAPTAÇÃO — "GANHE UM BRINDE"
    ============================================================
    - Aparece após 6s OU em exit intent (o que vier primeiro)
-   - 1x por visitante via DUPLA persistência:
-       cookie (7 dias) + localStorage (permanente até reset)
-   - Após preenchimento OU dismiss: NUNCA mais aparece
+   - PERSISTENTE: se o visitante NÃO preencher, reabre a cada
+     7s e volta a aparecer em toda nova visita (promoção relâmpago)
+   - Após PREENCHER: para de insistir e só reaparece depois de
+     um tempo (cooldown de 2h)
    - Lead salvo no localStorage para futuro painel
    - Mensagem alternativa se CEP sem unidade próxima
    ============================================================ */
 
 (function() {
-  const COOKIE_NAME   = 'laserco_popup_seen';
-  const STORAGE_KEY   = 'laserco_popup_state';
-  const COOKIE_DAYS   = 7;
-  const DELAY_MS      = 6000;
+  const STORAGE_KEY        = 'laserco_popup_state';
+  const FIRST_DELAY_MS     = 6000;            // primeira aparição
+  const NAG_INTERVAL_MS    = 7000;            // reabre a cada 7s se não preencher
+  const SUBMIT_COOLDOWN_MS = 2 * 60 * 60 * 1000; // 2h após preencher
 
-  function setCookie(name, value, days) {
-    const exp = new Date();
-    exp.setTime(exp.getTime() + days * 24 * 60 * 60 * 1000);
-    document.cookie = `${name}=${value}; expires=${exp.toUTCString()}; path=/; SameSite=Lax`;
-  }
+  let overlayEl = null;
+  let nagTimer  = null;
 
-  function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return null;
-  }
-
-  function hasSeen() {
-    if (getCookie(COOKIE_NAME) === '1') return true;
+  // Mostra o popup, a menos que o visitante tenha preenchido há menos de 2h.
+  function shouldShow() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const s = JSON.parse(raw);
-        if (s && s.seen) return true;
+      if (!raw) return true;
+      const s = JSON.parse(raw);
+      if (!s) return true;
+      if (s.status === 'submitted') {
+        const at = s.seenAt ? new Date(s.seenAt).getTime() : 0;
+        return (Date.now() - at) > SUBMIT_COOLDOWN_MS;
       }
-    } catch (e) {}
-    return false;
+      return true; // só fechou (dismiss): segue insistindo
+    } catch (e) { return true; }
   }
 
   function markSeen(status, extra) {
-    setCookie(COOKIE_NAME, '1', COOKIE_DAYS);
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        seen: true,
         status: status || 'dismissed',
         seenAt: new Date().toISOString(),
         ...extra,
@@ -73,9 +65,9 @@
       </div>
 
       <h2 class="popup-title" id="popup-title">
-        Uma sessão de <span class="italic">Rejuvenescimento Facial</span> <strong class="popup-title-strong">grátis</strong> na sua unidade.
+        Uma sessão de <span class="italic">Rejuvenescimento Facial</span> <strong class="popup-title-strong">GRÁTIS</strong>.
       </h2>
-      <p class="popup-sub">Resgate em segundos: informe nome, WhatsApp e CEP. A unidade Laser &amp; Co da sua região fala com você.</p>
+      <p class="popup-sub">Resgate seu brinde em segundos. Informe nome, WhatsApp e CEP.</p>
 
       <form class="popup-form" id="popup-form" novalidate>
         <div class="popup-fields-row">
@@ -94,7 +86,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary btn-block" id="popup-submit">
-          <span class="btn-text">Quero meu brinde</span>
+          <span class="btn-text">Resgatar meu brinde</span>
         </button>
         <p class="popup-disclaimer">Validade restrita à campanha vigente. Sem compromisso de compra.</p>
       </form>
@@ -108,7 +100,7 @@
         <h2 class="popup-title">Brinde reservado!</h2>
         <p class="popup-sub" id="popup-success-msg">A unidade Laser &amp; Co da sua região vai te chamar.</p>
         <div id="popup-unidade-info"></div>
-        <a href="#" target="_blank" rel="noopener" class="btn btn-primary btn-block" id="popup-whatsapp-btn">Falar no WhatsApp da unidade</a>
+        <a href="#" target="_blank" rel="noopener" class="btn btn-primary btn-block" id="popup-whatsapp-btn">Resgatar meu brinde agora</a>
       </div>
     </div>
   </div>
@@ -138,7 +130,21 @@
   function close(overlay, source) {
     overlay.classList.remove('visible');
     document.body.style.overflow = '';
-    if (source !== 'submit') markSeen('dismissed');
+    if (source === 'submit') { clearTimeout(nagTimer); return; }
+    // Fechou sem preencher: NÃO marca como visto, reabre em 7s (insistente)
+    scheduleNag();
+  }
+
+  function triggerPopup() {
+    if (!overlayEl) return;
+    if (overlayEl.classList.contains('visible')) return;
+    if (!shouldShow()) return;
+    show(overlayEl);
+  }
+
+  function scheduleNag() {
+    clearTimeout(nagTimer);
+    nagTimer = setTimeout(triggerPopup, NAG_INTERVAL_MS);
   }
 
   function validateField(field) {
@@ -182,6 +188,7 @@
     });
 
     markSeen('submitted', { nome, whatsapp, cep, unidadeId: result.unidade ? result.unidade.id : null });
+    clearTimeout(nagTimer);
 
     // Renderiza tela de sucesso
     form.parentElement.style.display = 'none';
@@ -194,7 +201,7 @@
 
     if (result.hasUnidade && result.unidade) {
       const u = result.unidade;
-      successMsg.textContent = `A unidade ${u.nome} (${u.cidade}/${u.uf}) vai te chamar para resgatar seu brinde.`;
+      successMsg.textContent = `A unidade ${u.nome} (${u.cidade}/${u.uf}) vai entrar em contato com você para resgatar seu brinde.`;
       unidadeInfo.innerHTML = `
         <div class="popup-unit-card">
           <div class="popup-unit-eyebrow">Sua unidade</div>
@@ -216,11 +223,11 @@
   }
 
   function init() {
-    if (hasSeen()) return;
     if (document.querySelector('[data-no-popup]')) return;
 
     document.body.insertAdjacentHTML('beforeend', buildPopupHTML());
     const overlay = document.getElementById('popup-captacao');
+    overlayEl = overlay;
     const form = overlay.querySelector('#popup-form');
     const closeBtn = overlay.querySelector('#popup-close');
 
@@ -243,16 +250,9 @@
       input.addEventListener('input', () => input.closest('.field').classList.remove('has-error'));
     });
 
-    let triggered = false;
-    function trigger() {
-      if (triggered || hasSeen()) return;
-      triggered = true;
-      show(overlay);
-    }
-
-    setTimeout(trigger, DELAY_MS);
+    setTimeout(triggerPopup, FIRST_DELAY_MS);
     document.addEventListener('mouseleave', (e) => {
-      if (e.clientY <= 0) trigger();
+      if (e.clientY <= 0) triggerPopup();
     });
   }
 
