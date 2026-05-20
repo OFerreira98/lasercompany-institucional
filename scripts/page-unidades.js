@@ -1,5 +1,5 @@
 /* ============================================================
-   PAGE-UNIDADES — Lógica da Página Unidades
+   PAGE-UNIDADES, Lógica da Página Unidades
    - Mapa real (Leaflet + OpenStreetMap) com pinos da marca
    - Pino clicado abre popup com nome, endereço, WhatsApp
    - Filtros UF/cidade refletem no mapa e na lista
@@ -127,9 +127,11 @@
       cidades.map(c => `<option value="${c}">${c}</option>`).join('');
   }
 
-  /* Placeholder de localizacao no card (gradiente da marca + pin) — ate
+  /* Placeholder de localizacao no card (gradiente da marca + pin), ate
      receber as fotos reais de fachada de cada unidade. */
   function unidadeCardStyle(u) {
+    // Foto real da fachada, quando cadastrada no data.js (campo foto)
+    if (u.foto) return `background-image:url('${u.foto}'); background-size:cover; background-position:center;`;
     let hash = 0;
     for (let i = 0; i < u.id.length; i++) hash = u.id.charCodeAt(i) + ((hash << 5) - hash);
     const hue = Math.abs(hash) % 30 + 20;

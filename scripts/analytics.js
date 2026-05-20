@@ -1,5 +1,5 @@
 /* ============================================================
-   ANALYTICS — Captura de leads e eventos
+   ANALYTICS, Captura de leads e eventos
    ============================================================
    Em produção, integrar com:
    - Painel do Franqueador (relatórios de leads)

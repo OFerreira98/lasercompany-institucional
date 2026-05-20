@@ -52,7 +52,7 @@
   const FAQ_LIST = [
     { id: 'doi',       label: 'O procedimento dói?',           answer: 'Tranquila! A maioria dos nossos procedimentos a laser causa apenas uma leve sensação de aquecimento ou pequenas picadinhas. Nossos equipamentos têm sistema de resfriamento que torna a sessão confortável.' },
     { id: 'sessoes',   label: 'Quantas sessões são?',           answer: 'Depende do procedimento. Para depilação a laser, em média 6 a 10 sessões. Para rejuvenescimento facial, 3 a 5 sessões. A profissional define o protocolo ideal na sua avaliação gratuita.' },
-    { id: 'preco',     label: 'Quanto custa?',                  answer: 'Trabalhamos com preços acessíveis e parcelamento em até 12x no cartão. Os valores variam por procedimento — a unidade da sua região passa a tabela atualizada com as condições especiais.' },
+    { id: 'preco',     label: 'Quanto custa?',                  answer: 'Trabalhamos com preços acessíveis e parcelamento em até 12x no cartão. Os valores variam por procedimento, a unidade da sua região passa a tabela atualizada com as condições especiais.' },
     { id: 'pagamento', label: 'Quais formas de pagamento?',     answer: 'Aceitamos todos os cartões de crédito (parcelamento em até 12x), débito, PIX e boleto (em até 24x). A condição exata é tratada diretamente com a unidade.' },
     { id: 'horario',   label: 'Qual o horário de funcionamento?', answer: 'A maioria das nossas unidades atende de segunda a sábado, das 9h às 20h. A unidade da sua região tem o horário exato (já enviei no card acima).' },
     { id: 'avaliacao', label: 'Como funciona a avaliação?',      answer: 'A avaliação é gratuita e sem compromisso. Você agenda um horário, nossa equipe avalia sua pele/região e define o melhor protocolo, junto com as condições e parcelamento.' },
@@ -249,7 +249,7 @@
         return;
       }
       // Fallback
-      await botSay('Pra essa pergunta, prefiro te conectar direto com a unidade no WhatsApp acima — assim você fala com quem atende você na ponta.');
+      await botSay('Pra essa pergunta, prefiro te conectar direto com a unidade no WhatsApp acima, assim você fala com quem atende você na ponta.');
       return;
     }
   }

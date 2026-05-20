@@ -1012,15 +1012,37 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: var(--sp-5);
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--sp-3);
   text-decoration: none;
   color: inherit;
   transition: all var(--duration-base) var(--ease-out);
   position: relative;
   overflow: hidden;
+}
+
+.procedimento-card-media {
+  height: 160px;
+  background-size: cover;
+  background-position: center;
+  border-bottom: 1px solid var(--color-border);
+  position: relative;
+}
+
+.procedimento-card-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.35));
+}
+
+.procedimento-card-body {
+  padding: var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  flex: 1;
 }
 
 .procedimento-card:hover {
@@ -1054,6 +1076,117 @@
   letter-spacing: var(--ls-snug);
 }
 
+/* Reserva espaço pro selo "Popular" não cobrir o nome */
+.procedimento-card.popular .procedimento-card-title {
+  padding-right: 5rem;
+}
+
+/* ====== ANTES x DEPOIS (detalhe do procedimento) ====== */
+.proc-antes-depois {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--sp-5);
+  border: 1px solid var(--color-border-accent);
+  box-shadow: 0 0 40px var(--color-accent-glow);
+}
+
+.proc-ad-cell {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+  min-height: 220px;
+}
+
+/* Placeholder da marca enquanto não há foto real */
+.proc-ad-cell.antes {
+  background-color: var(--color-bg-elevated);
+  background-image:
+    radial-gradient(circle at 50% 35%, rgba(255,255,255,0.05), transparent 60%),
+    linear-gradient(160deg, var(--color-bg-alt), var(--color-bg));
+  filter: grayscale(0.2);
+}
+
+.proc-ad-cell.depois {
+  background-color: var(--color-bg-elevated);
+  background-image:
+    radial-gradient(circle at 50% 30%, var(--color-accent-glow), transparent 60%),
+    linear-gradient(160deg, var(--color-surface-hover), var(--color-bg-alt));
+}
+
+.proc-ad-label {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  font-family: var(--font-accent);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wider);
+  font-weight: var(--fw-bold);
+  padding: 0.25rem 0.7rem;
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(6px);
+}
+
+.proc-ad-cell.antes .proc-ad-label {
+  background: rgba(0,0,0,0.5);
+  color: var(--color-text-soft);
+}
+
+.proc-ad-cell.depois .proc-ad-label {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+.proc-ad-cell-empty {
+  width: 100%;
+  text-align: center;
+  padding: var(--sp-4);
+  color: var(--color-text-muted);
+  font-size: var(--fs-xs);
+  font-family: var(--font-accent);
+  letter-spacing: var(--ls-wide);
+}
+
+.proc-ad-caption {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-bottom: var(--sp-5);
+  margin-top: calc(var(--sp-5) * -1 + var(--sp-2));
+}
+
+/* Linha de chamada (curiosidade) acima das abas */
+.proc-prova-social {
+  text-align: center;
+  color: var(--color-text-soft);
+  font-size: var(--fs-sm);
+  max-width: 640px;
+  margin: 0 auto var(--sp-6);
+}
+
+.proc-prova-social strong { color: var(--color-accent); }
+
+/* Foto de fundo opcional no topo (Vagas). Some sozinha se não houver arquivo. */
+.page-hero-photo-wrap { position: relative; overflow: hidden; }
+.page-hero-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.16;
+  mix-blend-mode: luminosity;
+  z-index: 0;
+  pointer-events: none;
+}
+.page-hero-photo-wrap .container { position: relative; z-index: 1; }
+
 .procedimento-card-desc {
   font-size: var(--fs-sm);
   color: var(--color-text-soft);
@@ -1084,6 +1217,15 @@
   padding: var(--sp-5);
   text-align: center;
   transition: all var(--duration-base) var(--ease-out);
+  overflow: hidden;
+}
+
+.tech-card-media {
+  height: 150px;
+  margin: calc(var(--sp-5) * -1) calc(var(--sp-5) * -1) var(--sp-4);
+  background-size: cover;
+  background-position: center;
+  border-bottom: 1px solid var(--color-border-accent);
 }
 
 .tech-card:hover {

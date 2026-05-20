@@ -1,5 +1,5 @@
 /* ============================================================
-   PAGE-AGENDAMENTO — Lógica da Página Agendamento
+   PAGE-AGENDAMENTO, Lógica da Página Agendamento
    ============================================================
    Conforme item 6.3 do roteiro:
    - 3 etapas: Procedimento → Identificação → WhatsApp da unidade
@@ -35,11 +35,16 @@
       s.classList.toggle('done', stepNum < n);
     });
 
-    window.scrollTo({ top: document.querySelector('.agendamento-shell').offsetTop - 80, behavior: 'smooth' });
+    // Foca na etapa ativa (não joga a página inteira pro topo)
+    const stepEl = document.getElementById(`step-${n}`);
+    if (stepEl) {
+      const y = stepEl.getBoundingClientRect().top + window.pageYOffset - 90;
+      window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+    }
     window.LaserAnalytics.trackEvent('agendamento_step', { step: n });
   }
 
-  /* -------- ETAPA 1 — Procedimento -------- */
+  /* -------- ETAPA 1, Procedimento -------- */
   function renderProcSegment(segment) {
     const list = document.getElementById('proc-options-list');
     const items = window.LaserData.procedimentos[segment];
@@ -91,7 +96,7 @@
     });
   }
 
-  /* -------- ETAPA 2 — Identificação -------- */
+  /* -------- ETAPA 2, Identificação -------- */
   function validateStep2() {
     const form = document.getElementById('step-2-form');
     const fields = form.querySelectorAll('.field');
@@ -162,7 +167,7 @@
     });
   }
 
-  /* -------- ETAPA 3 — Roteamento WhatsApp -------- */
+  /* -------- ETAPA 3, Roteamento WhatsApp -------- */
   function renderStep3(r) {
     const content = document.getElementById('step-3-content');
 
@@ -213,7 +218,7 @@
 
       document.getElementById('step-3-back').addEventListener('click', () => setStep(2));
       document.getElementById('step-3-wa-btn').addEventListener('click', () => {
-        // Conversão B — Lead de agendamento (clicou no WhatsApp)
+        // Conversão B, Lead de agendamento (clicou no WhatsApp)
         window.LaserAnalytics.trackLead('agendamento', {
           nome: state.nome,
           whatsapp: state.whatsapp,

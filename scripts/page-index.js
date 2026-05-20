@@ -1,5 +1,5 @@
 /* ============================================================
-   PAGE-INDEX — Lógica específica da Página Início
+   PAGE-INDEX, Lógica específica da Página Início
    ============================================================ */
 
 (function() {

@@ -1,5 +1,5 @@
 /* ============================================================
-   PAGE-PROCEDIMENTOS — Lógica da Página Procedimentos
+   PAGE-PROCEDIMENTOS, Lógica da Página Procedimentos
    ============================================================ */
 
 (function() {
@@ -39,15 +39,30 @@
     window.LaserAnalytics.trackEvent('proc_tab_change', { tab: name });
   }
 
+  /* Placeholder da marca quando o procedimento ainda não tem foto */
+  function procMediaStyle(p) {
+    if (p.img) return `background-image:url('${p.img}')`;
+    let hash = 0;
+    for (let i = 0; i < p.id.length; i++) hash = p.id.charCodeAt(i) + ((hash << 5) - hash);
+    const hue = Math.abs(hash) % 30 + 20;
+    return `background:
+      radial-gradient(circle at 30% 30%, hsla(${hue}, 40%, 55%, 0.30), transparent 55%),
+      radial-gradient(circle at 75% 75%, hsla(${hue + 15}, 45%, 40%, 0.35), transparent 50%),
+      linear-gradient(135deg, var(--color-bg-elevated), var(--color-bg-alt))`;
+  }
+
   function renderGrid(cat) {
     const grid = document.getElementById(`grid-${cat}`);
     if (!grid) return;
     const items = window.LaserData.procedimentos[cat];
     grid.innerHTML = items.map(p => `
       <article class="procedimento-card${p.popular ? ' popular' : ''}" data-id="${p.id}" data-cat="${cat}" tabindex="0" role="button" aria-label="Ver detalhes de ${p.nome}">
-        <h3 class="procedimento-card-title">${p.nome}</h3>
-        <p class="procedimento-card-desc">${p.sub}</p>
-        <span class="procedimento-card-link">Ver detalhes →</span>
+        <div class="procedimento-card-media" style="${procMediaStyle(p)}" aria-hidden="true"></div>
+        <div class="procedimento-card-body">
+          <h3 class="procedimento-card-title">${p.nome}</h3>
+          <p class="procedimento-card-desc">${p.sub}</p>
+          <span class="procedimento-card-link">Ver detalhes →</span>
+        </div>
       </article>
     `).join('');
 
@@ -58,6 +73,22 @@
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
       });
     });
+  }
+
+  /* Bloco antes/depois (prova social). Usa proc.antes / proc.depois
+     se houver foto real; caso contrário, mostra placeholder da marca. */
+  function antesDepoisHTML(proc) {
+    const antesStyle  = proc.antes  ? ` style="background-image:url('${proc.antes}')"`  : '';
+    const depoisStyle = proc.depois ? ` style="background-image:url('${proc.depois}')"` : '';
+    const antesEmpty  = proc.antes  ? '' : '<div class="proc-ad-cell-empty">Foto em breve</div>';
+    const depoisEmpty = proc.depois ? '' : '<div class="proc-ad-cell-empty">Foto em breve</div>';
+    return `
+      <div class="proc-antes-depois">
+        <div class="proc-ad-cell antes"${antesStyle}><span class="proc-ad-label">Antes</span>${antesEmpty}</div>
+        <div class="proc-ad-cell depois"${depoisStyle}><span class="proc-ad-label">Depois</span>${depoisEmpty}</div>
+      </div>
+      <p class="proc-ad-caption">Resultado ilustrativo. Cada caso é avaliado individualmente na avaliação grátis.</p>
+    `;
   }
 
   function openModal(procId) {
@@ -71,6 +102,7 @@
     content.innerHTML = `
       <div class="proc-detail-eyebrow">${catLabel[proc.categoria]}</div>
       <h2 class="proc-detail-title">${proc.nome}</h2>
+      ${antesDepoisHTML(proc)}
       <p style="color: var(--color-text-soft); margin-bottom: var(--sp-5);">${proc.sub}</p>
 
       <div class="proc-detail-section">
@@ -137,6 +169,7 @@
     if (!grid) return;
     grid.innerHTML = window.LaserData.lasers.map(l => `
       <div class="tech-card reveal">
+        ${l.img ? `<div class="tech-card-media" style="background-image:url('${l.img}')" aria-hidden="true"></div>` : ''}
         <div class="tech-sigla">${l.sigla}</div>
         <div class="tech-nome">${l.nome}</div>
         <p class="tech-desc">${l.desc}</p>

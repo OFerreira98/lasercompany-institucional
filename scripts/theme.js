@@ -15,8 +15,8 @@ window.LaserTheme = (function() {
   const themes = {
     base: [
       { id: 'default',       label: 'Design System',    swatch: '#C8A064', desc: 'Vinho profundo + Dourado quente (padrão)' },
-      { id: 'roteiro-dark',  label: 'Roteiro Dark',     swatch: '#9A6B1E', desc: 'Identidade do roteiro — versão escura' },
-      { id: 'roteiro-light', label: 'Roteiro Light',    swatch: '#F4ECDF', desc: 'Identidade do roteiro — versão clara' },
+      { id: 'roteiro-dark',  label: 'Roteiro Dark',     swatch: '#9A6B1E', desc: 'Identidade do roteiro, versão escura' },
+      { id: 'roteiro-light', label: 'Roteiro Light',    swatch: '#F4ECDF', desc: 'Identidade do roteiro, versão clara' },
     ],
     sazonais: [
       { id: 'outubro-rosa',     label: 'Outubro Rosa',      swatch: '#E08CB4' },
@@ -68,7 +68,7 @@ window.LaserTheme = (function() {
 <div class="theme-switcher" id="theme-switcher" role="region" aria-label="Seletor de temas (admin)">
   <button type="button" class="theme-switcher-toggle" id="theme-toggle" aria-label="Abrir seletor de temas" title="Seletor de temas (admin)">🎨</button>
   <div class="theme-switcher-panel">
-    <div class="theme-switcher-title">Seletor de Temas — Admin</div>
+    <div class="theme-switcher-title">Seletor de Temas, Admin</div>
     <div class="theme-switcher-section">
       <div class="theme-switcher-label">Tema base</div>
       <div class="theme-options">${baseOpts}</div>

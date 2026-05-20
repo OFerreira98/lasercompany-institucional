@@ -1,5 +1,5 @@
 /* ============================================================
-   POPUP DE CAPTAÇÃO — "GANHE UM BRINDE"
+   POPUP DE CAPTAÇÃO, "GANHE UM BRINDE"
    ============================================================
    - Aparece após 6s OU em exit intent (o que vier primeiro)
    - PERSISTENTE: se o visitante NÃO preencher, reabre a cada
@@ -213,7 +213,7 @@
       const msg = `Olá ${u.nome}! Sou ${nome}, vim pelo site da Laser & Co (CEP ${cep}) e quero resgatar meu brinde de uma sessão de Rejuvenescimento Facial.`;
       waBtn.href = window.LaserCEP.whatsappUrl(u, msg);
     } else {
-      successMsg.textContent = 'Ainda estamos chegando à sua cidade — avisamos assim que uma unidade abrir por aí.';
+      successMsg.textContent = 'Ainda estamos chegando à sua cidade, avisamos assim que uma unidade abrir por aí.';
       unidadeInfo.style.display = 'none';
       waBtn.style.display = 'none';
     }

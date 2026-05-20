@@ -1,5 +1,5 @@
 /* ============================================================
-   CEP — Resolução de CEP + roteamento de unidade
+   CEP, Resolução de CEP + roteamento de unidade
    ============================================================
    Núcleo da inteligência do site, conforme item 2.3 do roteiro.
    - Consulta o ViaCEP para resolver cidade/bairro
@@ -22,7 +22,7 @@ window.LaserCEP = (function() {
     return n.slice(0, 5) + '-' + n.slice(5);
   }
 
-  /* Valida CEP — exatamente 8 dígitos */
+  /* Valida CEP, exatamente 8 dígitos */
   function isValid(cep) {
     return normalize(cep).length === 8;
   }
@@ -115,7 +115,7 @@ window.LaserCEP = (function() {
         success: true,
         hasUnidade: false,
         cep: cepData,
-        message: 'Ainda estamos chegando à sua cidade — e avisamos quando uma unidade abrir por aí.',
+        message: 'Ainda estamos chegando à sua cidade, e avisamos quando uma unidade abrir por aí.',
       };
     }
 

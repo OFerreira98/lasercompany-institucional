@@ -1,5 +1,5 @@
 /* ============================================================
-   MAIN — Orquestração global
+   MAIN, Orquestração global
    ============================================================
    - Header sticky com encolhimento
    - Menu mobile toggle

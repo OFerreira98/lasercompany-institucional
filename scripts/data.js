@@ -1,5 +1,5 @@
 /* ============================================================
-   DATA — Mock de dados da rede
+   DATA, Mock de dados da rede
    ============================================================
    Em produção, este arquivo deve ser substituído por chamadas
    à API real do sistema da rede. As estruturas devem ser
@@ -15,36 +15,36 @@ window.LaserData = {
      prefixos de CEP que ela atende (ou centro+raio).
   */
   unidades: [
-    { id: 'sp-vmariana', nome: 'Vila Mariana', cidade: 'São Paulo', uf: 'SP', endereco: 'Rua Vergueiro, 1500 — Vila Mariana, São Paulo/SP', whatsapp: '5511999990001', telefone: '(11) 3456-7890', horario: 'Seg a Sáb, 9h às 20h', lat: -23.5910, lng: -46.6347, cepPrefixos: ['041','042','043','044','045','046','047','048','050'] },
-    { id: 'sp-pinheiros', nome: 'Pinheiros', cidade: 'São Paulo', uf: 'SP', endereco: 'Rua dos Pinheiros, 980 — Pinheiros, São Paulo/SP', whatsapp: '5511999990002', telefone: '(11) 3456-7891', horario: 'Seg a Sáb, 9h às 20h', lat: -23.5612, lng: -46.6822, cepPrefixos: ['054','055','056','057','058','053'] },
-    { id: 'sp-moema', nome: 'Moema', cidade: 'São Paulo', uf: 'SP', endereco: 'Av. Ibirapuera, 2330 — Moema, São Paulo/SP', whatsapp: '5511999990003', telefone: '(11) 3456-7892', horario: 'Seg a Sáb, 9h às 20h', lat: -23.6037, lng: -46.6597, cepPrefixos: ['040','049','045','046','047'] },
-    { id: 'sp-tatuape', nome: 'Tatuapé', cidade: 'São Paulo', uf: 'SP', endereco: 'Rua Tuiuti, 2100 — Tatuapé, São Paulo/SP', whatsapp: '5511999990004', telefone: '(11) 3456-7893', horario: 'Seg a Sáb, 9h às 20h', lat: -23.5377, lng: -46.5760, cepPrefixos: ['030','031','032','033','034','035','036','037','038','039'] },
-    { id: 'sp-santana', nome: 'Santana', cidade: 'São Paulo', uf: 'SP', endereco: 'Av. Cruzeiro do Sul, 1800 — Santana, São Paulo/SP', whatsapp: '5511999990005', telefone: '(11) 3456-7894', horario: 'Seg a Sáb, 9h às 20h', lat: -23.5045, lng: -46.6244, cepPrefixos: ['020','021','022','023','024','025','026','027','028','029'] },
-    { id: 'sp-campinas', nome: 'Campinas Cambuí', cidade: 'Campinas', uf: 'SP', endereco: 'Rua Coronel Quirino, 1830 — Cambuí, Campinas/SP', whatsapp: '5519999990006', telefone: '(19) 3456-7895', horario: 'Seg a Sáb, 9h às 20h', lat: -22.8920, lng: -47.0510, cepPrefixos: ['130','131','132','133','134'] },
-    { id: 'sp-santos', nome: 'Santos Gonzaga', cidade: 'Santos', uf: 'SP', endereco: 'Av. Ana Costa, 480 — Gonzaga, Santos/SP', whatsapp: '5513999990007', telefone: '(13) 3456-7896', horario: 'Seg a Sáb, 9h às 19h', lat: -23.9618, lng: -46.3322, cepPrefixos: ['110','111'] },
-    { id: 'sp-ribeirao', nome: 'Ribeirão Preto', cidade: 'Ribeirão Preto', uf: 'SP', endereco: 'Av. Presidente Vargas, 2121 — Jardim Santa Ângela, Ribeirão Preto/SP', whatsapp: '5516999990008', telefone: '(16) 3456-7897', horario: 'Seg a Sáb, 9h às 19h', lat: -21.1775, lng: -47.8208, cepPrefixos: ['140','141','142'] },
-    { id: 'rj-ipanema', nome: 'Ipanema', cidade: 'Rio de Janeiro', uf: 'RJ', endereco: 'Rua Visconde de Pirajá, 595 — Ipanema, Rio de Janeiro/RJ', whatsapp: '5521999990009', telefone: '(21) 3456-7898', horario: 'Seg a Sáb, 9h às 20h', lat: -22.9844, lng: -43.2018, cepPrefixos: ['224','225','226'] },
-    { id: 'rj-barra', nome: 'Barra da Tijuca', cidade: 'Rio de Janeiro', uf: 'RJ', endereco: 'Av. das Américas, 4666 — Barra da Tijuca, Rio de Janeiro/RJ', whatsapp: '5521999990010', telefone: '(21) 3456-7899', horario: 'Seg a Sáb, 9h às 20h', lat: -22.9989, lng: -43.3651, cepPrefixos: ['227','228','229'] },
-    { id: 'rj-tijuca', nome: 'Tijuca', cidade: 'Rio de Janeiro', uf: 'RJ', endereco: 'Rua Conde de Bonfim, 700 — Tijuca, Rio de Janeiro/RJ', whatsapp: '5521999990011', telefone: '(21) 3456-7800', horario: 'Seg a Sáb, 9h às 20h', lat: -22.9272, lng: -43.2300, cepPrefixos: ['205','206','207','208','209','220','221','222','223'] },
-    { id: 'rj-niteroi', nome: 'Niterói', cidade: 'Niterói', uf: 'RJ', endereco: 'Rua Moreira César, 121 — Icaraí, Niterói/RJ', whatsapp: '5521999990012', telefone: '(21) 3456-7801', horario: 'Seg a Sáb, 9h às 20h', lat: -22.9009, lng: -43.1031, cepPrefixos: ['240','241','242'] },
-    { id: 'mg-bh-savassi', nome: 'BH Savassi', cidade: 'Belo Horizonte', uf: 'MG', endereco: 'Rua Pernambuco, 1212 — Savassi, Belo Horizonte/MG', whatsapp: '5531999990013', telefone: '(31) 3456-7802', horario: 'Seg a Sáb, 9h às 20h', lat: -19.9382, lng: -43.9355, cepPrefixos: ['301','302','303','304'] },
-    { id: 'mg-bh-buritis', nome: 'BH Buritis', cidade: 'Belo Horizonte', uf: 'MG', endereco: 'Av. Mário Werneck, 2900 — Buritis, Belo Horizonte/MG', whatsapp: '5531999990014', telefone: '(31) 3456-7803', horario: 'Seg a Sáb, 9h às 20h', lat: -19.9651, lng: -43.9701, cepPrefixos: ['305','306','307','308','309','310','311','312'] },
-    { id: 'mg-uberlandia', nome: 'Uberlândia', cidade: 'Uberlândia', uf: 'MG', endereco: 'Av. Rondon Pacheco, 4600 — Tibery, Uberlândia/MG', whatsapp: '5534999990015', telefone: '(34) 3456-7804', horario: 'Seg a Sáb, 9h às 19h', lat: -18.9113, lng: -48.2622, cepPrefixos: ['384'] },
-    { id: 'rs-poa-moinhos', nome: 'Porto Alegre Moinhos', cidade: 'Porto Alegre', uf: 'RS', endereco: 'Rua Padre Chagas, 350 — Moinhos de Vento, Porto Alegre/RS', whatsapp: '5551999990016', telefone: '(51) 3456-7805', horario: 'Seg a Sáb, 9h às 20h', lat: -30.0214, lng: -51.2058, cepPrefixos: ['904','905','906','907','908','909','910'] },
-    { id: 'rs-caxias', nome: 'Caxias do Sul', cidade: 'Caxias do Sul', uf: 'RS', endereco: 'Rua Sinimbu, 1755 — Centro, Caxias do Sul/RS', whatsapp: '5554999990017', telefone: '(54) 3456-7806', horario: 'Seg a Sáb, 9h às 19h', lat: -29.1689, lng: -51.1789, cepPrefixos: ['950','951','952'] },
-    { id: 'pr-curitiba', nome: 'Curitiba Batel', cidade: 'Curitiba', uf: 'PR', endereco: 'Av. do Batel, 1750 — Batel, Curitiba/PR', whatsapp: '5541999990018', telefone: '(41) 3456-7807', horario: 'Seg a Sáb, 9h às 20h', lat: -25.4407, lng: -49.2872, cepPrefixos: ['800','801','802','803','804','805','806','807','808','809','810','811','812','813','814','815','816','817','818','819','820','821','822','823','824','825','826','827','828','829','830','831','832'] },
-    { id: 'pr-londrina', nome: 'Londrina', cidade: 'Londrina', uf: 'PR', endereco: 'Av. Higienópolis, 1100 — Centro, Londrina/PR', whatsapp: '5543999990019', telefone: '(43) 3456-7808', horario: 'Seg a Sáb, 9h às 19h', lat: -23.3115, lng: -51.1633, cepPrefixos: ['860','861','862','863','864','865','866','867','868','869','870'] },
-    { id: 'sc-floripa', nome: 'Florianópolis', cidade: 'Florianópolis', uf: 'SC', endereco: 'Rua Bocaiúva, 2160 — Centro, Florianópolis/SC', whatsapp: '5548999990020', telefone: '(48) 3456-7809', horario: 'Seg a Sáb, 9h às 20h', lat: -27.5912, lng: -48.5495, cepPrefixos: ['880','881','882','883','884','885','886','887','888'] },
-    { id: 'sc-joinville', nome: 'Joinville', cidade: 'Joinville', uf: 'SC', endereco: 'Rua Visconde de Taunay, 380 — Centro, Joinville/SC', whatsapp: '5547999990021', telefone: '(47) 3456-7810', horario: 'Seg a Sáb, 9h às 19h', lat: -26.3045, lng: -48.8487, cepPrefixos: ['892','893','894','895'] },
-    { id: 'ba-salvador', nome: 'Salvador Pituba', cidade: 'Salvador', uf: 'BA', endereco: 'Av. Manoel Dias da Silva, 1500 — Pituba, Salvador/BA', whatsapp: '5571999990022', telefone: '(71) 3456-7811', horario: 'Seg a Sáb, 9h às 20h', lat: -12.9941, lng: -38.4525, cepPrefixos: ['400','401','402','403','404','405','406','407','408','409','410','411','412','413','414','415','416','417','418','419'] },
-    { id: 'pe-recife', nome: 'Recife Boa Viagem', cidade: 'Recife', uf: 'PE', endereco: 'Av. Conselheiro Aguiar, 3380 — Boa Viagem, Recife/PE', whatsapp: '5581999990023', telefone: '(81) 3456-7812', horario: 'Seg a Sáb, 9h às 20h', lat: -8.1185, lng: -34.8956, cepPrefixos: ['500','501','502','503','504','505','506','507','508','509','510','511','512','513','514','515','516','517','518','519','520','521','522','523','524','525','526','527','528','529','530','531','532','533','534','535'] },
-    { id: 'ce-fortaleza', nome: 'Fortaleza Aldeota', cidade: 'Fortaleza', uf: 'CE', endereco: 'Av. Santos Dumont, 2828 — Aldeota, Fortaleza/CE', whatsapp: '5585999990024', telefone: '(85) 3456-7813', horario: 'Seg a Sáb, 9h às 20h', lat: -3.7350, lng: -38.4956, cepPrefixos: ['600','601','602','603','604','605','606','607','608','609','610','611','612','613'] },
-    { id: 'go-goiania', nome: 'Goiânia Setor Bueno', cidade: 'Goiânia', uf: 'GO', endereco: 'Av. T-7, 1300 — Setor Bueno, Goiânia/GO', whatsapp: '5562999990025', telefone: '(62) 3456-7814', horario: 'Seg a Sáb, 9h às 20h', lat: -16.7058, lng: -49.2773, cepPrefixos: ['740','741','742','743','744','745','746','747','748','749'] },
-    { id: 'df-brasilia', nome: 'Brasília Asa Sul', cidade: 'Brasília', uf: 'DF', endereco: 'CLS 405, Bloco B, Loja 18 — Asa Sul, Brasília/DF', whatsapp: '5561999990026', telefone: '(61) 3456-7815', horario: 'Seg a Sáb, 9h às 20h', lat: -15.8089, lng: -47.8857, cepPrefixos: ['700','701','702','703','704','705','706','707','708','709','710','711','712','713','714','715','716','717','718','719','720','721','722','723','724','725','726','727','728','729','730','731','732','733','734','735','736','737','738','739'] },
-    { id: 'es-vitoria', nome: 'Vitória Praia do Canto', cidade: 'Vitória', uf: 'ES', endereco: 'Av. Nossa Sra. dos Navegantes, 675 — Praia do Canto, Vitória/ES', whatsapp: '5527999990027', telefone: '(27) 3456-7816', horario: 'Seg a Sáb, 9h às 20h', lat: -20.3015, lng: -40.2902, cepPrefixos: ['290','291','292','293','294','295','296'] },
-    { id: 'ma-saoluis', nome: 'São Luís', cidade: 'São Luís', uf: 'MA', endereco: 'Av. Daniel de La Touche, 1700 — Cohama, São Luís/MA', whatsapp: '5598999990028', telefone: '(98) 3456-7817', horario: 'Seg a Sáb, 9h às 19h', lat: -2.5290, lng: -44.3068, cepPrefixos: ['650','651','652','653','654','655','656','657'] },
-    { id: 'pa-belem', nome: 'Belém', cidade: 'Belém', uf: 'PA', endereco: 'Av. Visconde de Souza Franco, 765 — Reduto, Belém/PA', whatsapp: '5591999990029', telefone: '(91) 3456-7818', horario: 'Seg a Sáb, 9h às 19h', lat: -1.4502, lng: -48.4799, cepPrefixos: ['660','661','662','663','664','665','666','667','668'] },
-    { id: 'am-manaus', nome: 'Manaus', cidade: 'Manaus', uf: 'AM', endereco: 'Av. Djalma Batista, 1830 — Adrianópolis, Manaus/AM', whatsapp: '5592999990030', telefone: '(92) 3456-7819', horario: 'Seg a Sáb, 9h às 19h', lat: -3.0962, lng: -60.0107, cepPrefixos: ['690','691','692','693','694','695','696','697','698','699'] },
+    { id: 'sp-vmariana', nome: 'Vila Mariana', cidade: 'São Paulo', uf: 'SP', endereco: 'Rua Vergueiro, 1500, Vila Mariana, São Paulo/SP', whatsapp: '5511999990001', telefone: '(11) 3456-7890', horario: 'Seg a Sáb, 9h às 20h', lat: -23.5910, lng: -46.6347, cepPrefixos: ['041','042','043','044','045','046','047','048','050'] },
+    { id: 'sp-pinheiros', nome: 'Pinheiros', cidade: 'São Paulo', uf: 'SP', endereco: 'Rua dos Pinheiros, 980, Pinheiros, São Paulo/SP', whatsapp: '5511999990002', telefone: '(11) 3456-7891', horario: 'Seg a Sáb, 9h às 20h', lat: -23.5612, lng: -46.6822, cepPrefixos: ['054','055','056','057','058','053'] },
+    { id: 'sp-moema', nome: 'Moema', cidade: 'São Paulo', uf: 'SP', endereco: 'Av. Ibirapuera, 2330, Moema, São Paulo/SP', whatsapp: '5511999990003', telefone: '(11) 3456-7892', horario: 'Seg a Sáb, 9h às 20h', lat: -23.6037, lng: -46.6597, cepPrefixos: ['040','049','045','046','047'] },
+    { id: 'sp-tatuape', nome: 'Tatuapé', cidade: 'São Paulo', uf: 'SP', endereco: 'Rua Tuiuti, 2100, Tatuapé, São Paulo/SP', whatsapp: '5511999990004', telefone: '(11) 3456-7893', horario: 'Seg a Sáb, 9h às 20h', lat: -23.5377, lng: -46.5760, cepPrefixos: ['030','031','032','033','034','035','036','037','038','039'] },
+    { id: 'sp-santana', nome: 'Santana', cidade: 'São Paulo', uf: 'SP', endereco: 'Av. Cruzeiro do Sul, 1800, Santana, São Paulo/SP', whatsapp: '5511999990005', telefone: '(11) 3456-7894', horario: 'Seg a Sáb, 9h às 20h', lat: -23.5045, lng: -46.6244, cepPrefixos: ['020','021','022','023','024','025','026','027','028','029'] },
+    { id: 'sp-campinas', nome: 'Campinas Cambuí', cidade: 'Campinas', uf: 'SP', endereco: 'Rua Coronel Quirino, 1830, Cambuí, Campinas/SP', whatsapp: '5519999990006', telefone: '(19) 3456-7895', horario: 'Seg a Sáb, 9h às 20h', lat: -22.8920, lng: -47.0510, cepPrefixos: ['130','131','132','133','134'] },
+    { id: 'sp-santos', nome: 'Santos Gonzaga', cidade: 'Santos', uf: 'SP', endereco: 'Av. Ana Costa, 480, Gonzaga, Santos/SP', whatsapp: '5513999990007', telefone: '(13) 3456-7896', horario: 'Seg a Sáb, 9h às 19h', lat: -23.9618, lng: -46.3322, cepPrefixos: ['110','111'] },
+    { id: 'sp-ribeirao', nome: 'Ribeirão Preto', cidade: 'Ribeirão Preto', uf: 'SP', endereco: 'Av. Presidente Vargas, 2121, Jardim Santa Ângela, Ribeirão Preto/SP', whatsapp: '5516999990008', telefone: '(16) 3456-7897', horario: 'Seg a Sáb, 9h às 19h', lat: -21.1775, lng: -47.8208, cepPrefixos: ['140','141','142'] },
+    { id: 'rj-ipanema', nome: 'Ipanema', cidade: 'Rio de Janeiro', uf: 'RJ', endereco: 'Rua Visconde de Pirajá, 595, Ipanema, Rio de Janeiro/RJ', whatsapp: '5521999990009', telefone: '(21) 3456-7898', horario: 'Seg a Sáb, 9h às 20h', lat: -22.9844, lng: -43.2018, cepPrefixos: ['224','225','226'] },
+    { id: 'rj-barra', nome: 'Barra da Tijuca', cidade: 'Rio de Janeiro', uf: 'RJ', endereco: 'Av. das Américas, 4666, Barra da Tijuca, Rio de Janeiro/RJ', whatsapp: '5521999990010', telefone: '(21) 3456-7899', horario: 'Seg a Sáb, 9h às 20h', lat: -22.9989, lng: -43.3651, cepPrefixos: ['227','228','229'] },
+    { id: 'rj-tijuca', nome: 'Tijuca', cidade: 'Rio de Janeiro', uf: 'RJ', endereco: 'Rua Conde de Bonfim, 700, Tijuca, Rio de Janeiro/RJ', whatsapp: '5521999990011', telefone: '(21) 3456-7800', horario: 'Seg a Sáb, 9h às 20h', lat: -22.9272, lng: -43.2300, cepPrefixos: ['205','206','207','208','209','220','221','222','223'] },
+    { id: 'rj-niteroi', nome: 'Niterói', cidade: 'Niterói', uf: 'RJ', endereco: 'Rua Moreira César, 121, Icaraí, Niterói/RJ', whatsapp: '5521999990012', telefone: '(21) 3456-7801', horario: 'Seg a Sáb, 9h às 20h', lat: -22.9009, lng: -43.1031, cepPrefixos: ['240','241','242'] },
+    { id: 'mg-bh-savassi', nome: 'BH Savassi', cidade: 'Belo Horizonte', uf: 'MG', endereco: 'Rua Pernambuco, 1212, Savassi, Belo Horizonte/MG', whatsapp: '5531999990013', telefone: '(31) 3456-7802', horario: 'Seg a Sáb, 9h às 20h', lat: -19.9382, lng: -43.9355, cepPrefixos: ['301','302','303','304'] },
+    { id: 'mg-bh-buritis', nome: 'BH Buritis', cidade: 'Belo Horizonte', uf: 'MG', endereco: 'Av. Mário Werneck, 2900, Buritis, Belo Horizonte/MG', whatsapp: '5531999990014', telefone: '(31) 3456-7803', horario: 'Seg a Sáb, 9h às 20h', lat: -19.9651, lng: -43.9701, cepPrefixos: ['305','306','307','308','309','310','311','312'] },
+    { id: 'mg-uberlandia', nome: 'Uberlândia', cidade: 'Uberlândia', uf: 'MG', endereco: 'Av. Rondon Pacheco, 4600, Tibery, Uberlândia/MG', whatsapp: '5534999990015', telefone: '(34) 3456-7804', horario: 'Seg a Sáb, 9h às 19h', lat: -18.9113, lng: -48.2622, cepPrefixos: ['384'] },
+    { id: 'rs-poa-moinhos', nome: 'Porto Alegre Moinhos', cidade: 'Porto Alegre', uf: 'RS', endereco: 'Rua Padre Chagas, 350, Moinhos de Vento, Porto Alegre/RS', whatsapp: '5551999990016', telefone: '(51) 3456-7805', horario: 'Seg a Sáb, 9h às 20h', lat: -30.0214, lng: -51.2058, cepPrefixos: ['904','905','906','907','908','909','910'] },
+    { id: 'rs-caxias', nome: 'Caxias do Sul', cidade: 'Caxias do Sul', uf: 'RS', endereco: 'Rua Sinimbu, 1755, Centro, Caxias do Sul/RS', whatsapp: '5554999990017', telefone: '(54) 3456-7806', horario: 'Seg a Sáb, 9h às 19h', lat: -29.1689, lng: -51.1789, cepPrefixos: ['950','951','952'] },
+    { id: 'pr-curitiba', nome: 'Curitiba Batel', cidade: 'Curitiba', uf: 'PR', endereco: 'Av. do Batel, 1750, Batel, Curitiba/PR', whatsapp: '5541999990018', telefone: '(41) 3456-7807', horario: 'Seg a Sáb, 9h às 20h', lat: -25.4407, lng: -49.2872, cepPrefixos: ['800','801','802','803','804','805','806','807','808','809','810','811','812','813','814','815','816','817','818','819','820','821','822','823','824','825','826','827','828','829','830','831','832'] },
+    { id: 'pr-londrina', nome: 'Londrina', cidade: 'Londrina', uf: 'PR', endereco: 'Av. Higienópolis, 1100, Centro, Londrina/PR', whatsapp: '5543999990019', telefone: '(43) 3456-7808', horario: 'Seg a Sáb, 9h às 19h', lat: -23.3115, lng: -51.1633, cepPrefixos: ['860','861','862','863','864','865','866','867','868','869','870'] },
+    { id: 'sc-floripa', nome: 'Florianópolis', cidade: 'Florianópolis', uf: 'SC', endereco: 'Rua Bocaiúva, 2160, Centro, Florianópolis/SC', whatsapp: '5548999990020', telefone: '(48) 3456-7809', horario: 'Seg a Sáb, 9h às 20h', lat: -27.5912, lng: -48.5495, cepPrefixos: ['880','881','882','883','884','885','886','887','888'] },
+    { id: 'sc-joinville', nome: 'Joinville', cidade: 'Joinville', uf: 'SC', endereco: 'Rua Visconde de Taunay, 380, Centro, Joinville/SC', whatsapp: '5547999990021', telefone: '(47) 3456-7810', horario: 'Seg a Sáb, 9h às 19h', lat: -26.3045, lng: -48.8487, cepPrefixos: ['892','893','894','895'] },
+    { id: 'ba-salvador', nome: 'Salvador Pituba', cidade: 'Salvador', uf: 'BA', endereco: 'Av. Manoel Dias da Silva, 1500, Pituba, Salvador/BA', whatsapp: '5571999990022', telefone: '(71) 3456-7811', horario: 'Seg a Sáb, 9h às 20h', lat: -12.9941, lng: -38.4525, cepPrefixos: ['400','401','402','403','404','405','406','407','408','409','410','411','412','413','414','415','416','417','418','419'] },
+    { id: 'pe-recife', nome: 'Recife Boa Viagem', cidade: 'Recife', uf: 'PE', endereco: 'Av. Conselheiro Aguiar, 3380, Boa Viagem, Recife/PE', whatsapp: '5581999990023', telefone: '(81) 3456-7812', horario: 'Seg a Sáb, 9h às 20h', lat: -8.1185, lng: -34.8956, cepPrefixos: ['500','501','502','503','504','505','506','507','508','509','510','511','512','513','514','515','516','517','518','519','520','521','522','523','524','525','526','527','528','529','530','531','532','533','534','535'] },
+    { id: 'ce-fortaleza', nome: 'Fortaleza Aldeota', cidade: 'Fortaleza', uf: 'CE', endereco: 'Av. Santos Dumont, 2828, Aldeota, Fortaleza/CE', whatsapp: '5585999990024', telefone: '(85) 3456-7813', horario: 'Seg a Sáb, 9h às 20h', lat: -3.7350, lng: -38.4956, cepPrefixos: ['600','601','602','603','604','605','606','607','608','609','610','611','612','613'] },
+    { id: 'go-goiania', nome: 'Goiânia Setor Bueno', cidade: 'Goiânia', uf: 'GO', endereco: 'Av. T-7, 1300, Setor Bueno, Goiânia/GO', whatsapp: '5562999990025', telefone: '(62) 3456-7814', horario: 'Seg a Sáb, 9h às 20h', lat: -16.7058, lng: -49.2773, cepPrefixos: ['740','741','742','743','744','745','746','747','748','749'] },
+    { id: 'df-brasilia', nome: 'Brasília Asa Sul', cidade: 'Brasília', uf: 'DF', endereco: 'CLS 405, Bloco B, Loja 18, Asa Sul, Brasília/DF', whatsapp: '5561999990026', telefone: '(61) 3456-7815', horario: 'Seg a Sáb, 9h às 20h', lat: -15.8089, lng: -47.8857, cepPrefixos: ['700','701','702','703','704','705','706','707','708','709','710','711','712','713','714','715','716','717','718','719','720','721','722','723','724','725','726','727','728','729','730','731','732','733','734','735','736','737','738','739'] },
+    { id: 'es-vitoria', nome: 'Vitória Praia do Canto', cidade: 'Vitória', uf: 'ES', endereco: 'Av. Nossa Sra. dos Navegantes, 675, Praia do Canto, Vitória/ES', whatsapp: '5527999990027', telefone: '(27) 3456-7816', horario: 'Seg a Sáb, 9h às 20h', lat: -20.3015, lng: -40.2902, cepPrefixos: ['290','291','292','293','294','295','296'] },
+    { id: 'ma-saoluis', nome: 'São Luís', cidade: 'São Luís', uf: 'MA', endereco: 'Av. Daniel de La Touche, 1700, Cohama, São Luís/MA', whatsapp: '5598999990028', telefone: '(98) 3456-7817', horario: 'Seg a Sáb, 9h às 19h', lat: -2.5290, lng: -44.3068, cepPrefixos: ['650','651','652','653','654','655','656','657'] },
+    { id: 'pa-belem', nome: 'Belém', cidade: 'Belém', uf: 'PA', endereco: 'Av. Visconde de Souza Franco, 765, Reduto, Belém/PA', whatsapp: '5591999990029', telefone: '(91) 3456-7818', horario: 'Seg a Sáb, 9h às 19h', lat: -1.4502, lng: -48.4799, cepPrefixos: ['660','661','662','663','664','665','666','667','668'] },
+    { id: 'am-manaus', nome: 'Manaus', cidade: 'Manaus', uf: 'AM', endereco: 'Av. Djalma Batista, 1830, Adrianópolis, Manaus/AM', whatsapp: '5592999990030', telefone: '(92) 3456-7819', horario: 'Seg a Sáb, 9h às 19h', lat: -3.0962, lng: -60.0107, cepPrefixos: ['690','691','692','693','694','695','696','697','698','699'] },
 
     /* --- SP interior e zona leste --- */
     { id: 'sp-sorocaba', nome: 'Sorocaba', cidade: 'Sorocaba', uf: 'SP', endereco: 'Av. General Carneiro, 1240, Centro, Sorocaba/SP', whatsapp: '5515999990031', telefone: '(15) 3456-7820', horario: 'Seg a Sáb, 9h às 19h', lat: -23.5015, lng: -47.4526, cepPrefixos: ['180','181','182'] },
@@ -179,7 +179,7 @@ window.LaserData = {
     { sigla: 'ND-YAG', nome: 'Laser ND-YAG', desc: 'Comprimento de onda de 1064nm. Seguro para todos os fototipos da pele, da branca à negra, inclusive bronzeada.' },
     { sigla: 'Erbium', nome: 'Laser Erbium', desc: 'A mesma família do Fotona. Renovação profunda da pele, indicado para rejuvenescimento, cicatrizes e textura.' },
     { sigla: 'Q-Switched', nome: 'Laser Q-Switched', desc: 'Tecnologia premium para remoção de tatuagens, melasma, manchas profundas e micropigmentação.' },
-    { sigla: 'Ultracel', nome: 'Ultrassom Ultracel', desc: 'Lifting não-invasivo. Estimula colágeno em camadas profundas — bichectomia sem cortes, full face, papada e fox eyes.' },
+    { sigla: 'Ultracel', nome: 'Ultrassom Ultracel', desc: 'Lifting não-invasivo. Estimula colágeno em camadas profundas, bichectomia sem cortes, full face, papada e fox eyes.' },
   ],
 
   /* --------- PROMOÇÕES DO MÊS ---------
@@ -216,7 +216,7 @@ window.LaserData = {
     { nome: 'Juliana A.', cidade: 'Curitiba, PR', texto: 'A papada com ultrassom microfocado foi um divisor de águas. Sem cortes, sem recuperação. O contorno do meu rosto ficou definido.', avatar: null, exemplo: true },
   ],
 
-  /* --------- COMO FUNCIONA — 4 passos ---------- */
+  /* --------- COMO FUNCIONA,4 passos ---------- */
   passos: [
     { n: '01', titulo: 'Escolha o procedimento', desc: 'Navegue pelas nossas três frentes (estética, depilação ou ultrassom) e encontre o tratamento ideal.' },
     { n: '02', titulo: 'Informe seu endereço', desc: 'Com seu CEP, identificamos em segundos a unidade Laser & Co mais próxima de você.' },
@@ -237,7 +237,7 @@ window.LaserData = {
     nome: 'Laser & Co',
     razaoSocial: 'Laser Company Brasil',
     cnpj: '53.078.691/0001-07',
-    conceito: '#SemTabus',
+    conceito: 'Estética premium acessível a todos',
     socia: 'Anitta',
     fundador: 'Rafael Estevez',
     centroTreinamento: 'Laser Academy',
@@ -248,13 +248,13 @@ window.LaserData = {
     whatsappFmt: '(11) 94776-4057',
     sac: 'sac@lasercompany.com',
     expansao: 'expansao@lasercompany.com',
-    enderecoSede: 'Rua Alvorada, 1047 — Vila Olímpia, São Paulo/SP — CEP 04550-004',
+    enderecoSede: 'Rua Alvorada, 1047, Vila Olímpia, São Paulo/SP, CEP 04550-004',
     instagram: 'lasercompanybrasil',
     facebook: 'laserecoficial',
   },
 
   pagamento: {
-    cartao: 'Aceitamos todos os cartões — parcelamento em até 12x sem juros',
+    cartao: 'Aceitamos todos os cartões, parcelamento em até 12x sem juros',
     boleto: 'Boleto em até 24x (consulte condições)',
     pix: 'Pix com desconto à vista',
     avaliacao: 'Avaliação gratuita em todas as unidades',
@@ -268,7 +268,7 @@ window.LaserData = {
   ],
 };
 
-/* Função utilitária — buscar procedimento por id */
+/* Função utilitária, buscar procedimento por id */
 window.LaserData.findProcedimento = function(id) {
   const cats = ['estetica', 'depilacao', 'ultrassom'];
   for (const c of cats) {
@@ -278,7 +278,7 @@ window.LaserData.findProcedimento = function(id) {
   return null;
 };
 
-/* Função utilitária — todos os procedimentos populares */
+/* Função utilitária, todos os procedimentos populares */
 window.LaserData.getPopulares = function() {
   const result = [];
   ['estetica', 'depilacao', 'ultrassom'].forEach(cat => {

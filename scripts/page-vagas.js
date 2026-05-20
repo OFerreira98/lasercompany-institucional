@@ -1,5 +1,5 @@
 /* ============================================================
-   PAGE-VAGAS — Lógica da Página Vagas
+   PAGE-VAGAS, Lógica da Página Vagas
    ============================================================
    Conforme item 6.5 do roteiro:
    - Lista de vagas com cidade, função, descrição
