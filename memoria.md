@@ -38,23 +38,20 @@ Feito, testado no preview e commitado (rodada com o Ferreira):
 5. **Volume ~60k/mês:** `painel-seed.js` N=900 leads, nomes primeiro+sobrenome. Tempo real mostra
    "Visitantes no mês 61.380 / hoje 2.040"; mocks de tráfego escalados.
 
-### ⟶ PRÓXIMA TAREFA: página "Seja um franqueado" (`franqueado.html`) com a persona Rafael
-Material em `Referência a site Rafael para SEJA FRANQUEADO/` (export Wix da Franchising Factory).
-Catálogo já feito. Usar:
-- **Persona:** Rafael Estevez, fundador da Laser & Co. e da Botoclinic; à frente da Franchising
-  Factory (formatação/aceleração de franquias).
-- **Provas públicas (ok):** Laser&Co ~70 unidades; Anitta sócia/embaixadora (set/2024); Botoclinic
-  ~180 unidades; +150 marcas formatadas; +1000 clientes; capa revista MENSCH Carreira (nov/2024);
-  conexão Grupo XP.
-- **NÃO publicar valor sensível:** venda de 65% da Botoclinic à XP por ~R$100mi é verdadeira, mas o
-  cliente pediu versão DISCRETA ("captou investimento da XP"), sem número/percentual.
-- **Ignorar** "5 empresas no Shopping Garden" (não existe; veio de transcrição de vídeo).
-- **Fotos reais usáveis** (renomear ao importar): retrato hero `ea38f0_e1406640358a41ddb3233bd407164df0~mv2.jpg`
-  e `ChatGPT Image 9 de set_edited.png`; fachada Laser&Co `WhatsApp Image 2025-09-12 at 14_12_01.jpeg`;
-  Rafael+Anitta `ea38f0_032f5ebc5d2240b8b4a57716a7a629a9~mv2.jpg`; capa MENSCH
-  `ea38f0_1e171f17e1f9447487beb76133f3cf82~mv2.webp`. Manter a página LIMPA.
+### FEITO: página "Seja um franqueado" (`franqueado.html`) enriquecida
+- Texto da XP deixado DISCRETO ("atraiu o investimento do fundo de Private Equity da XP"), sem o
+  "R$ 100 milhões / 65%" (cliente pediu pra tirar da página pública).
+- Foto real do Rafael no bloco "O Fundador" (`assets/img/equipe/rafael-estevez.jpg`).
+- Faixa "Liderança" (`#lideranca`) com a foto do Rafael e a ESPOSA (`assets/img/equipe/rafael-casal.jpg`)
+  + Franchising Factory (+150 marcas, +1000 clientes) + chips (70+ unidades, +150 marcas, Botoclinic +
+  Laser&Co, revista MENSCH). CSS `.cred-*` e `.fundador-foto.has-photo` no `pages.css`.
+- **CORREÇÃO IMPORTANTE:** a foto `ea38f0_032f5ebc...~mv2.jpg` é Rafael + a ESPOSA (provável Cristina
+  Bohrer), NÃO a Anitta (eu tinha errado). "Anitta sócia/embaixadora" é frase do material, mas NÃO foi
+  pra página (sem foto real dela; confirmar com o cliente se quiser usar).
+- "5 empresas no Shopping Garden": não existe, ignorado (veio de transcrição de vídeo).
+- As 18 fotos antes/depois que estavam soltas em `assets/img/antes-depois/` o cliente apagou (eram lixo).
 
-### DEPOIS: DOIS relatórios
+### ⟶ PRÓXIMA TAREFA: DOIS relatórios
 1. **CLIENTE:** linguagem simples, o que o site/painel já faz, sem jargão.
 2. **DESENVOLVEDORES:** tudo p/ continuarem sem o Ferreira (logins de teste + onde trocar,
    stack/arquitetura, o que foi feito, o que falta, testes, ponto de troca do banco

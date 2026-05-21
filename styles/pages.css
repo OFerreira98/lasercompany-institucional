@@ -1990,6 +1990,28 @@
   pointer-events: none;
 }
 
+/* Foto real no card do fundador (substitui a silhueta placeholder) */
+.fundador-foto.has-photo {
+  background-size: cover;
+  background-position: top center;
+  filter: grayscale(0.12) contrast(1.03);
+}
+.fundador-foto.has-photo::before { display: none; }
+
+/* Faixa de credibilidade (Anitta + Franchising Factory) */
+.cred-band { display: grid; grid-template-columns: 1.05fr 1fr; gap: var(--sp-7); align-items: center; }
+.cred-photo {
+  aspect-ratio: 4 / 3; border-radius: var(--radius-lg); background-size: cover; background-position: center;
+  border: 1px solid var(--color-border-accent); box-shadow: var(--shadow-lg); filter: grayscale(0.08) contrast(1.02);
+}
+.cred-chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin-top: var(--sp-5); }
+.cred-chip {
+  font-family: var(--font-accent); font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: var(--ls-wide);
+  padding: 6px 14px; border: 1px solid var(--color-border-accent); border-radius: var(--radius-pill);
+  color: var(--color-accent-pale); background: var(--color-surface);
+}
+@media (max-width: 860px) { .cred-band { grid-template-columns: 1fr; gap: var(--sp-5); } }
+
 .fundador-card-info {
   position: relative;
   padding: var(--sp-4) var(--sp-5) var(--sp-5);
