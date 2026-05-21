@@ -499,6 +499,104 @@ window.LaserPainel = (function () {
       '<p>A navegação e a estrutura desta tela já estão prontas. O conteúdo detalhado (gráficos, tabelas e gestão) entra nas próximas etapas do painel, conforme combinado.</p>' +
       '<span class="painel-stub-tag">Em construção</span></div>';
   }
+  /* ===================== telas internas dos menus ===================== */
+  function setView(h) { state.presetTipos = null; document.getElementById('painel-view').innerHTML = h; }
+  function kpiCard(v, l, accent) { return '<div class="kpi-card' + (accent ? ' kpi-accent' : '') + '"><div class="kpi-value">' + v + '</div><div class="kpi-label">' + l + '</div></div>'; }
+  function card(t, sub, inner, flush) { return '<div class="painel-chart-card' + (flush ? ' flush' : '') + '"><div class="painel-chart-title">' + t + (sub ? ' <small>' + sub + '</small>' : '') + '</div>' + inner + '</div>'; }
+  function cv(id, sm) { return '<div class="painel-chart-wrap' + (sm ? ' sm' : '') + '"><canvas id="' + id + '"></canvas></div>'; }
+  function barCfg(labels, data, horiz) { return { type: 'bar', data: { labels: labels, datasets: [{ data: data, backgroundColor: '#C8A064', borderRadius: 4 }] }, options: { indexAxis: horiz ? 'y' : 'x', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { color: '#B9AF9C', precision: 0, font: { size: 10 } } }, y: { beginAtZero: true, grid: { color: 'rgba(245,240,230,0.05)' }, ticks: { color: '#DDD3C0', font: { size: 10 } } } } } }; }
+  function rankList(pairs) { if (!pairs.length) return '<div class="painel-empty">Sem dados ainda.</div>'; var max = pairs[0][1]; return '<ul class="vg-ranking">' + pairs.map(function (p, i) { return '<li class="vg-rank-item"><span class="vg-rank-pos">' + (i + 1) + '</span><span class="vg-rank-nome">' + esc(p[0]) + '<div class="vg-rank-bar"><span style="width:' + Math.round(p[1] / max * 100) + '%"></span></div></span><span class="vg-rank-val">' + p[1] + '</span></li>'; }).join('') + '</ul>'; }
+  function tableHTML(headers, rows) { return '<div class="painel-table-wrap"><table class="painel-table"><thead><tr>' + headers.map(function (h) { return '<th>' + h + '</th>'; }).join('') + '</tr></thead><tbody>' + rows.map(function (r) { return '<tr>' + r.map(function (c) { return '<td>' + c + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>'; }
+  function origemPairs() { return topPairs(countBy(state.all, function (l) { return l.origem || 'direto'; }), 10); }
+  const MOCK_PAGINAS = [['Início', 4230], ['Procedimentos', 2680], ['Agendamento', 1940], ['Unidades', 1510], ['Vagas', 720], ['Seja um franqueado', 430]];
+  const MOCK_DISP = [['Celular', 68], ['Desktop', 26], ['Tablet', 6]];
+  const MOCK_IDADE = [['18-24', 14], ['25-34', 38], ['35-44', 27], ['45-54', 14], ['55+', 7]];
+  const MOCK_GEN = [['Feminino', 82], ['Masculino', 16], ['Outro', 2]];
+
+  function viewUnidadesRanking() {
+    var by = countBy(state.all.filter(function (l) { return l.unidadeId; }), function (l) { return l.unidadeNome || l.unidadeId; });
+    setView(card('Top 10 unidades', 'leads no período', cv('u-bar')) + card('Ranking completo', '', rankList(topPairs(by, 40)), true));
+    var t = topPairs(by, 10); vgChart('u-bar', barCfg(t.map(function (x) { return x[0]; }), t.map(function (x) { return x[1]; }), false));
+  }
+  function viewUnidadesMapa() {
+    var p = topPairs(countBy(state.all.filter(function (l) { return l.uf; }), function (l) { return l.uf; }), 14);
+    setView('<div class="painel-grid-2">' + card('Leads por estado', 'distribuição da rede', cv('uf-bar'), true) + card('Concentração por estado', '', rankList(p), true) + '</div>');
+    vgChart('uf-bar', barCfg(p.map(function (x) { return x[0]; }), p.map(function (x) { return x[1]; }), false));
+  }
+  function viewUnidadesCadastro() {
+    var us = (window.LaserData && window.LaserData.unidades) || [];
+    setView(card('Unidades cadastradas', us.length + ' unidades na rede', tableHTML(['Unidade', 'Cidade', 'Endereço', 'Contato'], us.map(function (u) { return [esc(u.nome), esc(u.cidade) + '/' + esc(u.uf), esc(u.endereco), esc(u.telefone || u.whatsapp || '-')]; })), true));
+  }
+  function viewTrafegoTempoReal() {
+    var now = Date.now();
+    var horaLeads = state.all.filter(function (l) { return now - new Date(l.createdAt) <= 3600000; }).length;
+    setView('<div class="painel-kpis">' + kpiCard((34 + state.all.length % 17) + '<span class="kpi-live"></span>', 'Visitantes (30 min)', true) + kpiCard(horaLeads, 'Leads na última hora') + kpiCard(6 + state.all.length % 5, 'Online agora') + '</div><div class="painel-grid-2">' + card('Origem do tráfego', 'agora', cv('tr-orig', true), true) + card('Dispositivos', '', cv('tr-disp', true), true) + '</div>');
+    var op = origemPairs(); vgChart('tr-orig', donutCfg(op.map(function (x) { return x[0]; }), op.map(function (x) { return x[1]; })));
+    vgChart('tr-disp', donutCfg(MOCK_DISP.map(function (x) { return x[0]; }), MOCK_DISP.map(function (x) { return x[1]; })));
+  }
+  function viewTrafegoOrigem() {
+    var op = origemPairs();
+    setView('<div class="painel-grid-2">' + card('Origem dos visitantes', 'distribuição', cv('o-don', true), true) + card('Ranking de origem', '', rankList(op), true) + '</div>');
+    vgChart('o-don', donutCfg(op.map(function (x) { return x[0]; }), op.map(function (x) { return x[1]; })));
+  }
+  function viewTrafegoPaginas() { setView(card('Páginas mais visitadas', 'últimos 30 dias (demonstração)', cv('pg-bar'))); vgChart('pg-bar', barCfg(MOCK_PAGINAS.map(function (x) { return x[0]; }), MOCK_PAGINAS.map(function (x) { return x[1]; }), true)); }
+  function viewTrafegoDispositivos() { setView('<div class="painel-grid-2">' + card('Dispositivos', 'demonstração', cv('d-don', true), true) + card('Resumo', '', rankList(MOCK_DISP), true) + '</div>'); vgChart('d-don', donutCfg(MOCK_DISP.map(function (x) { return x[0]; }), MOCK_DISP.map(function (x) { return x[1]; }))); }
+  function viewDemoIdade() { setView(card('Faixa etária dos leads', 'demonstração', cv('id-bar'))); vgChart('id-bar', barCfg(MOCK_IDADE.map(function (x) { return x[0]; }), MOCK_IDADE.map(function (x) { return x[1]; }), false)); }
+  function viewDemoGenero() { setView('<div class="painel-grid-2">' + card('Distribuição por gênero', 'demonstração', cv('g-don', true), true) + card('Resumo', '', rankList(MOCK_GEN), true) + '</div>'); vgChart('g-don', donutCfg(MOCK_GEN.map(function (x) { return x[0]; }), MOCK_GEN.map(function (x) { return x[1]; }))); }
+  function viewPromoAtivas() {
+    var ps = (window.LaserData && window.LaserData.promocoes) || [];
+    var html = ps.map(function (p) { return '<div class="painel-chart-card flush"><div style="font-family:var(--font-accent);font-weight:600">' + esc(p.titulo) + '</div><div style="color:var(--color-accent-pale);font-size:var(--fs-xl);font-family:var(--font-accent);margin:6px 0">' + esc(p.preco || '') + ' <small style="color:var(--color-text-muted);text-decoration:line-through;font-size:0.55em">' + esc(p.precoOriginal || '') + '</small></div><div style="font-size:var(--fs-xs);color:var(--color-text-muted)">Válida até ' + esc(p.valida || '-') + ' · ' + esc(p.desconto || '') + '</div></div>'; }).join('');
+    setView('<div class="painel-grid-3">' + (html || '<div class="painel-empty">Sem promoções ativas.</div>') + '</div>');
+  }
+  function viewPromoCadastrar() {
+    setView(card('Cadastrar promoção', 'demonstração (salvar entra na integração com o sistema)', '<div style="display:grid;gap:var(--sp-4);max-width:520px"><div class="det-field"><label>Título</label><input class="painel-input" style="width:100%" placeholder="Ex.: Rejuvenescimento Facial 4D"></div><div class="det-field"><label>Preço promocional</label><input class="painel-input" style="width:100%" placeholder="R$ 397"></div><div class="det-field"><label>Válida até</label><input class="painel-input" type="date" style="width:100%"></div><button class="btn btn-primary" type="button" onclick="return false">Salvar promoção</button></div>', true));
+  }
+  function viewPromoDesempenho() {
+    var ps = (window.LaserData && window.LaserData.promocoes) || [];
+    setView(card('Desempenho por promoção', 'leads gerados (demonstração)', cv('pr-bar')));
+    vgChart('pr-bar', barCfg(ps.map(function (p) { return p.titulo; }), ps.map(function (p, i) { return 40 + (i * 17 + state.all.length) % 90; }), true));
+  }
+  function viewRecrutVagas() {
+    var vs = (window.LaserData && window.LaserData.vagas) || [];
+    setView(card('Vagas abertas', vs.length + ' vagas', tableHTML(['Função', 'Cidade', 'Regime', 'Status'], vs.map(function (v) { return [esc(v.funcao), esc(v.cidade), esc(v.tipo) + ' · ' + esc(v.nivel), v.destaque ? 'Em destaque' : '-']; })), true));
+  }
+  function viewConfigUsuarios() {
+    var us = (window.LaserAPI && window.LaserAPI.DEMO_USERS) || [];
+    setView(card('Usuários e permissões', 'acessos do painel (demonstração)', tableHTML(['Nome', 'E-mail', 'Perfil', 'Unidade'], us.map(function (u) { return [esc(u.nome), esc(u.email), u.role === 'franqueador' ? 'Franqueador' : 'Franqueado', esc(u.unidadeId || 'rede toda')]; })), true));
+  }
+  function viewConfigConta() {
+    var u = state.session.user;
+    setView(card('Minha conta', '', '<div style="display:grid;gap:var(--sp-3);max-width:480px;font-size:var(--fs-sm)"><div class="det-row"><span class="det-k">Nome</span><span class="det-v">' + esc(u.nome) + '</span></div><div class="det-row"><span class="det-k">E-mail</span><span class="det-v">' + esc(u.email) + '</span></div><div class="det-row"><span class="det-k">Perfil</span><span class="det-v">' + (u.role === 'franqueador' ? 'Franqueador' : 'Franqueado') + '</span></div></div><div style="margin-top:var(--sp-5)"><button class="btn btn-outline" type="button" onclick="return false">Alterar senha</button></div>', true));
+  }
+  function viewDesempProcedimento() {
+    var t = topPairs(countBy(state.all.filter(function (l) { return l.procedimento; }), function (l) { return l.procedimento; }), 8);
+    setView(card('Seus leads por procedimento', 'top da sua unidade', cv('dp-bar')));
+    vgChart('dp-bar', barCfg(t.map(function (x) { return x[0]; }), t.map(function (x) { return x[1]; }), true));
+  }
+  function viewDesempPeriodo() {
+    var dias = leadsPorDia(state.all, 30);
+    setView(card('Seus leads por dia', 'últimos 30 dias', cv('dpd-line')));
+    var el = document.getElementById('dpd-line'); if (el && window.Chart) { var ctx = el.getContext('2d'); var g = ctx.createLinearGradient(0, 0, 0, 240); g.addColorStop(0, 'rgba(200,160,100,0.35)'); g.addColorStop(1, 'rgba(200,160,100,0)'); vgChart('dpd-line', { type: 'line', data: { labels: dias.map(function (d) { return d.key; }), datasets: [{ data: dias.map(function (d) { return d.count; }), borderColor: '#C8A064', borderWidth: 2, fill: true, backgroundColor: g, tension: 0.35, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { color: '#B9AF9C', maxTicksLimit: 8, font: { size: 10 } } }, y: { beginAtZero: true, grid: { color: 'rgba(245,240,230,0.06)' }, ticks: { color: '#B9AF9C', precision: 0, font: { size: 10 } } } } } }); }
+  }
+  function viewDesempRede() {
+    var rede = (window.LaserPainelData ? window.LaserPainelData.seed() : []).map(normalize);
+    var meus = leadsPorDia(state.all, 14), redeDias = leadsPorDia(rede, 14), nU = 14;
+    setView(card('Comparação com a rede', 'seus leads/dia vs média da rede (14 dias)', cv('cr-line')));
+    if (document.getElementById('cr-line') && window.Chart) {
+      vgChart('cr-line', { type: 'line', data: { labels: meus.map(function (d) { return d.key; }), datasets: [{ label: 'Sua unidade', data: meus.map(function (d) { return d.count; }), borderColor: '#C8A064', borderWidth: 2, tension: 0.35, pointRadius: 0 }, { label: 'Média da rede', data: redeDias.map(function (d) { return Math.round(d.count / nU * 10) / 10; }), borderColor: '#B7AD9D', borderWidth: 2, borderDash: [5, 4], tension: 0.35, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#DDD3C0', font: { size: 11 }, boxWidth: 12 } } }, scales: { x: { grid: { display: false }, ticks: { color: '#B9AF9C', font: { size: 10 } } }, y: { beginAtZero: true, grid: { color: 'rgba(245,240,230,0.06)' }, ticks: { color: '#B9AF9C', font: { size: 10 } } } } } });
+    }
+  }
+  function viewEquipeLogins() {
+    setView(card('Logins da equipe', 'acessos com permissão reduzida (só visualização)', tableHTML(['Nome', 'E-mail', 'Permissão'], [['Recepção', 'recepcao@unidade.com.br', 'Visualização'], ['Atendimento', 'atendimento@unidade.com.br', 'Visualização']]) + '<div style="margin-top:var(--sp-4)"><button class="btn btn-outline" type="button" onclick="return false">Adicionar acesso</button></div>', true));
+  }
+  const THEMES_BASE = [{ id: 'default', label: 'Vinho & Dourado', desc: 'Padrão', bg: 'linear-gradient(135deg,#3B0E0B,#1F0706)' }, { id: 'roteiro-light', label: 'Versão Clara', desc: 'Fundo claro', bg: 'linear-gradient(135deg,#F4ECDF,#D5CCBE)' }];
+  const THEMES_SAZ = [{ id: 'dia-das-maes', label: 'Dia das Mães', bg: '#E08CB4' }, { id: 'dia-dos-namorados', label: 'Dia dos Namorados', bg: '#C84B5A' }, { id: 'dia-dos-pais', label: 'Dia dos Pais', bg: '#5B9BD5' }, { id: 'outubro-rosa', label: 'Outubro Rosa', bg: '#D88FA5' }, { id: 'novembro-azul', label: 'Novembro Azul', bg: '#2E6FA8' }, { id: 'setembro-amarelo', label: 'Setembro Amarelo', bg: '#F5C342' }];
+  function siteTheme() { try { return localStorage.getItem('laserco_theme') || 'default'; } catch (e) { return 'default'; } }
+  function themeOpt(t) { var a = siteTheme() === t.id; return '<button type="button" class="theme-opt' + (a ? ' active' : '') + '" data-theme="' + t.id + '"><span class="theme-sw" style="background:' + t.bg + '"></span><span class="theme-opt-l">' + t.label + (t.desc ? '<small>' + t.desc + '</small>' : '') + '</span>' + (a ? '<span class="theme-tag">Ativo</span>' : '') + '</button>'; }
+  function bindThemes() { document.querySelectorAll('#painel-view .theme-opt').forEach(function (b) { b.addEventListener('click', function () { try { localStorage.setItem('laserco_theme', b.dataset.theme); } catch (e) {} router(); }); }); }
+  function viewAparenciaTema() { setView(card('Tema base do site', 'aparência do site público', '<div class="theme-grid big">' + THEMES_BASE.map(themeOpt).join('') + '</div>', true) + '<p class="painel-sub" style="margin-top:var(--sp-4)">A troca afeta só o site público. Os painéis seguem sempre vinho/dourado.</p>'); bindThemes(); }
+  function viewAparenciaSazonais() { setView(card('Temas sazonais', 'ative uma campanha por vez no site público', '<div class="theme-grid">' + THEMES_SAZ.map(themeOpt).join('') + '</div>', true) + '<div style="margin-top:var(--sp-4)"><button type="button" class="painel-export" id="t-reset">Voltar ao tema base</button></div>'); bindThemes(); var r = document.getElementById('t-reset'); if (r) r.addEventListener('click', function () { try { localStorage.setItem('laserco_theme', 'default'); } catch (e) {} router(); }); }
+
   const VIEWS = {
     'visao-geral': viewVisaoGeral,
     'leads-todos': function () { viewLeads({}); },
@@ -506,6 +604,27 @@ window.LaserPainel = (function () {
     'leads-agendamento': function () { viewLeads({ presetTipos: ['agendamento', 'agendamento_interesse'] }); },
     'leads-recrutamento': function () { viewLeads({ presetTipos: ['recrutamento'] }); },
     'recrut-candidatos': function () { viewLeads({ presetTipos: ['recrutamento'] }); },
+    'unidades-ranking': viewUnidadesRanking,
+    'unidades-mapa': viewUnidadesMapa,
+    'unidades-cadastro': viewUnidadesCadastro,
+    'trafego-tempo-real': viewTrafegoTempoReal,
+    'trafego-origem': viewTrafegoOrigem,
+    'trafego-paginas': viewTrafegoPaginas,
+    'trafego-dispositivos': viewTrafegoDispositivos,
+    'demo-idade': viewDemoIdade,
+    'demo-genero': viewDemoGenero,
+    'promo-ativas': viewPromoAtivas,
+    'promo-cadastrar': viewPromoCadastrar,
+    'promo-desempenho': viewPromoDesempenho,
+    'recrut-vagas': viewRecrutVagas,
+    'config-usuarios': viewConfigUsuarios,
+    'config-conta': viewConfigConta,
+    'desemp-procedimento': viewDesempProcedimento,
+    'desemp-periodo': viewDesempPeriodo,
+    'desemp-rede': viewDesempRede,
+    'equipe-logins': viewEquipeLogins,
+    'aparencia-tema': viewAparenciaTema,
+    'aparencia-sazonais': viewAparenciaSazonais,
   };
 
   /* ---------------- sidebar + roteador ---------------- */
