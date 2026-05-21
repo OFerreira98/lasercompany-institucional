@@ -1,9 +1,10 @@
 /* ============================================================
    PAINEL-SEED, leads de exemplo para o MODO DEMO dos painéis
    ============================================================
-   Gera um conjunto realista (~110 leads espalhados em 30 dias)
-   para dar vida aos KPIs e gráficos. Usado só quando não há
-   backend/banco respondendo. Em produção os dados vêm da API.
+   Gera um conjunto realista (~900 leads espalhados em 30 dias,
+   volume coerente com um site de ~60 mil visitas/mês) para dar
+   vida aos KPIs e gráficos. Usado só quando não há backend/banco
+   respondendo. Em produção os dados vêm da API.
    ============================================================ */
 
 window.LaserPainelData = (function () {
@@ -18,12 +19,15 @@ window.LaserPainelData = (function () {
     };
   }
 
-  const NOMES = ['Marina Souza', 'Carla Mendes', 'Patrícia Lima', 'Juliana Alves', 'Fernanda Rocha',
-    'Beatriz Cardoso', 'Renata Dias', 'Aline Castro', 'Larissa Pereira', 'Sandra Nogueira',
-    'Camila Ferreira', 'Vanessa Martins', 'Débora Pinto', 'Tatiane Gomes', 'Roberta Nunes',
-    'Bruna Carvalho', 'Letícia Ramos', 'Priscila Teixeira', 'Amanda Ribeiro', 'Mariana Costa',
-    'Gabriela Moreira', 'Helena Barbosa', 'Isabela Freitas', 'Natália Campos', 'Bianca Lopes',
-    'Daniela Araújo', 'Carolina Pires', 'Sabrina Melo', 'Tainá Cunha', 'Vitória Andrade'];
+  const PRIMEIROS = ['Marina', 'Carla', 'Patrícia', 'Juliana', 'Fernanda', 'Beatriz', 'Renata', 'Aline',
+    'Larissa', 'Sandra', 'Camila', 'Vanessa', 'Débora', 'Tatiane', 'Roberta', 'Bruna', 'Letícia',
+    'Priscila', 'Amanda', 'Mariana', 'Gabriela', 'Helena', 'Isabela', 'Natália', 'Bianca', 'Daniela',
+    'Carolina', 'Sabrina', 'Tainá', 'Vitória', 'Luana', 'Jéssica', 'Eduarda', 'Raquel', 'Mônica',
+    'Adriana', 'Cristina', 'Paula', 'Simone', 'Yasmin', 'Rafaela', 'Karina', 'Thaís', 'Verônica'];
+  const SOBRENOMES = ['Souza', 'Mendes', 'Lima', 'Alves', 'Rocha', 'Cardoso', 'Dias', 'Castro', 'Pereira',
+    'Nogueira', 'Ferreira', 'Martins', 'Pinto', 'Gomes', 'Nunes', 'Carvalho', 'Ramos', 'Teixeira',
+    'Ribeiro', 'Costa', 'Moreira', 'Barbosa', 'Freitas', 'Campos', 'Lopes', 'Araújo', 'Pires', 'Melo',
+    'Cunha', 'Andrade', 'Silva', 'Oliveira', 'Santos', 'Almeida', 'Barros', 'Cavalcanti', 'Tavares', 'Vieira'];
   const SOBREcid = ['São Paulo', 'Rio de Janeiro', 'Belo Horizonte', 'Curitiba', 'Porto Alegre',
     'Salvador', 'Recife', 'Fortaleza', 'Florianópolis', 'Goiânia', 'Brasília'];
 
@@ -71,7 +75,7 @@ window.LaserPainelData = (function () {
     const now = Date.now();
     const D = 86400000, H = 3600000;
     const out = [];
-    const N = 112;
+    const N = 900;
     for (let i = 0; i < N; i++) {
       // datas: mais leads recentes (curva). dia 0..29 atras, enviesado pra recente
       const dia = Math.floor(Math.pow(rng(), 1.7) * 30);
@@ -80,7 +84,7 @@ window.LaserPainelData = (function () {
       const tipo = weighted(rng, TIPOS);
       const origem = weighted(rng, ORIGENS);
       let status = weighted(rng, STATUS);
-      const nome = pick(rng, NOMES);
+      const nome = pick(rng, PRIMEIROS) + ' ' + pick(rng, SOBRENOMES);
       const dados = { nome: nome, whatsapp: phone(rng), cidade: u.cidade, uf: u.uf, unidadeId: u.id, unidadeNome: u.nome, hasUnidade: true };
       if (tipo === 'recrutamento') {
         dados.funcao = pick(rng, ['Enfermeira Esteta', 'Recepcionista', 'Esteticista', 'Consultora de Vendas', 'Gerente de Unidade']);

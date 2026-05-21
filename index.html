@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#1A0404">
+  <meta name="theme-color" content="#481712">
   <meta name="description" content="Laser & Co: a primeira rede do Brasil que une laser e ultrassom. Procedimentos premium, acessíveis a todos. Avaliação gratuita.">
   <title>Laser & Co | Estética premium, acessível a todos</title>
 
@@ -22,8 +22,13 @@
 
   <script>
     try {
-      var t = localStorage.getItem('laserco_theme') || 'default';
-      document.documentElement.setAttribute('data-theme', t);
+      var bs = ['default','roteiro-dark','roteiro-light'];
+      var b = localStorage.getItem('laserco_base') || localStorage.getItem('laserco_theme') || 'default';
+      var a = localStorage.getItem('laserco_accent') || '';
+      if (bs.indexOf(b) < 0) { a = a || b; b = 'default'; }
+      var r = document.documentElement;
+      r.setAttribute('data-theme', b);
+      if (a) r.setAttribute('data-accent', a);
     } catch(e) {}
   </script>
 </head>

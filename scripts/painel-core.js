@@ -57,10 +57,7 @@ window.LaserPainel = (function () {
       { id: 'trafego-paginas', label: 'Páginas mais visitadas' },
       { id: 'trafego-dispositivos', label: 'Dispositivos' },
     ] },
-    { ico: '👥', label: 'Demográfico', children: [
-      { id: 'demo-idade', label: 'Faixa etária' },
-      { id: 'demo-genero', label: 'Distribuição por gênero' },
-    ] },
+    { id: 'demo', ico: '👥', label: 'Demográfico' },
     { ico: '🎯', label: 'Promoções', children: [
       { id: 'promo-ativas', label: 'Promoções ativas' },
       { id: 'promo-cadastrar', label: 'Cadastrar promoção' },
@@ -107,7 +104,7 @@ window.LaserPainel = (function () {
     'unidades-mapa': 'Mapa da rede', 'unidades-cadastro': 'Cadastro de unidades',
     'trafego-tempo-real': 'Tráfego em tempo real', 'trafego-origem': 'Origem dos visitantes',
     'trafego-paginas': 'Páginas mais visitadas', 'trafego-dispositivos': 'Dispositivos',
-    'demo-idade': 'Faixa etária', 'demo-genero': 'Distribuição por gênero',
+    'demo': 'Demográfico',
     'promo-ativas': 'Promoções ativas', 'promo-cadastrar': 'Cadastrar promoção',
     'promo-desempenho': 'Desempenho por promoção', 'recrut-vagas': 'Vagas abertas',
     'recrut-candidatos': 'Candidatos', 'aparencia-tema': 'Tema do site',
@@ -123,6 +120,9 @@ window.LaserPainel = (function () {
     'leads-agendamento': 'Solicitações de avaliação pelo agendamento.',
     'leads-recrutamento': 'Candidaturas recebidas pelas vagas.',
     'recrut-candidatos': 'Candidaturas recebidas pelas vagas.',
+    'demo': 'Idade e gênero do público (demonstração).',
+    'config-usuarios': 'Gerencie acessos e permissões do painel.',
+    'config-conta': 'Seus dados de acesso e perfil.',
   };
 
   let state = { session: null, mode: 'franqueador', all: [], filtered: [], dataMode: 'demo', presetTipos: null, currentView: 'visao-geral' };
@@ -508,20 +508,35 @@ window.LaserPainel = (function () {
   function rankList(pairs) { if (!pairs.length) return '<div class="painel-empty">Sem dados ainda.</div>'; var max = pairs[0][1]; return '<ul class="vg-ranking">' + pairs.map(function (p, i) { return '<li class="vg-rank-item"><span class="vg-rank-pos">' + (i + 1) + '</span><span class="vg-rank-nome">' + esc(p[0]) + '<div class="vg-rank-bar"><span style="width:' + Math.round(p[1] / max * 100) + '%"></span></div></span><span class="vg-rank-val">' + p[1] + '</span></li>'; }).join('') + '</ul>'; }
   function tableHTML(headers, rows) { return '<div class="painel-table-wrap"><table class="painel-table"><thead><tr>' + headers.map(function (h) { return '<th>' + h + '</th>'; }).join('') + '</tr></thead><tbody>' + rows.map(function (r) { return '<tr>' + r.map(function (c) { return '<td>' + c + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>'; }
   function origemPairs() { return topPairs(countBy(state.all, function (l) { return l.origem || 'direto'; }), 10); }
-  const MOCK_PAGINAS = [['Início', 4230], ['Procedimentos', 2680], ['Agendamento', 1940], ['Unidades', 1510], ['Vagas', 720], ['Seja um franqueado', 430]];
+  function col0(a) { return a.map(function (x) { return x[0]; }); }
+  function col1(a) { return a.map(function (x) { return x[1]; }); }
+  function nf(n) { return Number(n).toLocaleString('pt-BR'); }
+  const MOCK_PAGINAS = [['Início', 58240], ['Procedimentos', 41360], ['Agendamento', 23110], ['Unidades', 18470], ['Seja um franqueado', 9320], ['Vagas', 6240]];
+  const MOCK_PG_TIME = ['1m12s', '2m48s', '3m21s', '1m54s', '2m37s', '1m08s'];
+  const MOCK_PG_EXIT = [32, 21, 44, 28, 26, 51];
   const MOCK_DISP = [['Celular', 68], ['Desktop', 26], ['Tablet', 6]];
+  const MOCK_BROWSER = [['Chrome', 58], ['Safari', 27], ['Edge', 8], ['Samsung Internet', 4], ['Outros', 3]];
   const MOCK_IDADE = [['18-24', 14], ['25-34', 38], ['35-44', 27], ['45-54', 14], ['55+', 7]];
   const MOCK_GEN = [['Feminino', 82], ['Masculino', 16], ['Outro', 2]];
 
   function viewUnidadesRanking() {
     var by = countBy(state.all.filter(function (l) { return l.unidadeId; }), function (l) { return l.unidadeNome || l.unidadeId; });
-    setView(card('Top 10 unidades', 'leads no período', cv('u-bar')) + card('Ranking completo', '', rankList(topPairs(by, 40)), true));
-    var t = topPairs(by, 10); vgChart('u-bar', barCfg(t.map(function (x) { return x[0]; }), t.map(function (x) { return x[1]; }), false));
+    var pairs = topPairs(by, 40), top = pairs.slice(0, 10);
+    var totalLeads = pairs.reduce(function (s, p) { return s + p[1]; }, 0);
+    var nUni = Object.keys(by).length;
+    var totalU = (window.LaserData && window.LaserData.unidades) ? window.LaserData.unidades.length : 70;
+    var media = nUni ? Math.round(totalLeads / nUni) : 0;
+    setView('<div class="painel-kpis">' + kpiCard(nf(totalLeads), 'Leads na rede', true) + kpiCard(nUni + ' <small style="font-size:0.5em;color:var(--color-text-muted)">de ' + totalU + '</small>', 'Unidades com leads') + kpiCard(media, 'Média por unidade') + kpiCard(Math.round(nUni / totalU * 100) + '%', 'Cobertura da rede') + '</div>' +
+      '<div class="painel-grid-2">' + card('Top 10 unidades', 'leads no período', cv('u-bar'), true) + card('Ranking completo', nf(nUni) + ' unidades', rankList(pairs), true) + '</div>');
+    vgChart('u-bar', barCfg(col0(top), col1(top), false));
   }
   function viewUnidadesMapa() {
-    var p = topPairs(countBy(state.all.filter(function (l) { return l.uf; }), function (l) { return l.uf; }), 14);
-    setView('<div class="painel-grid-2">' + card('Leads por estado', 'distribuição da rede', cv('uf-bar'), true) + card('Concentração por estado', '', rankList(p), true) + '</div>');
-    vgChart('uf-bar', barCfg(p.map(function (x) { return x[0]; }), p.map(function (x) { return x[1]; }), false));
+    var p = topPairs(countBy(state.all.filter(function (l) { return l.uf; }), function (l) { return l.uf; }), 16);
+    var totalU = (window.LaserData && window.LaserData.unidades) ? window.LaserData.unidades.length : 70;
+    setView('<div class="painel-kpis">' + kpiCard(p.length, 'Estados com presença', true) + kpiCard(totalU, 'Unidades na rede') + kpiCard(p[0] ? p[0][0] : '-', 'Estado líder') + '</div>' +
+      '<div class="painel-grid-2">' + card('Leads por estado', 'distribuição da rede', cv('uf-bar'), true) + card('Concentração por estado', '', rankList(p), true) + '</div>' +
+      '<p class="painel-sub" style="margin-top:var(--sp-2)">O mapa geográfico interativo entra na fase de integração com o sistema unificado.</p>');
+    vgChart('uf-bar', barCfg(col0(p), col1(p), false));
   }
   function viewUnidadesCadastro() {
     var us = (window.LaserData && window.LaserData.unidades) || [];
@@ -530,19 +545,39 @@ window.LaserPainel = (function () {
   function viewTrafegoTempoReal() {
     var now = Date.now();
     var horaLeads = state.all.filter(function (l) { return now - new Date(l.createdAt) <= 3600000; }).length;
-    setView('<div class="painel-kpis">' + kpiCard((34 + state.all.length % 17) + '<span class="kpi-live"></span>', 'Visitantes (30 min)', true) + kpiCard(horaLeads, 'Leads na última hora') + kpiCard(6 + state.all.length % 5, 'Online agora') + '</div><div class="painel-grid-2">' + card('Origem do tráfego', 'agora', cv('tr-orig', true), true) + card('Dispositivos', '', cv('tr-disp', true), true) + '</div>');
-    var op = origemPairs(); vgChart('tr-orig', donutCfg(op.map(function (x) { return x[0]; }), op.map(function (x) { return x[1]; })));
-    vgChart('tr-disp', donutCfg(MOCK_DISP.map(function (x) { return x[0]; }), MOCK_DISP.map(function (x) { return x[1]; })));
+    var online = 28 + state.all.length % 22;
+    var v30 = 64 + state.all.length % 40;
+    setView('<div class="painel-kpis">' + kpiCard(online + '<span class="kpi-live"></span>', 'Online agora', true) + kpiCard(nf(v30), 'Visitantes (30 min)') + kpiCard('2.040', 'Visitantes hoje') + kpiCard('61.380', 'Visitantes no mês') + kpiCard(horaLeads, 'Leads na última hora') + '</div><div class="painel-grid-2">' + card('Origem do tráfego', 'agora', cv('tr-orig', true), true) + card('Dispositivos', '', cv('tr-disp', true), true) + '</div>');
+    var op = origemPairs(); vgChart('tr-orig', donutCfg(col0(op), col1(op)));
+    vgChart('tr-disp', donutCfg(col0(MOCK_DISP), col1(MOCK_DISP)));
   }
   function viewTrafegoOrigem() {
     var op = origemPairs();
     setView('<div class="painel-grid-2">' + card('Origem dos visitantes', 'distribuição', cv('o-don', true), true) + card('Ranking de origem', '', rankList(op), true) + '</div>');
     vgChart('o-don', donutCfg(op.map(function (x) { return x[0]; }), op.map(function (x) { return x[1]; })));
   }
-  function viewTrafegoPaginas() { setView(card('Páginas mais visitadas', 'últimos 30 dias (demonstração)', cv('pg-bar'))); vgChart('pg-bar', barCfg(MOCK_PAGINAS.map(function (x) { return x[0]; }), MOCK_PAGINAS.map(function (x) { return x[1]; }), true)); }
-  function viewTrafegoDispositivos() { setView('<div class="painel-grid-2">' + card('Dispositivos', 'demonstração', cv('d-don', true), true) + card('Resumo', '', rankList(MOCK_DISP), true) + '</div>'); vgChart('d-don', donutCfg(MOCK_DISP.map(function (x) { return x[0]; }), MOCK_DISP.map(function (x) { return x[1]; }))); }
-  function viewDemoIdade() { setView(card('Faixa etária dos leads', 'demonstração', cv('id-bar'))); vgChart('id-bar', barCfg(MOCK_IDADE.map(function (x) { return x[0]; }), MOCK_IDADE.map(function (x) { return x[1]; }), false)); }
-  function viewDemoGenero() { setView('<div class="painel-grid-2">' + card('Distribuição por gênero', 'demonstração', cv('g-don', true), true) + card('Resumo', '', rankList(MOCK_GEN), true) + '</div>'); vgChart('g-don', donutCfg(MOCK_GEN.map(function (x) { return x[0]; }), MOCK_GEN.map(function (x) { return x[1]; }))); }
+  function viewTrafegoPaginas() {
+    var totalViews = MOCK_PAGINAS.reduce(function (s, p) { return s + p[1]; }, 0);
+    var rows = MOCK_PAGINAS.map(function (p, i) { return [p[0], nf(p[1]), MOCK_PG_TIME[i], MOCK_PG_EXIT[i] + '%']; });
+    setView('<div class="painel-kpis">' + kpiCard(nf(totalViews), 'Visualizações (30 dias)', true) + kpiCard('2m31s', 'Tempo médio na página') + kpiCard('33%', 'Taxa de saída média') + '</div>' +
+      '<div class="painel-grid-2">' + card('Páginas mais visitadas', 'últimos 30 dias (demonstração)', cv('pg-bar'), true) + card('Detalhe por página', '', tableHTML(['Página', 'Views', 'Tempo médio', 'Saída'], rows), true) + '</div>');
+    vgChart('pg-bar', barCfg(col0(MOCK_PAGINAS), col1(MOCK_PAGINAS), true));
+  }
+  function viewTrafegoDispositivos() {
+    setView('<div class="painel-kpis">' + kpiCard('68%', 'Celular', true) + kpiCard('26%', 'Desktop') + kpiCard('6%', 'Tablet') + '</div>' +
+      '<div class="painel-grid-2">' + card('Dispositivos', 'distribuição (demonstração)', cv('d-don', true), true) + card('Navegadores', 'demonstração', rankList(MOCK_BROWSER), true) + '</div>');
+    vgChart('d-don', donutCfg(col0(MOCK_DISP), col1(MOCK_DISP)));
+  }
+  function viewDemografico() {
+    var faixaTop = MOCK_IDADE.slice().sort(function (a, b) { return b[1] - a[1]; })[0];
+    var totalG = MOCK_GEN.reduce(function (s, x) { return s + x[1]; }, 0);
+    var fem = (MOCK_GEN.filter(function (x) { return x[0] === 'Feminino'; })[0] || ['', 0])[1];
+    setView('<div class="painel-kpis">' + kpiCard(faixaTop[0] + ' anos', 'Faixa predominante', true) + kpiCard(Math.round(fem / totalG * 100) + '%', 'Público feminino') + kpiCard(MOCK_IDADE.length, 'Faixas monitoradas') + '</div>' +
+      '<div class="painel-grid-2">' + card('Faixa etária (idade)', 'distribuição dos leads por idade (demonstração)', cv('demo-id-bar'), true) + card('Distribuição por gênero', 'demonstração', cv('demo-gen-don', true), true) + '</div>' +
+      card('Resumo demográfico', 'idade e gênero (demonstração)', '<div class="painel-grid-2" style="margin-bottom:0">' + tableHTML(['Faixa etária (idade)', 'Participação'], MOCK_IDADE.map(function (x) { return [x[0] + ' anos', x[1] + '%']; })) + tableHTML(['Gênero', 'Participação'], MOCK_GEN.map(function (x) { return [x[0], x[1] + '%']; })) + '</div>', true));
+    vgChart('demo-id-bar', barCfg(col0(MOCK_IDADE), col1(MOCK_IDADE), false));
+    vgChart('demo-gen-don', donutCfg(col0(MOCK_GEN), col1(MOCK_GEN)));
+  }
   function viewPromoAtivas() {
     var ps = (window.LaserData && window.LaserData.promocoes) || [];
     var html = ps.map(function (p) { return '<div class="painel-chart-card flush"><div style="font-family:var(--font-accent);font-weight:600">' + esc(p.titulo) + '</div><div style="color:var(--color-accent-pale);font-size:var(--fs-xl);font-family:var(--font-accent);margin:6px 0">' + esc(p.preco || '') + ' <small style="color:var(--color-text-muted);text-decoration:line-through;font-size:0.55em">' + esc(p.precoOriginal || '') + '</small></div><div style="font-size:var(--fs-xs);color:var(--color-text-muted)">Válida até ' + esc(p.valida || '-') + ' · ' + esc(p.desconto || '') + '</div></div>'; }).join('');
@@ -560,13 +595,73 @@ window.LaserPainel = (function () {
     var vs = (window.LaserData && window.LaserData.vagas) || [];
     setView(card('Vagas abertas', vs.length + ' vagas', tableHTML(['Função', 'Cidade', 'Regime', 'Status'], vs.map(function (v) { return [esc(v.funcao), esc(v.cidade), esc(v.tipo) + ' · ' + esc(v.nivel), v.destaque ? 'Em destaque' : '-']; })), true));
   }
-  function viewConfigUsuarios() {
+  const PERMS = [
+    { key: 'ver', label: 'Ver leads' },
+    { key: 'editar', label: 'Editar leads' },
+    { key: 'exportar', label: 'Exportar CSV' },
+    { key: 'promos', label: 'Gerenciar promoções' },
+    { key: 'usuarios', label: 'Gerenciar usuários' },
+  ];
+  var _usuarios = null;
+  function roleLabel(r) { return r === 'franqueador' ? 'Franqueador' : (r === 'recepcao' ? 'Recepção' : 'Franqueado'); }
+  function unidadeNomePorId(id) { var u = (window.LaserData && window.LaserData.unidades || []).filter(function (x) { return x.id === id; })[0]; return u ? u.nome + '/' + u.uf : (id ? id : 'Rede toda'); }
+  function ensureUsuarios() {
+    if (_usuarios) return _usuarios;
     var us = (window.LaserAPI && window.LaserAPI.DEMO_USERS) || [];
-    setView(card('Usuários e permissões', 'acessos do painel (demonstração)', tableHTML(['Nome', 'E-mail', 'Perfil', 'Unidade'], us.map(function (u) { return [esc(u.nome), esc(u.email), u.role === 'franqueador' ? 'Franqueador' : 'Franqueado', esc(u.unidadeId || 'rede toda')]; })), true));
+    _usuarios = us.map(function (u) { return { nome: u.nome, email: u.email, role: u.role, unidadeId: u.unidadeId || '', perms: u.role === 'franqueador' ? PERMS.map(function (p) { return p.key; }) : ['ver', 'editar', 'exportar'] }; });
+    if (!_usuarios.length) _usuarios.push({ nome: 'Franqueador', email: 'franqueador@laserco.com.br', role: 'franqueador', unidadeId: '', perms: PERMS.map(function (p) { return p.key; }) });
+    _usuarios.push({ nome: 'Recepção, V. Mariana', email: 'recepcao.vmariana@laserco.com.br', role: 'recepcao', unidadeId: 'vmariana', perms: ['ver'] });
+    return _usuarios;
+  }
+  function permChips(perms) { return PERMS.filter(function (p) { return perms.indexOf(p.key) >= 0; }).map(function (p) { return '<span class="perm-chip">' + p.label + '</span>'; }).join('') || '<span class="muted">Sem permissões</span>'; }
+  function viewConfigUsuarios() {
+    var us = ensureUsuarios();
+    var rows = us.map(function (u, i) { return [esc(u.nome), esc(u.email), roleLabel(u.role), esc(unidadeNomePorId(u.unidadeId)), '<div class="perm-chips">' + permChips(u.perms) + '</div>', '<button class="painel-act det" type="button" data-edit="' + i + '">Editar</button>']; });
+    setView('<div class="painel-toolbar" style="justify-content:flex-end"><button class="btn btn-primary" type="button" id="u-novo">+ Convidar usuário</button></div>' +
+      '<div id="u-form-box"></div>' +
+      card('Usuários e permissões', us.length + ' acessos (demonstração, salvar conecta na integração)', tableHTML(['Nome', 'E-mail', 'Perfil', 'Unidade', 'Permissões', ''], rows), true));
+    var box = document.getElementById('u-form-box');
+    function unidadeOptions(sel) { var opt = '<option value="">Rede toda</option>'; (window.LaserData && window.LaserData.unidades || []).slice().sort(function (a, b) { return a.nome.localeCompare(b.nome); }).forEach(function (u) { opt += '<option value="' + u.id + '"' + (u.id === sel ? ' selected' : '') + '>' + esc(u.nome) + ' (' + u.uf + ')</option>'; }); return opt; }
+    function openForm(idx) {
+      var u = idx == null ? { nome: '', email: '', role: 'franqueado', unidadeId: '', perms: ['ver', 'editar'] } : us[idx];
+      box.innerHTML = card(idx == null ? 'Convidar usuário' : 'Editar usuário', '', '<div class="painel-form"><div class="det-field"><label>Nome</label><input id="uf-nome" class="painel-input" style="width:100%" value="' + esc(u.nome) + '"></div>' +
+        '<div class="det-field"><label>E-mail</label><input id="uf-email" class="painel-input" type="email" style="width:100%" value="' + esc(u.email) + '"></div>' +
+        '<div class="det-field"><label>Perfil</label><select id="uf-role" class="painel-select"><option value="franqueado"' + (u.role === 'franqueado' ? ' selected' : '') + '>Franqueado</option><option value="recepcao"' + (u.role === 'recepcao' ? ' selected' : '') + '>Recepção</option><option value="franqueador"' + (u.role === 'franqueador' ? ' selected' : '') + '>Franqueador</option></select></div>' +
+        '<div class="det-field"><label>Unidade</label><select id="uf-uni" class="painel-select">' + unidadeOptions(u.unidadeId) + '</select></div>' +
+        '<div class="det-field" style="grid-column:1/-1"><label>Permissões</label><div class="perm-list">' + PERMS.map(function (p) { return '<label class="perm-item"><input type="checkbox" value="' + p.key + '"' + (u.perms.indexOf(p.key) >= 0 ? ' checked' : '') + '> ' + p.label + '</label>'; }).join('') + '</div></div></div>' +
+        '<div class="det-actions"><button class="btn btn-primary" type="button" id="uf-save">Salvar</button><button class="btn btn-outline" type="button" id="uf-cancel">Cancelar</button></div>', true);
+      document.getElementById('uf-cancel').addEventListener('click', function () { box.innerHTML = ''; });
+      document.getElementById('uf-save').addEventListener('click', function () {
+        var perms = Array.prototype.slice.call(box.querySelectorAll('.perm-item input:checked')).map(function (c) { return c.value; });
+        var data = { nome: document.getElementById('uf-nome').value || 'Sem nome', email: document.getElementById('uf-email').value, role: document.getElementById('uf-role').value, unidadeId: document.getElementById('uf-uni').value, perms: perms };
+        if (idx == null) us.push(data); else us[idx] = data;
+        router();
+      });
+    }
+    var novo = document.getElementById('u-novo'); if (novo) novo.addEventListener('click', function () { openForm(null); });
+    document.querySelectorAll('#painel-view [data-edit]').forEach(function (b) { b.addEventListener('click', function () { openForm(parseInt(b.dataset.edit, 10)); }); });
   }
   function viewConfigConta() {
     var u = state.session.user;
-    setView(card('Minha conta', '', '<div style="display:grid;gap:var(--sp-3);max-width:480px;font-size:var(--fs-sm)"><div class="det-row"><span class="det-k">Nome</span><span class="det-v">' + esc(u.nome) + '</span></div><div class="det-row"><span class="det-k">E-mail</span><span class="det-v">' + esc(u.email) + '</span></div><div class="det-row"><span class="det-k">Perfil</span><span class="det-v">' + (u.role === 'franqueador' ? 'Franqueador' : 'Franqueado') + '</span></div></div><div style="margin-top:var(--sp-5)"><button class="btn btn-outline" type="button" onclick="return false">Alterar senha</button></div>', true));
+    var inicial = String(u.nome || u.email || '?').trim().charAt(0).toUpperCase();
+    setView(card('Minha conta', 'seus dados de acesso (demonstração)',
+      '<div class="acct-head"><div class="acct-avatar" id="acct-avatar">' + esc(inicial) + '</div>' +
+        '<div><div class="acct-name">' + esc(u.nome || '-') + '</div><div class="muted">' + roleLabel(u.role) + (u.unidadeId ? ' · ' + esc(unidadeNomePorId(u.unidadeId)) : ' · rede toda') + '</div>' +
+        '<label class="btn btn-outline acct-photo-btn" style="margin-top:var(--sp-3)">Alterar foto<input type="file" id="acct-photo" accept="image/*" hidden></label></div></div>' +
+      '<div class="painel-form" style="margin-top:var(--sp-5)">' +
+        '<div class="det-field"><label>Nome</label><input id="ac-nome" class="painel-input" style="width:100%" value="' + esc(u.nome || '') + '"></div>' +
+        '<div class="det-field"><label>E-mail</label><input id="ac-email" class="painel-input" type="email" style="width:100%" value="' + esc(u.email || '') + '"></div>' +
+        '<div class="det-field"><label>Telefone</label><input id="ac-fone" class="painel-input" style="width:100%" placeholder="(00) 00000-0000"></div>' +
+        '<div class="det-field"><label>Cargo</label><input id="ac-cargo" class="painel-input" style="width:100%" placeholder="Ex.: Proprietário"></div>' +
+        '<div class="det-field" style="grid-column:1/-1"><label>Observações</label><textarea id="ac-obs" class="painel-textarea" rows="3" style="width:100%" placeholder="Notas internas (opcional)"></textarea></div>' +
+      '</div>' +
+      '<div class="det-actions"><button class="btn btn-primary" type="button" id="ac-save">Salvar alterações</button><button class="btn btn-outline" type="button" onclick="return false">Alterar senha</button><span class="muted" id="ac-msg"></span></div>', true));
+    var photo = document.getElementById('acct-photo');
+    if (photo) photo.addEventListener('change', function () {
+      var f = photo.files && photo.files[0]; if (!f) return;
+      var rd = new FileReader(); rd.onload = function (e) { var av = document.getElementById('acct-avatar'); if (av) { av.textContent = ''; av.style.backgroundImage = 'url(' + e.target.result + ')'; av.style.backgroundSize = 'cover'; av.style.backgroundPosition = 'center'; } }; rd.readAsDataURL(f);
+    });
+    var save = document.getElementById('ac-save'); if (save) save.addEventListener('click', function () { var m = document.getElementById('ac-msg'); if (m) m.textContent = 'Salvo nesta sessão. A gravação real entra na integração.'; });
   }
   function viewDesempProcedimento() {
     var t = topPairs(countBy(state.all.filter(function (l) { return l.procedimento; }), function (l) { return l.procedimento; }), 8);
@@ -589,13 +684,18 @@ window.LaserPainel = (function () {
   function viewEquipeLogins() {
     setView(card('Logins da equipe', 'acessos com permissão reduzida (só visualização)', tableHTML(['Nome', 'E-mail', 'Permissão'], [['Recepção', 'recepcao@unidade.com.br', 'Visualização'], ['Atendimento', 'atendimento@unidade.com.br', 'Visualização']]) + '<div style="margin-top:var(--sp-4)"><button class="btn btn-outline" type="button" onclick="return false">Adicionar acesso</button></div>', true));
   }
-  const THEMES_BASE = [{ id: 'default', label: 'Vinho & Dourado', desc: 'Padrão', bg: 'linear-gradient(135deg,#3B0E0B,#1F0706)' }, { id: 'roteiro-light', label: 'Versão Clara', desc: 'Fundo claro', bg: 'linear-gradient(135deg,#F4ECDF,#D5CCBE)' }];
+  const THEMES_BASE = [{ id: 'default', label: 'Vinho & Dourado', desc: 'Padrão', bg: 'linear-gradient(135deg,#5E211B,#481712)' }, { id: 'roteiro-light', label: 'Versão Clara', desc: 'Fundo claro', bg: 'linear-gradient(135deg,#EFE0CB,#E6D0B9)' }];
   const THEMES_SAZ = [{ id: 'dia-das-maes', label: 'Dia das Mães', bg: '#E08CB4' }, { id: 'dia-dos-namorados', label: 'Dia dos Namorados', bg: '#C84B5A' }, { id: 'dia-dos-pais', label: 'Dia dos Pais', bg: '#5B9BD5' }, { id: 'outubro-rosa', label: 'Outubro Rosa', bg: '#D88FA5' }, { id: 'novembro-azul', label: 'Novembro Azul', bg: '#2E6FA8' }, { id: 'setembro-amarelo', label: 'Setembro Amarelo', bg: '#F5C342' }];
-  function siteTheme() { try { return localStorage.getItem('laserco_theme') || 'default'; } catch (e) { return 'default'; } }
-  function themeOpt(t) { var a = siteTheme() === t.id; return '<button type="button" class="theme-opt' + (a ? ' active' : '') + '" data-theme="' + t.id + '"><span class="theme-sw" style="background:' + t.bg + '"></span><span class="theme-opt-l">' + t.label + (t.desc ? '<small>' + t.desc + '</small>' : '') + '</span>' + (a ? '<span class="theme-tag">Ativo</span>' : '') + '</button>'; }
-  function bindThemes() { document.querySelectorAll('#painel-view .theme-opt').forEach(function (b) { b.addEventListener('click', function () { try { localStorage.setItem('laserco_theme', b.dataset.theme); } catch (e) {} router(); }); }); }
-  function viewAparenciaTema() { setView(card('Tema base do site', 'aparência do site público', '<div class="theme-grid big">' + THEMES_BASE.map(themeOpt).join('') + '</div>', true) + '<p class="painel-sub" style="margin-top:var(--sp-4)">A troca afeta só o site público. Os painéis seguem sempre vinho/dourado.</p>'); bindThemes(); }
-  function viewAparenciaSazonais() { setView(card('Temas sazonais', 'ative uma campanha por vez no site público', '<div class="theme-grid">' + THEMES_SAZ.map(themeOpt).join('') + '</div>', true) + '<div style="margin-top:var(--sp-4)"><button type="button" class="painel-export" id="t-reset">Voltar ao tema base</button></div>'); bindThemes(); var r = document.getElementById('t-reset'); if (r) r.addEventListener('click', function () { try { localStorage.setItem('laserco_theme', 'default'); } catch (e) {} router(); }); }
+  const THEME_BASE_IDS = ['default', 'roteiro-dark', 'roteiro-light'];
+  function thGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function thSet(k, v) { try { if (v == null || v === '') localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
+  function siteBase() { var b = thGet('laserco_base'); if (b && THEME_BASE_IDS.indexOf(b) >= 0) return b; var o = thGet('laserco_theme'); if (o && THEME_BASE_IDS.indexOf(o) >= 0) return o; return 'default'; }
+  function siteAccent() { var a = thGet('laserco_accent'); if (a) return a; var o = thGet('laserco_theme'); if (o && THEME_BASE_IDS.indexOf(o) < 0) return o; return ''; }
+  function persistTheme(base, accent) { thSet('laserco_base', base || 'default'); thSet('laserco_accent', accent || ''); thSet('laserco_theme', accent || base || 'default'); }
+  function themeOpt(t, kind) { var cur = kind === 'accent' ? siteAccent() : siteBase(); var a = cur === t.id; return '<button type="button" class="theme-opt' + (a ? ' active' : '') + '" data-kind="' + (kind || 'base') + '" data-theme="' + t.id + '"><span class="theme-sw" style="background:' + t.bg + '"></span><span class="theme-opt-l">' + t.label + (t.desc ? '<small>' + t.desc + '</small>' : '') + '</span>' + (a ? '<span class="theme-tag">Ativo</span>' : '') + '</button>'; }
+  function bindThemes() { document.querySelectorAll('#painel-view .theme-opt').forEach(function (b) { b.addEventListener('click', function () { if (b.dataset.kind === 'accent') { persistTheme(siteBase(), siteAccent() === b.dataset.theme ? '' : b.dataset.theme); } else { persistTheme(b.dataset.theme, siteAccent()); } router(); }); }); }
+  function viewAparenciaTema() { setView(card('Tema base do site', 'aparência do site público', '<div class="theme-grid big">' + THEMES_BASE.map(function (t) { return themeOpt(t, 'base'); }).join('') + '</div>', true) + '<p class="painel-sub" style="margin-top:var(--sp-4)">A troca afeta só o site público. Os painéis seguem sempre vinho/dourado. O acento sazonal se mantém sobre a base escolhida.</p>'); bindThemes(); }
+  function viewAparenciaSazonais() { setView(card('Acento sazonal', 'combina com a base atual (clara ou escura)', '<div class="theme-grid">' + THEMES_SAZ.map(function (t) { return themeOpt(t, 'accent'); }).join('') + '</div>', true) + '<div style="margin-top:var(--sp-4)"><button type="button" class="painel-export" id="t-reset">Remover acento sazonal</button></div>'); bindThemes(); var r = document.getElementById('t-reset'); if (r) r.addEventListener('click', function () { persistTheme(siteBase(), ''); router(); }); }
 
   const VIEWS = {
     'visao-geral': viewVisaoGeral,
@@ -611,8 +711,7 @@ window.LaserPainel = (function () {
     'trafego-origem': viewTrafegoOrigem,
     'trafego-paginas': viewTrafegoPaginas,
     'trafego-dispositivos': viewTrafegoDispositivos,
-    'demo-idade': viewDemoIdade,
-    'demo-genero': viewDemoGenero,
+    'demo': viewDemografico,
     'promo-ativas': viewPromoAtivas,
     'promo-cadastrar': viewPromoCadastrar,
     'promo-desempenho': viewPromoDesempenho,

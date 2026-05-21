@@ -11,6 +11,64 @@ Memória completa do projeto para retomar do zero (sobrevive a `/clear`). Espelh
 
 ---
 
+## ⟶ PROSSEGUIR / CONTINUAR (LER PRIMEIRO AO RETOMAR)
+
+Quando o usuário disser **"prosseguir"** ou **"continuar"**, é daqui que retomamos. Estado em
+2026-05-21 (logo após `/clear`):
+
+### STATUS: ajustes de cores + tema + painel CONCLUÍDOS e COMMITADOS (2026-05-21)
+Feito, testado no preview e commitado (rodada com o Ferreira):
+
+1. **Cores (aprovadas):** vinho default mais leve/quente, `--laser-wine-deep: #481712` (era
+   `#1A0404`), ramp `#5E211B` / `#74302A` / `#1F0B0A`. Afeta site + painéis. `<meta
+   theme-color>` dos 11 arquivos e a `design-system.html` atualizadas pra nova cor.
+2. **Versão Clara (`roteiro-light`) refeita:** creme quente (bg `#EFE0CB`, cards `#F7EEDD`, sem
+   branco puro), texto vinho nítido (`#361410` / `#4E1A15`, muted `#6E4A3A`), dourado bronze
+   pontual. Resolveu o "muito branco / letras apagadas".
+3. **Tema BASE + ACENTO separados:** `data-theme` (base) + `data-accent` (sazonal). Storage
+   `laserco_base` + `laserco_accent` (mantém `laserco_theme` legado = accent||base p/ migração).
+   Corrigiu o bug "Versão Clara + sazonal voltava pro vinho". Sazonais agora são
+   `:root[data-accent="..."]` no `tokens.css`. `theme.js` reescrito; 8 HTMLs públicos com script
+   anti-flash novo; `painel.html` virou fixo `default`. Aparência do painel grava base+acento.
+4. **Painel:** Demográfico = tela única (`#demo` → `viewDemografico`, idade rotulada como idade +
+   gênero). Telas vazias preenchidas (tráfego páginas/dispositivos, ranking 2-col sem vácuo,
+   mapa com KPIs + nota de que o mapa geográfico real é da integração). Config > Usuários:
+   convidar/editar usuário com permissões (checkbox). Minha conta: foto (upload preview),
+   telefone, cargo, observações (vale nos 2 painéis). CSS novo no fim de `painel.css`.
+5. **Volume ~60k/mês:** `painel-seed.js` N=900 leads, nomes primeiro+sobrenome. Tempo real mostra
+   "Visitantes no mês 61.380 / hoje 2.040"; mocks de tráfego escalados.
+
+### ⟶ PRÓXIMA TAREFA: página "Seja um franqueado" (`franqueado.html`) com a persona Rafael
+Material em `Referência a site Rafael para SEJA FRANQUEADO/` (export Wix da Franchising Factory).
+Catálogo já feito. Usar:
+- **Persona:** Rafael Estevez, fundador da Laser & Co. e da Botoclinic; à frente da Franchising
+  Factory (formatação/aceleração de franquias).
+- **Provas públicas (ok):** Laser&Co ~70 unidades; Anitta sócia/embaixadora (set/2024); Botoclinic
+  ~180 unidades; +150 marcas formatadas; +1000 clientes; capa revista MENSCH Carreira (nov/2024);
+  conexão Grupo XP.
+- **NÃO publicar valor sensível:** venda de 65% da Botoclinic à XP por ~R$100mi é verdadeira, mas o
+  cliente pediu versão DISCRETA ("captou investimento da XP"), sem número/percentual.
+- **Ignorar** "5 empresas no Shopping Garden" (não existe; veio de transcrição de vídeo).
+- **Fotos reais usáveis** (renomear ao importar): retrato hero `ea38f0_e1406640358a41ddb3233bd407164df0~mv2.jpg`
+  e `ChatGPT Image 9 de set_edited.png`; fachada Laser&Co `WhatsApp Image 2025-09-12 at 14_12_01.jpeg`;
+  Rafael+Anitta `ea38f0_032f5ebc5d2240b8b4a57716a7a629a9~mv2.jpg`; capa MENSCH
+  `ea38f0_1e171f17e1f9447487beb76133f3cf82~mv2.webp`. Manter a página LIMPA.
+
+### DEPOIS: DOIS relatórios
+1. **CLIENTE:** linguagem simples, o que o site/painel já faz, sem jargão.
+2. **DESENVOLVEDORES:** tudo p/ continuarem sem o Ferreira (logins de teste + onde trocar,
+   stack/arquitetura, o que foi feito, o que falta, testes, ponto de troca do banco
+   `api/_lib/store.js`, passo a passo do `BACKEND.md`).
+
+### DÉBITOS restantes (pendências)
+1. ~43 imagens de procedimento por IA (`_gen.cjs` flux, sem texto), depois `--wire`.
+2. Banco + senhas reais (Postgres no Marketplace, `DATABASE_URL`, `npm i pg`, tabela,
+   `AUTH_SECRET`), ver `BACKEND.md`.
+3. Integração real do painel (dados ao vivo, CRUD que salva, mapa geográfico).
+4. Fotos reais das fachadas das unidades e dos antes/depois (cliente fornece).
+
+---
+
 ## REGRAS PERMANENTES (não violar)
 
 1. **ZERO traços longos.** Nunca em-dash nem en-dash em texto visível ao usuário (endereços,
@@ -99,9 +157,9 @@ Detalhes em `BACKEND.md`.
   - **Franqueado:** Visão Geral (próprios dados), Desempenho (procedimento/período/comparação
     com a rede), Equipe, Minha conta. Menu restrito (não vê unidades da rede, promoções nem
     seletor de temas).
-  - **Seletor de temas (Aparência):** aplica o tema do site público via
-    `localStorage['laserco_theme']` (base claro/dark + 6 sazonais) sem recolorir o painel.
-- **Dados de demonstração:** `painel-seed.js` gera ~112 leads em 30 dias. A integração real
+  - **Seletor de temas (Aparência):** aplica o tema do site público via `localStorage`
+    `laserco_base` (base) + `laserco_accent` (sazonal), combináveis, sem recolorir o painel.
+- **Dados de demonstração:** `painel-seed.js` gera ~900 leads em 30 dias (volume ~60k visitas/mês). A integração real
   (dados ao vivo, CRUD que salva, mapa geográfico no painel) fica para o DESENVOLVEDOR na
   fase de sistema unificado. Cliente aprovou esse recorte.
 - **Logins de teste:** `franqueador@laserco.com.br`, `vmariana@laserco.com.br`,

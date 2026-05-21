@@ -108,11 +108,11 @@
    ============================================================= */
 :root,
 :root[data-theme="default"] {
-  /* Marca - cores raiz */
-  --laser-wine:       #2A0707;
-  --laser-wine-deep:  #1A0404;
-  --laser-wine-soft:  #3A1010;
-  --laser-black:      #0A0606;
+  /* Marca - cores raiz (vinho leve e quente, menos "pesado") */
+  --laser-wine:       #5E211B;
+  --laser-wine-deep:  #481712;
+  --laser-wine-soft:  #74302A;
+  --laser-black:      #1F0B0A;
 
   /* Acento — dourado quente */
   --laser-gold:       #C8A064;
@@ -190,46 +190,50 @@
 }
 
 /* =============================================================
-   TEMA ROTEIRO — LIGHT (Bege + vinho + dourado)
+   TEMA ROTEIRO — LIGHT (Versão clara: creme quente + vinho + dourado pontual)
+   Não usa branco puro; é uma versão "leve" do vinho da marca.
    ============================================================= */
 :root[data-theme="roteiro-light"] {
-  --color-bg:           #F4ECDF;
-  --color-bg-alt:       #D5CCBE;
-  --color-bg-elevated:  #FFFFFF;
-  --color-surface:      rgba(59, 14, 11, 0.04);
-  --color-surface-hover:rgba(59, 14, 11, 0.07);
+  --color-bg:           #EFE0CB;
+  --color-bg-alt:       #E6D0B9;
+  --color-bg-elevated:  #F7EEDD;
+  --color-surface:      rgba(72, 23, 18, 0.05);
+  --color-surface-hover:rgba(72, 23, 18, 0.09);
 
-  --color-text:         #3B0E0B;
-  --color-text-soft:    #6B2418;
-  --color-text-muted:   #8A6B5A;
-  --color-text-dim:     rgba(59, 14, 11, 0.55);
+  --color-text:         #361410;
+  --color-text-soft:    #4E1A15;
+  --color-text-muted:   #6E4A3A;
+  --color-text-dim:     rgba(54, 20, 16, 0.7);
 
-  --color-accent:       #9A6B1E;
-  --color-accent-soft:  #B58432;
-  --color-accent-deep:  #6E4A12;
-  --color-accent-pale:  #C8A064;
-  --color-accent-grad:  linear-gradient(90deg, #6E4A12 0%, #C8A064 50%, #6E4A12 100%);
-  --color-accent-glow:  rgba(154, 107, 30, 0.3);
+  --color-accent:       #9C6E27;
+  --color-accent-soft:  #B98C44;
+  --color-accent-deep:  #6E4D18;
+  --color-accent-pale:  #D2B47C;
+  --color-accent-grad:  linear-gradient(90deg, #6E4D18 0%, #C8A064 50%, #6E4D18 100%);
+  --color-accent-glow:  rgba(156, 110, 39, 0.22);
 
-  --color-border:       rgba(59, 14, 11, 0.15);
-  --color-border-strong:rgba(59, 14, 11, 0.3);
-  --color-border-accent:rgba(154, 107, 30, 0.45);
+  --color-border:       rgba(54, 20, 16, 0.16);
+  --color-border-strong:rgba(54, 20, 16, 0.30);
+  --color-border-accent:rgba(156, 110, 39, 0.42);
 
-  --shadow-sm: 0 2px 8px rgba(59, 14, 11, 0.08);
-  --shadow-md: 0 8px 24px rgba(59, 14, 11, 0.12);
-  --shadow-lg: 0 16px 48px rgba(59, 14, 11, 0.18);
-  --shadow-glow: 0 0 32px rgba(154, 107, 30, 0.2);
+  --shadow-sm: 0 2px 8px rgba(54, 20, 16, 0.09);
+  --shadow-md: 0 10px 28px rgba(54, 20, 16, 0.13);
+  --shadow-lg: 0 18px 50px rgba(54, 20, 16, 0.17);
+  --shadow-glow: 0 0 32px rgba(156, 110, 39, 0.18);
 
   color-scheme: light;
 }
 
 /* =============================================================
-   TEMAS SAZONAIS
-   Mantêm a base vinho+dourado da marca; apenas o ACENTO muda.
+   TEMAS SAZONAIS (ACENTO)
+   Aplicados via data-accent, sobrepõem APENAS o acento e funcionam
+   sobre qualquer base (default, roteiro-dark ou roteiro-light).
+   Ex.: base clara + data-accent="dia-dos-namorados" = fundo claro
+   com acento dos namorados (não volta pro vinho).
    ============================================================= */
 
 /* Outubro Rosa — Câncer de mama */
-:root[data-theme="outubro-rosa"] {
+:root[data-accent="outubro-rosa"] {
   --color-accent:       #E08CB4;
   --color-accent-soft:  #F0B5CF;
   --color-accent-deep:  #B5527D;
@@ -240,7 +244,7 @@
 }
 
 /* Novembro Azul — Câncer de próstata */
-:root[data-theme="novembro-azul"] {
+:root[data-accent="novembro-azul"] {
   --color-accent:       #5B9BD5;
   --color-accent-soft:  #87B5DF;
   --color-accent-deep:  #2E6FA8;
@@ -251,7 +255,7 @@
 }
 
 /* Setembro Amarelo — Prevenção ao suicídio */
-:root[data-theme="setembro-amarelo"] {
+:root[data-accent="setembro-amarelo"] {
   --color-accent:       #F5C342;
   --color-accent-soft:  #F8D778;
   --color-accent-deep:  #BE9015;
@@ -262,7 +266,7 @@
 }
 
 /* Dia das Mães */
-:root[data-theme="dia-das-maes"] {
+:root[data-accent="dia-das-maes"] {
   --color-accent:       #D88FA5;
   --color-accent-soft:  #ECBACA;
   --color-accent-deep:  #A6566F;
@@ -273,7 +277,7 @@
 }
 
 /* Dia dos Namorados */
-:root[data-theme="dia-dos-namorados"] {
+:root[data-accent="dia-dos-namorados"] {
   --color-accent:       #C84B5A;
   --color-accent-soft:  #DA7882;
   --color-accent-deep:  #8E2935;
@@ -284,7 +288,7 @@
 }
 
 /* Dia dos Pais */
-:root[data-theme="dia-dos-pais"] {
+:root[data-accent="dia-dos-pais"] {
   --color-accent:       #5C7F9C;
   --color-accent-soft:  #87A2BA;
   --color-accent-deep:  #355974;

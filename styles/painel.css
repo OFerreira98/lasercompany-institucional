@@ -365,3 +365,17 @@
   .painel-main { padding: var(--sp-4); }
   .det-row { grid-template-columns: 1fr; gap: 0.15rem; }
 }
+
+/* ---- Usuários/permissões + Minha conta ---- */
+.painel-form { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); }
+.painel-form .det-field { margin-bottom: 0; }
+.perm-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--sp-2); }
+.perm-item { display: flex; align-items: center; gap: 8px; font-size: var(--fs-sm); color: var(--color-text-soft); cursor: pointer; }
+.perm-item input { accent-color: var(--color-accent); }
+.perm-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.perm-chip { font-size: var(--fs-xs); padding: 2px 8px; border: 1px solid var(--color-border); border-radius: var(--radius-pill); color: var(--color-text-soft); background: var(--color-surface); white-space: nowrap; }
+.acct-head { display: flex; gap: var(--sp-4); align-items: center; }
+.acct-avatar { width: 72px; height: 72px; border-radius: 50%; background: var(--color-bg-elevated); border: 1px solid var(--color-border-accent); display: flex; align-items: center; justify-content: center; font-family: var(--font-serif); font-size: 1.9rem; color: var(--color-accent-pale); flex-shrink: 0; overflow: hidden; background-size: cover; background-position: center; }
+.acct-name { font-family: var(--font-accent); font-weight: 600; font-size: var(--fs-lg); }
+.acct-photo-btn { display: inline-flex; cursor: pointer; }
+@media (max-width: 640px) { .painel-form { grid-template-columns: 1fr; } }

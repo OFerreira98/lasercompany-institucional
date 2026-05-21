@@ -3,6 +3,13 @@
 Site institucional estático (HTML/CSS/JS, sem framework de build) da **Laser & Company Brasil**,
 rede de franquias de estética a laser. Hospedado no GitHub e publicado na Vercel.
 
+> **AO RETOMAR (após `/clear`) ou quando o usuário disser "prosseguir"/"continuar":** leia a
+> seção **"PROSSEGUIR / CONTINUAR"** no topo de `memoria.md`. É lá que está o estado atual e o
+> próximo passo. Resumo rápido: cores + tema (base/acento) + refinos do painel + volume do seed
+> já CONCLUÍDOS e commitados. Próximo: construir a página "Seja um franqueado" (`franqueado.html`)
+> com a persona do Rafael (material em `Referência a site Rafael...`), depois montar 2 relatórios
+> (cliente + devs).
+
 - **Repositório:** `lasercompany-institucional` (conta `OFerreira98`)
 - **Produção:** https://lasercompany-institucional.vercel.app
 - **Deploy:** `vercel --prod` (SEM `--yes` — com `--yes` o classificador de auto-mode bloqueia)
