@@ -1558,6 +1558,45 @@
   100% { box-shadow: 0 0 0 24px transparent; }
 }
 
+/* ============================================================
+   PLACEHOLDER "imagem em producao" (trocar por foto real)
+   Usado em cards de unidade, procedimento, antes/depois e maquinas
+   enquanto nao chegam as fotos reais. Marcado com
+   data-placeholder="trocar-por-foto-real" para facilitar a troca.
+   ============================================================ */
+.laser-img-ph {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  text-align: center;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(200,160,100,0.18), transparent 55%),
+    radial-gradient(circle at 75% 82%, rgba(154,107,30,0.22), transparent 55%),
+    linear-gradient(135deg, var(--color-bg-alt), var(--color-bg));
+}
+.laser-img-ph-mono {
+  font-family: var(--font-display, 'Cormorant Garamond', serif);
+  font-size: clamp(1.05rem, 0.85rem + 1vw, 1.55rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-accent-pale, #E8C088);
+  line-height: 1;
+}
+.laser-img-ph-mono em { font-style: italic; color: var(--color-accent, #C8A064); padding: 0 0.12em; }
+.laser-img-ph-cap {
+  font-family: var(--font-accent, 'Manrope', sans-serif);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(245, 240, 230, 0.5);
+}
+
 .unidade-card-image {
   aspect-ratio: 16 / 9;
   position: relative;

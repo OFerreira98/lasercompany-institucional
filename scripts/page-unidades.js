@@ -7,6 +7,9 @@
 
 (function() {
 
+  /* Placeholder "imagem em produção" (trocar por foto real depois) */
+  const PH_HTML = '<div class="laser-img-ph" data-placeholder="trocar-por-foto-real"><span class="laser-img-ph-mono">Laser <em>&amp;</em> Co</span><span class="laser-img-ph-cap">imagem em produção</span></div>';
+
   let map = null;
   const markers = {};
 
@@ -157,6 +160,7 @@
       return `
         <article class="unidade-card" data-id="${u.id}">
           <div class="unidade-card-image" style="${unidadeCardStyle(u)}" aria-hidden="true">
+            ${u.foto ? '' : PH_HTML}
             <span class="unidade-card-uf-badge">${u.uf}</span>
             <button type="button" class="unidade-card-pin" data-focus="${u.id}" aria-label="Ver no mapa">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>

@@ -4,6 +4,9 @@
 
 (function() {
 
+  /* Placeholder "imagem em produção" (trocar por foto real depois) */
+  const PH_HTML = '<div class="laser-img-ph" data-placeholder="trocar-por-foto-real"><span class="laser-img-ph-mono">Laser <em>&amp;</em> Co</span><span class="laser-img-ph-cap">imagem em produção</span></div>';
+
   // Detalhes adicionais por procedimento (FAQs, número de sessões, etc.)
   // Em produção, esses dados viriam do CMS junto com a lista de procedimentos.
   const DETALHES_PADRAO = {
@@ -57,7 +60,7 @@
     const items = window.LaserData.procedimentos[cat];
     grid.innerHTML = items.map(p => `
       <article class="procedimento-card${p.popular ? ' popular' : ''}" data-id="${p.id}" data-cat="${cat}" tabindex="0" role="button" aria-label="Ver detalhes de ${p.nome}">
-        <div class="procedimento-card-media" style="${procMediaStyle(p)}" aria-hidden="true"></div>
+        <div class="procedimento-card-media" style="${procMediaStyle(p)}" aria-hidden="true">${p.img ? '' : PH_HTML}</div>
         <div class="procedimento-card-body">
           <h3 class="procedimento-card-title">${p.nome}</h3>
           <p class="procedimento-card-desc">${p.sub}</p>
@@ -80,8 +83,8 @@
   function antesDepoisHTML(proc) {
     const antesStyle  = proc.antes  ? ` style="background-image:url('${proc.antes}')"`  : '';
     const depoisStyle = proc.depois ? ` style="background-image:url('${proc.depois}')"` : '';
-    const antesEmpty  = proc.antes  ? '' : '<div class="proc-ad-cell-empty">Foto em breve</div>';
-    const depoisEmpty = proc.depois ? '' : '<div class="proc-ad-cell-empty">Foto em breve</div>';
+    const antesEmpty  = proc.antes  ? '' : PH_HTML;
+    const depoisEmpty = proc.depois ? '' : PH_HTML;
     return `
       <div class="proc-antes-depois">
         <div class="proc-ad-cell antes"${antesStyle}><span class="proc-ad-label">Antes</span>${antesEmpty}</div>
@@ -169,7 +172,7 @@
     if (!grid) return;
     grid.innerHTML = window.LaserData.lasers.map(l => `
       <div class="tech-card reveal">
-        ${l.img ? `<div class="tech-card-media" style="background-image:url('${l.img}')" aria-hidden="true"></div>` : ''}
+        ${l.img ? `<div class="tech-card-media" style="background-image:url('${l.img}')" aria-hidden="true"></div>` : `<div class="tech-card-media" style="position:relative" aria-hidden="true">${PH_HTML}</div>`}
         <div class="tech-sigla">${l.sigla}</div>
         <div class="tech-nome">${l.nome}</div>
         <p class="tech-desc">${l.desc}</p>
