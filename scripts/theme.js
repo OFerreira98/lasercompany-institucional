@@ -24,7 +24,7 @@ window.LaserTheme = (function() {
     base: [
       { id: 'default',       label: 'Design System',    swatch: '#C8A064', desc: 'Vinho profundo + Dourado quente (padrão)' },
       { id: 'roteiro-dark',  label: 'Roteiro Dark',     swatch: '#9A6B1E', desc: 'Identidade do roteiro, versão escura' },
-      { id: 'roteiro-light', label: 'Roteiro Light',    swatch: '#EFE0CB', desc: 'Identidade do roteiro, versão clara' },
+      { id: 'roteiro-light', label: 'Roteiro Light',    swatch: '#F3E4DC', desc: 'Versão clara, creme + vinho' },
     ],
     sazonais: [
       { id: 'outubro-rosa',     label: 'Outubro Rosa',      swatch: '#E08CB4' },

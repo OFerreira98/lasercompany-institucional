@@ -684,7 +684,7 @@ window.LaserPainel = (function () {
   function viewEquipeLogins() {
     setView(card('Logins da equipe', 'acessos com permissão reduzida (só visualização)', tableHTML(['Nome', 'E-mail', 'Permissão'], [['Recepção', 'recepcao@unidade.com.br', 'Visualização'], ['Atendimento', 'atendimento@unidade.com.br', 'Visualização']]) + '<div style="margin-top:var(--sp-4)"><button class="btn btn-outline" type="button" onclick="return false">Adicionar acesso</button></div>', true));
   }
-  const THEMES_BASE = [{ id: 'default', label: 'Vinho & Dourado', desc: 'Padrão', bg: 'linear-gradient(135deg,#5E211B,#481712)' }, { id: 'roteiro-light', label: 'Versão Clara', desc: 'Fundo claro', bg: 'linear-gradient(135deg,#EFE0CB,#E6D0B9)' }];
+  const THEMES_BASE = [{ id: 'default', label: 'Vinho & Dourado', desc: 'Padrão', bg: 'linear-gradient(135deg,#5E211B,#481712)' }, { id: 'roteiro-light', label: 'Versão Clara', desc: 'Creme + vinho', bg: 'linear-gradient(135deg,#F3E4DC,#9E2E22)' }];
   const THEMES_SAZ = [{ id: 'dia-das-maes', label: 'Dia das Mães', bg: '#E08CB4' }, { id: 'dia-dos-namorados', label: 'Dia dos Namorados', bg: '#C84B5A' }, { id: 'dia-dos-pais', label: 'Dia dos Pais', bg: '#5B9BD5' }, { id: 'outubro-rosa', label: 'Outubro Rosa', bg: '#D88FA5' }, { id: 'novembro-azul', label: 'Novembro Azul', bg: '#2E6FA8' }, { id: 'setembro-amarelo', label: 'Setembro Amarelo', bg: '#F5C342' }];
   const THEME_BASE_IDS = ['default', 'roteiro-dark', 'roteiro-light'];
   function thGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }

@@ -190,36 +190,36 @@
 }
 
 /* =============================================================
-   TEMA ROTEIRO — LIGHT (Versão clara: creme quente + vinho + dourado pontual)
-   Não usa branco puro; é uma versão "leve" do vinho da marca.
+   TEMA ROTEIRO — LIGHT (Versão clara: creme + vermelho/vinho da marca)
+   Sem branco puro e SEM dourado; o acento é o vinho/vermelho da paleta.
    ============================================================= */
 :root[data-theme="roteiro-light"] {
-  --color-bg:           #EFE0CB;
-  --color-bg-alt:       #E6D0B9;
-  --color-bg-elevated:  #F7EEDD;
-  --color-surface:      rgba(72, 23, 18, 0.05);
-  --color-surface-hover:rgba(72, 23, 18, 0.09);
+  --color-bg:           #F3E4DC;
+  --color-bg-alt:       #E9D4C9;
+  --color-bg-elevated:  #FBF3EE;
+  --color-surface:      rgba(120, 24, 18, 0.05);
+  --color-surface-hover:rgba(120, 24, 18, 0.10);
 
-  --color-text:         #361410;
-  --color-text-soft:    #4E1A15;
-  --color-text-muted:   #6E4A3A;
-  --color-text-dim:     rgba(54, 20, 16, 0.7);
+  --color-text:         #3A140F;
+  --color-text-soft:    #5A1C15;
+  --color-text-muted:   #7E4A40;
+  --color-text-dim:     rgba(58, 20, 15, 0.7);
 
-  --color-accent:       #9C6E27;
-  --color-accent-soft:  #B98C44;
-  --color-accent-deep:  #6E4D18;
-  --color-accent-pale:  #D2B47C;
-  --color-accent-grad:  linear-gradient(90deg, #6E4D18 0%, #C8A064 50%, #6E4D18 100%);
-  --color-accent-glow:  rgba(156, 110, 39, 0.22);
+  --color-accent:       #9E2E22;
+  --color-accent-soft:  #BC4A3C;
+  --color-accent-deep:  #6E1E16;
+  --color-accent-pale:  #DBA89E;
+  --color-accent-grad:  linear-gradient(90deg, #6E1E16 0%, #A8392C 50%, #6E1E16 100%);
+  --color-accent-glow:  rgba(158, 46, 34, 0.22);
 
-  --color-border:       rgba(54, 20, 16, 0.16);
-  --color-border-strong:rgba(54, 20, 16, 0.30);
-  --color-border-accent:rgba(156, 110, 39, 0.42);
+  --color-border:       rgba(58, 20, 15, 0.16);
+  --color-border-strong:rgba(58, 20, 15, 0.30);
+  --color-border-accent:rgba(158, 46, 34, 0.42);
 
-  --shadow-sm: 0 2px 8px rgba(54, 20, 16, 0.09);
-  --shadow-md: 0 10px 28px rgba(54, 20, 16, 0.13);
-  --shadow-lg: 0 18px 50px rgba(54, 20, 16, 0.17);
-  --shadow-glow: 0 0 32px rgba(156, 110, 39, 0.18);
+  --shadow-sm: 0 2px 8px rgba(58, 20, 15, 0.09);
+  --shadow-md: 0 10px 28px rgba(58, 20, 15, 0.13);
+  --shadow-lg: 0 18px 50px rgba(58, 20, 15, 0.17);
+  --shadow-glow: 0 0 32px rgba(158, 46, 34, 0.18);
 
   color-scheme: light;
 }
