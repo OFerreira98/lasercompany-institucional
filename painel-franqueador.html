@@ -9,44 +9,48 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles/tokens.css">
   <link rel="stylesheet" href="styles/base.css">
   <link rel="stylesheet" href="styles/components.css">
   <link rel="stylesheet" href="styles/painel.css">
-  <script>try{var t=localStorage.getItem('laserco_theme')||'default';document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+  <!-- Painel sempre no tema vinho/dourado, independente do tema do site -->
+  <script>document.documentElement.setAttribute('data-theme','default')</script>
 </head>
 <body class="painel-body">
 
-  <header class="painel-topbar">
-    <a class="painel-topbar-brand" href="painel-franqueador.html">
-      <img src="assets/logos/logo-bold-dourado.png" alt="Laser & Co">
-    </a>
-    <span class="painel-topbar-title">Painel do Franqueador</span>
-    <span class="painel-topbar-spacer"></span>
-    <div class="painel-user">
-      <div class="painel-user-nome" id="painel-user-nome"></div>
-      <div class="painel-user-role" id="painel-user-role"></div>
+  <div class="painel-backdrop" id="painel-backdrop"></div>
+
+  <div class="painel-shell">
+    <aside class="painel-sidebar" id="painel-sidebar">
+      <div class="painel-sidebar-brand">
+        <img src="assets/logos/logo-bold-dourado.png" alt="Laser & Co">
+        <span class="painel-sidebar-tag">Painel<br>Franqueador</span>
+      </div>
+      <nav class="painel-nav" id="painel-nav" aria-label="Menu do painel"></nav>
+    </aside>
+
+    <div class="painel-content">
+      <header class="painel-topbar">
+        <button class="painel-burger" id="painel-burger" type="button" aria-label="Abrir menu">☰</button>
+        <span class="painel-topbar-title">Rede completa</span>
+        <span class="painel-topbar-spacer"></span>
+        <div class="painel-user">
+          <div class="painel-user-nome" id="painel-user-nome"></div>
+          <div class="painel-user-role" id="painel-user-role"></div>
+        </div>
+        <button class="painel-logout" id="painel-logout" type="button">Sair</button>
+      </header>
+
+      <main class="painel-main">
+        <div class="painel-view-head">
+          <h1 class="painel-h1" id="painel-view-title">Visão Geral</h1>
+          <p class="painel-sub" id="painel-view-sub"></p>
+        </div>
+        <div id="painel-view"></div>
+      </main>
     </div>
-    <button class="painel-logout" id="painel-logout" type="button">Sair</button>
-  </header>
-
-  <main class="painel-main">
-    <h1 class="painel-h1">Leads da rede</h1>
-    <p class="painel-sub">Todos os contatos capturados pelo site, de todas as unidades. Filtre, classifique o status e fale com o cliente.</p>
-
-    <div class="painel-mode-banner" id="painel-mode-banner" hidden></div>
-
-    <div class="painel-kpis" id="painel-kpis"></div>
-
-    <div class="painel-toolbar">
-      <div class="painel-filtros" id="painel-filtros"></div>
-      <span class="painel-count" id="painel-count"></span>
-      <button class="painel-export" id="painel-export" type="button">Exportar CSV</button>
-    </div>
-
-    <div id="painel-tabela"></div>
-  </main>
+  </div>
 
   <div class="painel-modal-overlay" id="painel-detail-modal" role="dialog" aria-modal="true">
     <div class="painel-modal">
