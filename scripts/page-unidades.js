@@ -8,7 +8,7 @@
 (function() {
 
   /* Placeholder "imagem em produção" (trocar por foto real depois) */
-  const PH_HTML = '<div class="laser-img-ph" data-placeholder="trocar-por-foto-real"><span class="laser-img-ph-mono">Laser <em>&amp;</em> Co</span><span class="laser-img-ph-cap">imagem em produção</span></div>';
+  const PH_HTML = '<div class="laser-img-ph" data-placeholder="trocar-por-foto-real"><span class="laser-img-ph-mono">Laser <em>&amp;</em> Co</span></div>';
 
   let map = null;
   const markers = {};
