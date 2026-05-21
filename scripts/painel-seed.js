@@ -1,61 +1,112 @@
 /* ============================================================
    PAINEL-SEED, leads de exemplo para o MODO DEMO dos painéis
    ============================================================
-   Usado só quando não há backend/banco respondendo. Junto com os
-   leads reais capturados neste navegador (laserco_leads), dá vida
-   ao painel para teste. Em produção, os dados vêm da API.
+   Gera um conjunto realista (~110 leads espalhados em 30 dias)
+   para dar vida aos KPIs e gráficos. Usado só quando não há
+   backend/banco respondendo. Em produção os dados vêm da API.
    ============================================================ */
 
 window.LaserPainelData = (function () {
   let _cache = null;
 
-  function build() {
-    const now = Date.now();
-    const H = 3600 * 1000;
-    const D = 24 * H;
-    const iso = (ms) => new Date(ms).toISOString();
-    const L = (id, tipo, status, ago, dados, origem, url) => ({
-      id: id, tipo: tipo, status: status, dados: dados,
-      origem: origem || 'site', url: url || '/', timestamp: iso(now - ago),
-    });
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      let t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
 
-    return [
-      L('lead_demo_01', 'agendamento', 'quente', 2 * H,
-        { nome: 'Marina Souza', whatsapp: '(11) 98877-1122', cep: '04101-000', cidade: 'São Paulo', uf: 'SP', procedimentoNome: 'Rejuvenescimento Facial 4D', unidadeId: 'sp-vmariana', unidadeNome: 'Vila Mariana', hasUnidade: true, whatsappClicked: true }, 'instagram', '/agendamento.html'),
-      L('lead_demo_02', 'popup_brinde', 'quente', 5 * H,
-        { nome: 'Carla Mendes', whatsapp: '(11) 99654-3210', cep: '04015-000', cidade: 'São Paulo', uf: 'SP', unidadeId: 'sp-vmariana', unidadeNome: 'Vila Mariana', hasUnidade: true, brinde: 'Sessão de Rejuvenescimento Facial' }, 'google', '/index.html'),
-      L('lead_demo_03', 'agendamento_interesse', 'morno', 9 * H,
-        { nome: 'Patrícia Lima', whatsapp: '(21) 98123-4567', cep: '22410-000', cidade: 'Rio de Janeiro', uf: 'RJ', procedimentoNome: 'Melasma', unidadeId: 'rj-ipanema', unidadeNome: 'Ipanema', hasUnidade: true }, 'instagram', '/agendamento.html'),
-      L('lead_demo_04', 'agendamento', 'convertido', 1 * D + 3 * H,
-        { nome: 'Juliana Alves', whatsapp: '(21) 99988-7766', cep: '22640-100', cidade: 'Rio de Janeiro', uf: 'RJ', procedimentoNome: 'Papada', unidadeId: 'rj-ipanema', unidadeNome: 'Ipanema', hasUnidade: true, whatsappClicked: true }, 'direto', '/agendamento.html'),
-      L('lead_demo_05', 'popup_brinde', 'novo', 1 * D + 6 * H,
-        { nome: 'Fernanda Rocha', whatsapp: '(11) 98765-1234', cep: '04077-000', cidade: 'São Paulo', uf: 'SP', unidadeId: 'sp-moema', unidadeNome: 'Moema', hasUnidade: true, brinde: 'Sessão de Rejuvenescimento Facial' }, 'facebook', '/index.html'),
-      L('lead_demo_06', 'agendamento', 'morno', 2 * D,
-        { nome: 'Beatriz Cardoso', whatsapp: '(31) 99876-5432', cep: '30130-000', cidade: 'Belo Horizonte', uf: 'MG', procedimentoNome: 'Full Face', unidadeId: 'mg-bh-savassi', unidadeNome: 'BH Savassi', hasUnidade: true, whatsappClicked: true }, 'google', '/agendamento.html'),
-      L('lead_demo_07', 'chatbot', 'novo', 2 * D + 4 * H,
-        { nome: 'Renata Dias', whatsapp: '(11) 97777-8888', cep: '05422-000', cidade: 'São Paulo', uf: 'SP', procedimentoNome: 'Depilação a Laser', unidadeId: 'sp-pinheiros', unidadeNome: 'Pinheiros', hasUnidade: true }, 'instagram', '/index.html'),
-      L('lead_demo_08', 'agendamento_interesse', 'frio', 3 * D,
-        { nome: 'Aline Castro', whatsapp: '(41) 98555-2211', cep: '80420-000', cidade: 'Curitiba', uf: 'PR', procedimentoNome: 'Axila', unidadeId: 'pr-curitiba', unidadeNome: 'Curitiba Batel', hasUnidade: true }, 'tiktok', '/agendamento.html'),
-      L('lead_demo_09', 'agendamento', 'quente', 3 * D + 2 * H,
-        { nome: 'Larissa Pereira', whatsapp: '(11) 96543-2109', cep: '04101-300', cidade: 'São Paulo', uf: 'SP', procedimentoNome: 'Full Face', unidadeId: 'sp-vmariana', unidadeNome: 'Vila Mariana', hasUnidade: true, whatsappClicked: true }, 'instagram', '/agendamento.html'),
-      L('lead_demo_10', 'contato', 'contatado', 4 * D,
-        { nome: 'Sandra Nogueira', whatsapp: '(21) 98444-1199', email: 'sandra@email.com', cidade: 'Rio de Janeiro', uf: 'RJ', unidadeId: 'rj-ipanema', unidadeNome: 'Ipanema', mensagem: 'Gostaria de saber valores de pacotes.' }, 'direto', '/contato.html'),
-      L('lead_demo_11', 'recrutamento', 'novo', 1 * D + 1 * H,
-        { nome: 'Camila Ferreira', email: 'camila.rh@email.com', whatsapp: '(11) 98222-3344', funcao: 'Enfermeira Esteta', cidadeVaga: 'São Paulo, SP', cidadeCandidato: 'São Paulo', curriculoNome: 'cv-camila-ferreira.pdf' }, 'linkedin', '/vagas.html'),
-      L('lead_demo_12', 'recrutamento', 'contatado', 5 * D,
-        { nome: 'Bruno Teixeira', email: 'bruno.t@email.com', whatsapp: '(21) 97111-2233', funcao: 'Recepcionista', cidadeVaga: 'Rio de Janeiro, RJ', cidadeCandidato: 'Niterói', curriculoNome: 'curriculo-bruno.docx' }, 'instagram', '/vagas.html'),
-      L('lead_demo_13', 'franquia', 'quente', 6 * H,
-        { nome: 'Roberto Antunes', whatsapp: '(47) 99333-4455', email: 'roberto.invest@email.com', cidade: 'Joinville', uf: 'SC', capital: 'Acima de R$ 250 mil', mensagem: 'Tenho ponto comercial e quero abrir uma unidade.' }, 'google', '/franqueado.html'),
-      L('lead_demo_14', 'popup_brinde', 'novo', 7 * H,
-        { nome: 'Tatiane Gomes', whatsapp: '(85) 98666-7788', cep: '60160-230', cidade: 'Fortaleza', uf: 'CE', unidadeId: 'ce-fortaleza', unidadeNome: 'Fortaleza Aldeota', hasUnidade: true, brinde: 'Sessão de Rejuvenescimento Facial' }, 'facebook', '/index.html'),
-      L('lead_demo_15', 'agendamento_interesse', 'novo', 11 * H,
-        { nome: 'Vanessa Martins', whatsapp: '(11) 98000-1212', cep: '04094-050', cidade: 'São Paulo', uf: 'SP', procedimentoNome: 'Melasma', unidadeId: 'sp-vmariana', unidadeNome: 'Vila Mariana', hasUnidade: true }, 'google', '/agendamento.html'),
-      L('lead_demo_16', 'agendamento', 'quente', 14 * H,
-        { nome: 'Débora Pinto', whatsapp: '(21) 97654-3322', cep: '22420-000', cidade: 'Rio de Janeiro', uf: 'RJ', procedimentoNome: 'Rejuvenescimento Facial 4D', unidadeId: 'rj-ipanema', unidadeNome: 'Ipanema', hasUnidade: true, whatsappClicked: true }, 'instagram', '/agendamento.html'),
-    ];
+  const NOMES = ['Marina Souza', 'Carla Mendes', 'Patrícia Lima', 'Juliana Alves', 'Fernanda Rocha',
+    'Beatriz Cardoso', 'Renata Dias', 'Aline Castro', 'Larissa Pereira', 'Sandra Nogueira',
+    'Camila Ferreira', 'Vanessa Martins', 'Débora Pinto', 'Tatiane Gomes', 'Roberta Nunes',
+    'Bruna Carvalho', 'Letícia Ramos', 'Priscila Teixeira', 'Amanda Ribeiro', 'Mariana Costa',
+    'Gabriela Moreira', 'Helena Barbosa', 'Isabela Freitas', 'Natália Campos', 'Bianca Lopes',
+    'Daniela Araújo', 'Carolina Pires', 'Sabrina Melo', 'Tainá Cunha', 'Vitória Andrade'];
+  const SOBREcid = ['São Paulo', 'Rio de Janeiro', 'Belo Horizonte', 'Curitiba', 'Porto Alegre',
+    'Salvador', 'Recife', 'Fortaleza', 'Florianópolis', 'Goiânia', 'Brasília'];
+
+  // Unidades usadas no demo (id, nome, uf) - inclui vmariana e ipanema para teste de franqueado
+  const UNIDADES = [
+    { id: 'sp-vmariana', nome: 'Vila Mariana', uf: 'SP', cidade: 'São Paulo', w: 16 },
+    { id: 'rj-ipanema', nome: 'Ipanema', uf: 'RJ', cidade: 'Rio de Janeiro', w: 14 },
+    { id: 'sp-moema', nome: 'Moema', uf: 'SP', cidade: 'São Paulo', w: 11 },
+    { id: 'sp-pinheiros', nome: 'Pinheiros', uf: 'SP', cidade: 'São Paulo', w: 10 },
+    { id: 'mg-bh-savassi', nome: 'BH Savassi', uf: 'MG', cidade: 'Belo Horizonte', w: 9 },
+    { id: 'pr-curitiba', nome: 'Curitiba Batel', uf: 'PR', cidade: 'Curitiba', w: 8 },
+    { id: 'rj-barra', nome: 'Barra da Tijuca', uf: 'RJ', cidade: 'Rio de Janeiro', w: 7 },
+    { id: 'rs-poa-moinhos', nome: 'Porto Alegre Moinhos', uf: 'RS', cidade: 'Porto Alegre', w: 6 },
+    { id: 'sc-floripa', nome: 'Florianópolis', uf: 'SC', cidade: 'Florianópolis', w: 6 },
+    { id: 'ba-salvador', nome: 'Salvador Pituba', uf: 'BA', cidade: 'Salvador', w: 5 },
+    { id: 'ce-fortaleza', nome: 'Fortaleza Aldeota', uf: 'CE', cidade: 'Fortaleza', w: 5 },
+    { id: 'pe-recife', nome: 'Recife Boa Viagem', uf: 'PE', cidade: 'Recife', w: 4 },
+    { id: 'go-goiania', nome: 'Goiânia Setor Bueno', uf: 'GO', cidade: 'Goiânia', w: 4 },
+    { id: 'sp-santana', nome: 'Santana', uf: 'SP', cidade: 'São Paulo', w: 4 },
+  ];
+  const PROCS = ['Rejuvenescimento Facial 4D', 'Full Face', 'Melasma', 'Papada', 'Axila',
+    'Virilha Completa', 'Perna Inteira', 'Cicatriz de Acne', 'Bichectomia sem cortes', 'Fox Eyes',
+    'Abdômen', 'Depilação a Laser', 'Remoção de Tatuagem'];
+  const ORIGENS = [['instagram', 34], ['google', 26], ['direto', 16], ['facebook', 12], ['tiktok', 8], ['youtube', 4]];
+  const TIPOS = [['agendamento', 30], ['popup_brinde', 26], ['agendamento_interesse', 18],
+    ['recrutamento', 9], ['contato', 7], ['chatbot', 6], ['franquia', 4]];
+  const STATUS = [['quente', 26], ['novo', 24], ['morno', 18], ['contatado', 12], ['frio', 9], ['convertido', 8], ['perdido', 3]];
+
+  function weighted(rng, pairs) {
+    const total = pairs.reduce((s, p) => s + p[1], 0);
+    let r = rng() * total;
+    for (let i = 0; i < pairs.length; i++) { r -= pairs[i][1]; if (r <= 0) return pairs[i][0]; }
+    return pairs[0][0];
+  }
+  function pick(rng, arr) { return arr[Math.floor(rng() * arr.length)]; }
+  function phone(rng) {
+    const dd = ['11', '21', '31', '41', '51', '71', '81', '85', '48', '62'][Math.floor(rng() * 10)];
+    const n = String(90000 + Math.floor(rng() * 9999));
+    const m = String(1000 + Math.floor(rng() * 8999));
+    return '(' + dd + ') 9' + n.slice(0, 4) + '-' + m;
+  }
+
+  function build() {
+    const rng = mulberry32(20260521);
+    const now = Date.now();
+    const D = 86400000, H = 3600000;
+    const out = [];
+    const N = 112;
+    for (let i = 0; i < N; i++) {
+      // datas: mais leads recentes (curva). dia 0..29 atras, enviesado pra recente
+      const dia = Math.floor(Math.pow(rng(), 1.7) * 30);
+      const ts = now - dia * D - Math.floor(rng() * 24) * H - Math.floor(rng() * 60) * 60000;
+      const u = weighted(rng, UNIDADES.map(x => [x, x.w]));
+      const tipo = weighted(rng, TIPOS);
+      const origem = weighted(rng, ORIGENS);
+      let status = weighted(rng, STATUS);
+      const nome = pick(rng, NOMES);
+      const dados = { nome: nome, whatsapp: phone(rng), cidade: u.cidade, uf: u.uf, unidadeId: u.id, unidadeNome: u.nome, hasUnidade: true };
+      if (tipo === 'recrutamento') {
+        dados.funcao = pick(rng, ['Enfermeira Esteta', 'Recepcionista', 'Esteticista', 'Consultora de Vendas', 'Gerente de Unidade']);
+        dados.email = nome.toLowerCase().replace(/[^a-z]/g, '') + '@email.com';
+        dados.curriculoNome = 'cv-' + nome.split(' ')[0].toLowerCase() + '.pdf';
+        delete dados.unidadeId; delete dados.unidadeNome; delete dados.hasUnidade;
+      } else if (tipo === 'franquia') {
+        dados.email = nome.toLowerCase().replace(/[^a-z]/g, '') + '@email.com';
+        dados.capital = pick(rng, ['R$ 150 a 250 mil', 'Acima de R$ 250 mil', 'Até R$ 150 mil']);
+        delete dados.unidadeId; delete dados.unidadeNome; delete dados.hasUnidade;
+      } else {
+        dados.procedimentoNome = pick(rng, PROCS);
+        if (tipo === 'popup_brinde') dados.brinde = 'Sessão de Rejuvenescimento Facial';
+      }
+      out.push({
+        id: 'lead_demo_' + (1000 + i),
+        tipo: tipo, status: status, dados: dados,
+        origem: origem, url: '/', timestamp: new Date(ts).toISOString(),
+      });
+    }
+    out.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    return out;
   }
 
   return {
     seed: function () { if (!_cache) _cache = build(); return _cache.slice(); },
+    unidadesDemo: function () { return UNIDADES.slice(); },
   };
 })();

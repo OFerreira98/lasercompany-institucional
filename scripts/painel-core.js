@@ -359,16 +359,137 @@ window.LaserPainel = (function () {
     const ex = document.getElementById('painel-export'); if (ex) ex.addEventListener('click', exportCsv);
     applyFiltros();
   }
+  /* ---- Visao Geral: agregacoes + graficos (Chart.js) ---- */
+  let _charts = [];
+  function destroyCharts() { _charts.forEach(function (c) { try { c.destroy(); } catch (e) {} }); _charts = []; }
+  const VG_PALETTE = ['#C8A064', '#9A6B1E', '#E8C088', '#8a3b3b', '#B7AD9D', '#5e1a16', '#d89b45'];
+
+  function leadsPorDia(list, dias) {
+    const now = new Date(); now.setHours(0, 0, 0, 0);
+    const buckets = [];
+    for (let i = dias - 1; i >= 0; i--) {
+      const d = new Date(now.getTime() - i * 86400000);
+      buckets.push({ key: d.getDate() + '/' + (d.getMonth() + 1), ts: d.getTime(), count: 0 });
+    }
+    list.forEach(function (l) {
+      const t = new Date(l.createdAt); t.setHours(0, 0, 0, 0);
+      const b = buckets.find(function (x) { return x.ts === t.getTime(); });
+      if (b) b.count++;
+    });
+    return buckets;
+  }
+  function countBy(list, fn) { const o = {}; list.forEach(function (l) { const k = fn(l) || '-'; o[k] = (o[k] || 0) + 1; }); return o; }
+  function topPairs(obj, n) { return Object.keys(obj).map(function (k) { return [k, obj[k]]; }).sort(function (a, b) { return b[1] - a[1]; }).slice(0, n); }
+  function vgChart(id, config) {
+    const el = document.getElementById(id);
+    if (!el || !window.Chart) return;
+    try { _charts.push(new window.Chart(el.getContext('2d'), config)); } catch (e) {}
+  }
+  function donutCfg(labels, data) {
+    return {
+      type: 'doughnut',
+      data: { labels: labels, datasets: [{ data: data, backgroundColor: VG_PALETTE, borderColor: 'rgba(20,6,6,0.5)', borderWidth: 2 }] },
+      options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { position: 'bottom', labels: { color: '#B9AF9C', font: { size: 10 }, boxWidth: 10, padding: 8 } } } },
+    };
+  }
+
+  function renderVgKpis(list) {
+    const box = document.getElementById('painel-kpis'); if (!box) return;
+    const now = Date.now(), D = 86400000;
+    const in30 = list.filter(function (l) { return now - new Date(l.createdAt) <= 30 * D; });
+    const prev30 = list.filter(function (l) { const a = now - new Date(l.createdAt); return a > 30 * D && a <= 60 * D; });
+    const hoje0 = new Date(); hoje0.setHours(0, 0, 0, 0);
+    const hoje = list.filter(function (l) { return new Date(l.createdAt) >= hoje0; }).length;
+    const live = list.some(function (l) { return now - new Date(l.createdAt) <= 3600000; });
+    const ag = in30.filter(function (l) { return l.tipo === 'agendamento' || l.tipo === 'agendamento_interesse'; }).length;
+    const conv = in30.filter(function (l) { return l.status === 'convertido'; }).length;
+    const taxa = in30.length ? Math.round(conv / in30.length * 100) : 0;
+    const delta = prev30.length ? Math.round((in30.length - prev30.length) / prev30.length * 100) : 0;
+    const deltaHtml = '<div class="kpi-delta ' + (delta >= 0 ? 'up' : 'down') + '">' + (delta >= 0 ? '+' : '') + delta + '% vs mês anterior</div>';
+    let cards = [
+      { v: in30.length, l: 'Leads no mês', extra: deltaHtml },
+      { v: hoje + (live ? '<span class="kpi-live"></span>' : ''), l: 'Recebidos hoje' + (live ? ' (ao vivo)' : '') },
+      { v: ag, l: 'Agendamentos no mês' },
+      { v: taxa + '%', l: 'Taxa de conversão' },
+    ];
+    if (state.mode === 'franqueador') {
+      const uni24 = {}; list.filter(function (l) { return now - new Date(l.createdAt) <= D; }).forEach(function (l) { if (l.unidadeId) uni24[l.unidadeId] = 1; });
+      const totalU = (window.LaserData && window.LaserData.unidades) ? window.LaserData.unidades.length : 70;
+      cards.push({ v: Object.keys(uni24).length + ' <small style="font-size:0.5em;color:var(--color-text-muted)">de ' + totalU + '</small>', l: 'Unidades ativas (24h)', accent: true });
+    } else {
+      cards.push({ v: list.filter(function (l) { return l.status === 'quente'; }).length, l: 'Leads quentes', accent: true });
+    }
+    box.innerHTML = cards.map(function (c) {
+      return '<div class="kpi-card' + (c.accent ? ' kpi-accent' : '') + '"><div class="kpi-value">' + c.v + '</div><div class="kpi-label">' + c.l + '</div>' + (c.extra || '') + '</div>';
+    }).join('');
+  }
+  function renderVgRanking(list) {
+    const box = document.getElementById('vg-ranking'); if (!box) return;
+    const by = countBy(list.filter(function (l) { return l.unidadeId; }), function (l) { return l.unidadeNome || l.unidadeId; });
+    const top = topPairs(by, 8);
+    if (!top.length) { box.innerHTML = '<li class="vg-rank-item"><span class="vg-rank-pos"></span><span class="vg-rank-nome muted">Sem dados ainda</span><span></span></li>'; return; }
+    const max = top[0][1];
+    box.innerHTML = top.map(function (p, i) {
+      return '<li class="vg-rank-item"><span class="vg-rank-pos">' + (i + 1) + '</span>' +
+        '<span class="vg-rank-nome">' + esc(p[0]) + '<div class="vg-rank-bar"><span style="width:' + Math.round(p[1] / max * 100) + '%"></span></div></span>' +
+        '<span class="vg-rank-val">' + p[1] + '</span></li>';
+    }).join('');
+  }
+  function renderVgActivity(list) {
+    const box = document.getElementById('vg-activity'); if (!box) return;
+    box.innerHTML = list.slice(0, 14).map(function (l) {
+      return '<li class="vg-act-item"><span class="vg-act-time">' + fmtData(l.createdAt) + '</span>' +
+        '<span class="vg-act-main"><strong>' + esc(l.nome) + '</strong><small>' + esc(l.cidade || '-') + ' · ' + esc(TIPO_LABEL[l.tipo] || l.tipo) + '</small></span>' +
+        '<span class="vg-tag st-' + l.status + '">' + (STATUS_LABEL[l.status] || l.status) + '</span></li>';
+    }).join('');
+  }
+  function renderVgCharts(list) {
+    if (!window.Chart) return;
+    const dias = leadsPorDia(list, 30);
+    const lineEl = document.getElementById('vg-line');
+    if (lineEl) {
+      const ctx = lineEl.getContext('2d');
+      const g = ctx.createLinearGradient(0, 0, 0, 240);
+      g.addColorStop(0, 'rgba(200,160,100,0.35)'); g.addColorStop(1, 'rgba(200,160,100,0)');
+      vgChart('vg-line', {
+        type: 'line',
+        data: { labels: dias.map(function (d) { return d.key; }), datasets: [{ data: dias.map(function (d) { return d.count; }), borderColor: '#C8A064', borderWidth: 2, fill: true, backgroundColor: g, tension: 0.35, pointRadius: 0, pointHoverRadius: 4 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { color: '#B9AF9C', maxTicksLimit: 8, font: { size: 10 } } }, y: { beginAtZero: true, grid: { color: 'rgba(245,240,230,0.06)' }, ticks: { color: '#B9AF9C', precision: 0, font: { size: 10 } } } } },
+      });
+    }
+    const byTipo = countBy(list, function (l) { return TIPO_LABEL[l.tipo] || l.tipo; });
+    vgChart('vg-tipo', donutCfg(Object.keys(byTipo), Object.keys(byTipo).map(function (k) { return byTipo[k]; })));
+    const byProc = countBy(list.filter(function (l) { return l.procedimento; }), function (l) { return l.procedimento; });
+    const tp = topPairs(byProc, 5);
+    vgChart('vg-proc', {
+      type: 'bar',
+      data: { labels: tp.map(function (x) { return x[0]; }), datasets: [{ data: tp.map(function (x) { return x[1]; }), backgroundColor: '#C8A064', borderRadius: 4 }] },
+      options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { color: '#B9AF9C', precision: 0, font: { size: 10 } } }, y: { grid: { display: false }, ticks: { color: '#DDD3C0', font: { size: 10 } } } } },
+    });
+    const byOrig = countBy(list, function (l) { return l.origem || 'direto'; });
+    vgChart('vg-origem', donutCfg(Object.keys(byOrig), Object.keys(byOrig).map(function (k) { return byOrig[k]; })));
+  }
+
   function viewVisaoGeral() {
     state.presetTipos = null;
     document.getElementById('painel-view').innerHTML =
       '<div class="painel-mode-banner" id="painel-mode-banner" hidden></div>' +
       '<div class="painel-kpis" id="painel-kpis"></div>' +
-      '<div class="painel-stub"><div class="painel-stub-ico">📈</div>' +
-      '<h3>Gráficos, ranking e mapa</h3>' +
-      '<p>Os indicadores acima já estão ao vivo. Os gráficos (leads por dia, donut por tipo e origem do tráfego), o ranking de unidades, o mapa do Brasil e a atividade em tempo real entram na próxima etapa.</p>' +
-      '<span class="painel-stub-tag">Próxima etapa</span></div>';
-    showBanner(); renderKpis();
+      '<div class="painel-chart-card"><div class="painel-chart-title">Leads por dia <small>últimos 30 dias</small></div><div class="painel-chart-wrap"><canvas id="vg-line"></canvas></div></div>' +
+      '<div class="painel-grid-2">' +
+        '<div class="painel-chart-card flush"><div class="painel-chart-title">Ranking de unidades <small>leads no período</small></div><ul class="vg-ranking" id="vg-ranking"></ul></div>' +
+        '<div class="painel-chart-card flush"><div class="painel-chart-title">Atividade recente</div><ul class="vg-activity" id="vg-activity"></ul></div>' +
+      '</div>' +
+      '<div class="painel-grid-3">' +
+        '<div class="painel-chart-card flush"><div class="painel-chart-title">Leads por tipo</div><div class="painel-chart-wrap sm"><canvas id="vg-tipo"></canvas></div></div>' +
+        '<div class="painel-chart-card flush"><div class="painel-chart-title">Top procedimentos</div><div class="painel-chart-wrap sm"><canvas id="vg-proc"></canvas></div></div>' +
+        '<div class="painel-chart-card flush"><div class="painel-chart-title">Origem do tráfego</div><div class="painel-chart-wrap sm"><canvas id="vg-origem"></canvas></div></div>' +
+      '</div>';
+    showBanner();
+    renderVgKpis(state.all);
+    renderVgRanking(state.all);
+    renderVgActivity(state.all);
+    renderVgCharts(state.all);
   }
   function viewStub(id) {
     state.presetTipos = null;
@@ -412,6 +533,7 @@ window.LaserPainel = (function () {
   function router() {
     let id = (location.hash || '').replace(/^#/, '') || 'visao-geral';
     if (!VIEW_TITLE[id]) id = 'visao-geral';
+    destroyCharts();
     state.currentView = id;
     setActive(id);
     const t = document.getElementById('painel-view-title'); if (t) t.textContent = VIEW_TITLE[id] || id;
