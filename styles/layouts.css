@@ -162,6 +162,25 @@
 /* CTA do header */
 .header-cta {
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+/* "Seja um franqueado" no header: chama atencao (dourado) sem pesar */
+.btn-franqueado {
+  background: transparent;
+  border: 1px solid var(--color-accent);
+  color: var(--color-accent);
+}
+.btn-franqueado:hover {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  border-color: var(--color-accent);
+}
+.nav-item-franqueado-mobile { display: none; }
+@media (max-width: 980px) {
+  .nav-item-franqueado-mobile { display: block; }
 }
 
 /* Toggle mobile */

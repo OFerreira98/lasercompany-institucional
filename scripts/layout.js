@@ -28,8 +28,10 @@
       <div class="nav-item"><a href="agendamento.html" class="nav-link" data-page="agendamento">Agendamento</a></div>
       <div class="nav-item"><a href="unidades.html" class="nav-link" data-page="unidades">Unidades</a></div>
       <div class="nav-item"><a href="vagas.html" class="nav-link" data-page="vagas">Vagas</a></div>
+      <div class="nav-item nav-item-franqueado-mobile"><a href="franqueado.html" class="nav-link" data-page="franqueado">Seja um franqueado</a></div>
     </nav>
     <div class="header-cta">
+      <a href="franqueado.html" class="btn btn-franqueado btn-sm" data-page="franqueado">Seja um franqueado</a>
       <a href="agendamento.html" class="btn btn-primary btn-sm">Agendar avaliação grátis</a>
     </div>
     <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
