@@ -17,13 +17,21 @@ rede de franquias de estética a laser. Hospedado no GitHub e publicado na Verce
    Substituir sempre por vírgula ou ponto.
 2. **Sem "#SemTabus".** Já removido; usar "Estética premium acessível a todos".
 3. **Sem escrita "cara de IA"** (frases com travessão, tom robótico). Texto natural, direto.
-4. **Cards de unidade e de procedimento NÃO usam imagens falsas/aleatórias.** Enquanto não
-   houver foto real, usar os placeholders com gradiente da marca (hash do id).
-5. **Página Vagas: NÃO mexer na estrutura** (o cliente ama a página). Só foi adicionada uma
-   foto de fundo no hero que se auto-remove se o arquivo não existir.
-6. **Comunicação concisa** com o cliente — resumir o resultado, sem texto longo.
-7. Não gero imagens fotorrealistas com IA. Quando faltar foto, criar slot + placeholder +
-   apontar a necessidade ao cliente.
+4. **Unidades = SÓ foto REAL da franquia.** NUNCA usar imagem de IA/inventada de fachada
+   (o cliente recusou: cada unidade precisa da foto verdadeira dela). Sem foto, usar o
+   placeholder do monograma "Laser & Co". Antes/depois também precisa ser foto real (com
+   autorização), nunca par gerado por IA.
+5. **Imagem de IA só para genéricos** (máquinas, procedimentos, texturas, fundos). Gerar via
+   `_gen.cjs` (Pollinations modelo flux) e CONFERIR cada uma. NUNCA escrever texto/aviso em
+   cima da imagem (nada de "imagem em produção" nem "gerado por IA"). O cliente sabe que é
+   provisório e troca depois.
+6. **Página Vagas: NÃO mexer na estrutura** (o cliente ama a página). Só hero com foto de
+   fundo (`assets/img/equipe/recepcao.png`) que se auto-remove se o arquivo não existir.
+7. **Comunicação concisa** com o cliente, resumir o resultado, sem texto longo.
+8. **Cache:** em `vercel.json`, CSS/JS/assets NUNCA `immutable`. Usar `max-age=0,
+   must-revalidate` (CSS/JS) e curto nas imagens, senão o cliente fica preso na versão velha
+   (já aconteceu: parecia "bug", era só cache; resolve com Ctrl+Shift+R + headers revalidando).
+9. **Painéis sempre vinho/dourado** (`data-theme="default"` fixo), não trocam com o tema do site.
 
 ---
 
@@ -84,15 +92,26 @@ Commits: `a07b3d1` (popup), `ee36ee0` (agendamento), `e2eebb4` (visual/traços).
 
 ---
 
-## Pendente: fotos do cliente
+## Imagens (estratégia atual)
 
-O cliente vai enviar as fotos. Quando chegarem:
-- **Máquinas** → `assets/img/maquinas/` (`alexandrite.jpg`, `nd-yag.jpg`, `erbium.jpg`,
-  `q-switched.jpg`, `ultracel.jpg`) + adicionar `img:` em cada item de `lasers` no `data.js`.
-- **Antes/depois** → `assets/img/antes-depois/` (`<id>-antes.jpg`/`<id>-depois.jpg`) +
-  campos `antes:`/`depois:` no procedimento.
-- **Fachadas** → `assets/img/unidades/` (nome = id da unidade) + campo `foto:` na unidade.
-- **Equipe/recepção** → `assets/img/equipe/recepcao.jpg` (já referenciado pelo hero de Vagas).
+Saga: o Antigravity gerou ~40 imagens via Pollinations que saíram TODAS como pinturas de
+tigre (script do agente quebrado). Descobri que chamando o Pollinations direto com modelo
+`flux` + prompt bom sai ótimo. Ferramenta: **`_gen.cjs`** (na raiz, NÃO versionado; tem
+permissão em `.claude/settings.local.json`). Comandos: `node _gen.cjs` (gera), `--wire`
+(liga `foto:`/`img:` no data.js), `--unwire-units` (remove `foto:` das unidades).
+
+Estado por categoria:
+- **Máquinas** (5): imagens de IA boas, JÁ no ar (`img:` nos `lasers` do `data.js`).
+- **Recepção (Vagas)**: o cliente trocou pela própria (`assets/img/equipe/recepcao.png`,
+  PNG). `vagas.html` aponta pro `.png`.
+- **Unidades**: FORAM revertidas a placeholder (a foto de IA de fachada foi recusada pelo
+  cliente, tem que ser a real). Sem `foto:` no `data.js`. As 19 fachadas de IA foram apagadas.
+- **Procedimentos (cards)**: PENDENTE. O cliente quer ~43 imagens de IA (as que não têm foto),
+  no mesmo estilo das `proc-*.jpg` existentes, SEM nenhum texto em cima. Fazer DEPOIS, quando
+  ele pedir. Hoje mostram o placeholder do monograma.
+- **Antes/depois**: placeholder. Só foto real com autorização (não gerar por IA).
+
+Como o cliente troca uma foto: salvar com o mesmo nome/caminho que o código espera.
 
 ---
 
@@ -108,25 +127,60 @@ Construído de forma autônoma. Detalhes completos em `BACKEND.md`.
 - **Ponto de troca do banco:** `api/_lib/store.js`. Sem `DATABASE_URL` → memória/demo;
   com `DATABASE_URL` → Postgres (lazy require `pg`). DDL e passo a passo em `BACKEND.md`.
 - **Cliente:** `scripts/api-client.js` (`LaserAPI`: login/listLeads/updateLead com fallback
-  para localStorage quando não há backend), `scripts/painel-seed.js` (16 leads demo),
-  `scripts/painel-core.js` (`LaserPainel`: guard de sessão, KPIs, filtros, tabela, pipeline
-  de status, modal de detalhe, export CSV), `scripts/page-painel-login.js`. Estilos em
-  `styles/painel.css`.
-- **Integração com o site:** `scripts/analytics.js` → `trackLead()` agora faz POST
-  fire-and-forget para `/api/leads` (não quebra se a API estiver fora). Ponto único: todo
-  lead (popup, agendamento, vagas, contato, franquia, chatbot) já flui para o painel.
+  para localStorage), `scripts/painel-seed.js` (~112 leads demo em 30 dias p/ os gráficos),
+  `scripts/painel-core.js` (`LaserPainel`), `scripts/page-painel-login.js`. Estilos em
+  `styles/painel.css`. Chart.js via CDN nas páginas de painel.
+- **Painéis FUNCIONAIS (estilo Wix Analytics):** menu lateral fixo com submenus expansíveis +
+  roteador por hash (`#view`), responsivo. `painel-core.js` tem TODAS as telas com conteúdo
+  (sem "em construção"): Visão Geral (KPIs do mês com variação %, linha leads/dia, donuts de
+  tipo e origem, barras top procedimentos, ranking de unidades, atividade recente), Leads
+  (todos/popup/agendamento/recrutamento com tabela+filtros+status+detalhe+CSV), Unidades
+  (ranking/distribuição por UF/cadastro), Tráfego (tempo real/origem/páginas/dispositivos),
+  Demográfico (idade/gênero), Promoções (ativas/cadastrar/desempenho), Recrutamento (vagas/
+  candidatos), Configurações (usuários/conta), e no Franqueado: Desempenho (procedimento/
+  período/comparação com a rede) + Equipe. **Seletor de temas** (Aparência) aplica tema do
+  site público via `localStorage['laserco_theme']` sem recolorir o painel.
+- **Telas com dados de demonstração.** A integração real (dados ao vivo, CRUD que salva,
+  mapa geográfico no painel) fica para o DESENVOLVEDOR na fase de integração com o sistema
+  unificado. O cliente já sabe e aprovou esse recorte.
+- **Integração com o site:** `scripts/analytics.js` → `trackLead()` faz POST fire-and-forget
+  para `/api/leads`. Ponto único: todo lead (popup, agendamento, vagas, contato, franquia,
+  chatbot) já flui para o painel.
+- **Header:** botão "Seja um franqueado" (dourado, `.btn-franqueado`) ao lado do Agendar;
+  no mobile entra no menu (`.nav-item-franqueado-mobile`).
 - **Logins de teste:** franqueador@laserco.com.br / vmariana@laserco.com.br /
   ipanema@laserco.com.br, senha `laser2026` (em `auth.js` e `api-client.js`).
-- **Testado em navegador (modo demo):** login, guard de acesso, filtro por papel
-  (franqueado vê só a unidade), KPIs, modal, troca de status persistida, e lead capturado
-  no site aparecendo no painel. Sem erros de console.
+- **Testado em navegador (modo demo):** login, guard de acesso, filtro por papel, todas as
+  telas dos dois painéis renderizam com gráficos/tabelas, troca de status, seletor de temas
+  e lead capturado no site aparecendo no painel. Sem erros de console.
 - **Falta o cliente fazer (ver BACKEND.md):** criar Postgres no Marketplace + `DATABASE_URL`,
   rodar `npm i pg`, criar a tabela, definir senhas reais + `AUTH_SECRET`, e dar `git push`.
 
+## Pendências (próximas etapas)
+
+1. **Imagens dos ~43 procedimentos** (cards sem foto): gerar via `_gen.cjs` (flux), estilo
+   das `proc-*.jpg`, SEM texto em cima. Só quando o cliente pedir. Depois `--wire` no data.js.
+2. **Banco + senhas reais** (ativa o painel de verdade): ver `BACKEND.md` (Postgres no
+   Marketplace, `DATABASE_URL`, `npm i pg`, tabela, `AUTH_SECRET`).
+3. **Integração real do painel** (dados ao vivo, CRUD que salva, mapa no painel): com o
+   desenvolvedor, na fase de sistema unificado.
+4. **Fotos reais** das fachadas de unidade e dos antes/depois (cliente fornece).
+
 ## Aprendizados técnicos
 
-- Edit `replace_all` de " — " → ", " removia o espaço final (virava ","). Usar PowerShell .NET
-  regex com UTF-8 sem BOM para substituições em massa de texto acentuado.
-- Deploy de produção: rodar `vercel --prod` SEM `--yes`.
-- Placeholders de imagem com fallback gracioso: `<img onerror="this.remove()">` e
-  `background-image` condicional a partir de campos do `data.js`.
+- Edit `replace_all` de " — " para ", " removia o espaço final. Usar PowerShell .NET regex
+  com UTF-8 sem BOM para substituições em massa de texto acentuado.
+- Deploy de produção: `vercel --prod` SEM `--yes` (o classificador bloqueia com `--yes`).
+- **Cache foi a causa de vários "bugs" fantasmas:** `vercel.json` tinha CSS/JS/assets
+  `immutable` (1 ano), então o cliente via versões velhas (placeholder quebrado, "bug" na
+  entrada do painel). Corrigido para `max-age=0, must-revalidate`. Cliente precisa de um
+  Ctrl+Shift+R uma vez.
+- **Pollinations funciona bem chamado direto** com `?model=flux&nologo=true` e prompt bom
+  (os tigres vieram do script quebrado do Antigravity). Tem rate-limit 402 sob carga: gerar
+  com baixa concorrência + retry. `_gen.cjs` faz isso e pula os que já existem.
+- **Testes no preview headless:** o servidor estático de teste (`_serve.cjs`) precisa enviar
+  `Cache-Control: no-store`, senão o navegador do preview cacheia e mostra código velho. O
+  fluxo de clicar "Entrar" é instável por timing; para testar o dashboard, setar a sessão via
+  `eval` (`LaserAPI.login` + `LaserPainel.setSession`) e navegar direto.
+- `_gen.cjs` e `_serve.cjs` são ferramentas de dev, NÃO versionadas (ficam na raiz).
+  Permissão de `node _gen.cjs` está em `.claude/settings.local.json`.
