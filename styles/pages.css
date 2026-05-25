@@ -2048,44 +2048,84 @@
 .numeros-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--sp-4);
+  gap: var(--sp-5);
 }
 
 @media (max-width: 900px) { .numeros-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .numeros-grid { grid-template-columns: 1fr; } }
 
 .numero-card {
-  text-align: center;
-  padding: var(--sp-5);
-  background: var(--color-surface);
+  position: relative;
+  background: var(--color-bg-elevated);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  transition: all var(--duration-base) var(--ease-out);
+  overflow: hidden;
+  text-align: center;
+  transition: transform var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out), border-color var(--duration-base) var(--ease-out);
 }
 
 .numero-card:hover {
   border-color: var(--color-border-accent);
-  transform: translateY(-3px);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.numero-card-head {
+  position: relative;
+  height: 58px;
+  background: var(--color-accent-grad);
+}
+.numero-card-head::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.numero-card-icon {
+  position: absolute;
+  left: 50%;
+  bottom: -22px;
+  transform: translateX(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-bg);
+  border: 1px solid var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  z-index: 2;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.32);
+}
+.numero-card-icon svg { width: 20px; height: 20px; stroke-width: 1.6; }
+
+.numero-body {
+  padding: var(--sp-7) var(--sp-4) var(--sp-5);
 }
 
 .numero-big {
   font-family: var(--font-serif);
-  font-size: var(--fs-3xl);
+  font-size: var(--fs-xl);
   font-weight: var(--fw-light);
   background: var(--color-accent-grad);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   letter-spacing: var(--ls-tight);
-  line-height: 1;
+  line-height: 1.15;
   margin-bottom: var(--sp-2);
 }
 
 .numero-label {
   font-family: var(--font-accent);
-  font-size: var(--fs-xs);
+  font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: var(--ls-wider);
   color: var(--color-text-muted);
+  line-height: 1.4;
 }
 
 .modelo-list {
