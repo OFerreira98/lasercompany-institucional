@@ -104,6 +104,7 @@
         <span>CNPJ 53.078.691/0001-07</span>
         <a href="#">Política de Privacidade</a>
         <a href="#">Termos de Uso</a>
+        <a href="painel.html" class="footer-painel-link">Acesso Franqueados</a>
       </div>
     </div>
   </div>
