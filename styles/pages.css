@@ -49,12 +49,32 @@
 
 /* ============================================================
    SEÇÃO CLARA (.section-light), pedido do novo responsável (mai. 2026)
-   Cinza claro / branco gelo, com texto vinho escuro, contraste forte.
-   Aplicado em Sobre, Queridinhos, Como Funciona, Depoimentos.
+   Cinza claro / branco gelo, com texto vinho escuro.
+   Escopo: sobrescreve as variáveis CSS pra que todos os descendentes
+   que usam var(--color-text) etc. já peguem a paleta clara
+   automaticamente, sem precisar listar cada classe.
    ============================================================ */
 .section-light {
-  background: #F4ECDC;
-  color: #1F0B0A;
+  --color-bg:           #F4ECDC;
+  --color-bg-alt:       #FFFFFF;
+  --color-bg-elevated:  #FFFFFF;
+  --color-surface:      #FFFFFF;
+  --color-surface-hover:#F9F3E6;
+
+  --color-text:         #1F0B0A;
+  --color-text-soft:    #3A140F;
+  --color-text-muted:   #6E4A3A;
+  --color-text-dim:     rgba(31, 11, 10, 0.6);
+
+  --color-border:       rgba(70, 25, 20, 0.10);
+  --color-border-strong:rgba(70, 25, 20, 0.20);
+  --color-border-accent:rgba(154, 107, 30, 0.32);
+
+  --color-accent-pale:  #74302A;
+  --color-accent-glow:  rgba(154, 107, 30, 0.18);
+
+  background: var(--color-bg);
+  color: var(--color-text);
   position: relative;
 }
 .section-light .eyebrow { color: #9A6B1E; }
@@ -62,28 +82,59 @@
 .section-light .section-title-left { color: #1F0B0A; }
 .section-light .section-title .italic,
 .section-light .section-title-left .italic { color: #481712; }
-.section-light .section-sub,
-.section-light .demo-content-note { color: #6E4A3A; }
-.section-light .sobre-lead,
-.section-light .sobre-text { color: #3A140F; }
-.section-light .sobre-lead strong,
 .section-light .text-accent { color: #481712; }
-.section-light .stat-block .stat-num { color: #481712; }
-.section-light .stat-block .stat-label { color: #6E4A3A; }
-.section-light .stat-block { border-color: rgba(70,25,20,0.10); background: #FFFFFF; }
-.section-light .marquee-track { color: #1F0B0A; }
+
+/* Cards específicos: garantem sombra sutil e borda discreta */
 .section-light .marquee-card,
-.section-light .testimonial-card,
-.section-light .step-card,
-.section-light .grid > * {
-  background: #FFFFFF;
-  color: #1F0B0A;
-  border-color: rgba(70,25,20,0.08);
-  box-shadow: 0 1px 3px rgba(70,25,20,0.04);
+.section-light .depoimento-card,
+.section-light .stat-block {
+  box-shadow: 0 1px 3px rgba(70, 25, 20, 0.04);
 }
-.section-light .step-card .step-num { color: #9A6B1E; }
-.section-light .testimonial-card .author,
-.section-light .testimonial-card .role { color: #6E4A3A; }
+.section-light .marquee-card-image::after {
+  background: linear-gradient(0deg, rgba(70,25,20,0.35) 0%, transparent 55%);
+}
+
+/* Step (Como Funciona, 4 passos): elementos não eram cards, agora
+   ficam destacados com fundo branco e cores legíveis. */
+.section-light .step-item {
+  background: #FFFFFF;
+  border: 1px solid rgba(70, 25, 20, 0.08);
+  border-radius: 14px;
+  padding: var(--sp-5) var(--sp-4) var(--sp-4);
+  align-items: center;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.section-light .step-item:hover {
+  transform: translateY(-4px);
+  border-color: rgba(154, 107, 30, 0.35);
+  box-shadow: 0 12px 30px rgba(70, 25, 20, 0.10);
+}
+.section-light .step-item .step-num {
+  background: #FFFFFF;
+  border-color: rgba(154, 107, 30, 0.45);
+  color: #9A6B1E;
+  box-shadow: 0 0 0 4px rgba(154, 107, 30, 0.06);
+}
+.section-light .step-item .step-title { color: #1F0B0A; }
+.section-light .step-item .step-desc { color: #4E1A15; }
+.section-light .steps-grid::before { opacity: 0.18; }
+
+/* Depoimentos: card branco e tipografia escura */
+.section-light .depoimento-card {
+  background: #FFFFFF;
+  border-color: rgba(70,25,20,0.08);
+}
+.section-light .depoimento-card::before { color: rgba(154,107,30,0.30); }
+.section-light .depoimento-texto { color: #1F0B0A; }
+.section-light .depoimento-autor { border-color: rgba(70,25,20,0.10); }
+.section-light .depoimento-info-nome { color: #1F0B0A; }
+.section-light .depoimento-avatar { color: #FFFFFF; }
+
+/* Botões ghost dentro de seção clara */
 .section-light .btn-outline {
   color: #481712;
   border-color: rgba(70,25,20,0.30);
@@ -93,10 +144,105 @@
   color: #FFFFFF;
   border-color: #481712;
 }
-/* fundo um pouco mais claro pra blocos "queridinhos" e "depoimentos" */
-.section-light.section-light-soft {
-  background: #F8F2E5;
+.section-light .btn-ghost {
+  color: #481712;
+  border-color: rgba(70,25,20,0.30);
 }
+
+/* Variantes de fundo (matiz pra alternar entre seções claras) */
+.section-light.section-light-soft { background: #F8F2E5; }
+.section-light.section-light-snow  { background: #FBF6EC; }
+
+/* ============================================================
+   BLOG (3 cards de conteúdo)
+   ============================================================ */
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-5);
+  margin-top: var(--sp-6);
+}
+@media (max-width: 900px) { .blog-grid { grid-template-columns: 1fr; } }
+
+.blog-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(70, 25, 20, 0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.blog-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(154, 107, 30, 0.35);
+  box-shadow: 0 18px 40px rgba(70, 25, 20, 0.12);
+}
+.blog-card-cover {
+  display: block;
+  overflow: hidden;
+}
+.blog-card-img {
+  aspect-ratio: 16 / 10;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.6s ease;
+}
+.blog-card:hover .blog-card-img { transform: scale(1.07); }
+.blog-card-body {
+  padding: var(--sp-4) var(--sp-5) var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.blog-card-cat {
+  font-family: var(--font-accent);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #9A6B1E;
+}
+.blog-card-title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.25;
+  margin: 0;
+}
+.blog-card-title a {
+  color: #1F0B0A;
+  text-decoration: none;
+}
+.blog-card-title a:hover { color: #481712; }
+.blog-card-preview {
+  color: #4E1A15;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.blog-card-meta {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  font-family: var(--font-accent);
+  font-size: 0.72rem;
+  color: #6E4A3A;
+  margin-top: var(--sp-2);
+}
+.blog-card-cta {
+  margin-top: var(--sp-3);
+  font-family: var(--font-accent);
+  font-size: 0.78rem;
+  color: #9A6B1E;
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  align-self: flex-start;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.blog-card-cta:hover { color: #481712; border-bottom-color: #481712; }
 
 /* ============================================================
    INDEX — Página Início
@@ -321,6 +467,18 @@
 @keyframes marqueeMove {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
+}
+
+/* Marquee dos queridinhos: pausa no hover do bloco inteiro,
+   cards individuais escalam imagem ao passar o mouse. */
+.marquee-wrapper:hover .marquee-track {
+  animation-play-state: paused;
+}
+.marquee-card .marquee-card-image {
+  transition: transform 0.7s var(--ease-out);
+}
+.marquee-card:hover .marquee-card-image {
+  transform: scale(1.08);
 }
 
 .marquee-card {

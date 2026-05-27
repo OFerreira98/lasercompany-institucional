@@ -16,13 +16,24 @@
     </a>
     <nav class="header-nav header-capsule" aria-label="Menu principal">
       <div class="nav-item"><a href="index.html" class="nav-link" data-page="index">Início</a></div>
-      <div class="nav-item">
+      <div class="nav-item nav-item-mega">
         <a href="procedimentos.html" class="nav-link" data-page="procedimentos">Procedimentos <span class="caret">▾</span></a>
-        <div class="nav-submenu">
-          <div class="nav-submenu-label">Nossas três frentes</div>
-          <a href="procedimentos.html?tab=estetica" class="nav-submenu-link">Estética a Laser</a>
-          <a href="procedimentos.html?tab=depilacao" class="nav-submenu-link">Depilação a Laser</a>
-          <a href="procedimentos.html?tab=ultrassom" class="nav-submenu-link">Ultrassom</a>
+        <div class="nav-submenu nav-mega" role="menu">
+          <div class="nav-mega-col" data-mega-cat="estetica">
+            <a href="procedimentos.html?tab=estetica" class="nav-mega-title">Estética a Laser</a>
+            <ul class="nav-mega-list" aria-label="Procedimentos de estética"></ul>
+            <a href="procedimentos.html?tab=estetica" class="nav-mega-all">Ver todos os tratamentos &rarr;</a>
+          </div>
+          <div class="nav-mega-col" data-mega-cat="depilacao">
+            <a href="procedimentos.html?tab=depilacao" class="nav-mega-title">Depilação a Laser</a>
+            <ul class="nav-mega-list" aria-label="Áreas de depilação"></ul>
+            <a href="procedimentos.html?tab=depilacao" class="nav-mega-all">Ver todas as áreas &rarr;</a>
+          </div>
+          <div class="nav-mega-col" data-mega-cat="ultrassom">
+            <a href="procedimentos.html?tab=ultrassom" class="nav-mega-title">Ultrassom Ultracel</a>
+            <ul class="nav-mega-list" aria-label="Tratamentos de ultrassom"></ul>
+            <a href="procedimentos.html?tab=ultrassom" class="nav-mega-all">Ver todos os tratamentos &rarr;</a>
+          </div>
         </div>
       </div>
       <div class="nav-item"><a href="agendamento.html" class="nav-link" data-page="agendamento">Agendamento</a></div>
@@ -195,13 +206,16 @@
     </div>
     <div class="footer-media">
       <span class="footer-media-eyebrow">Saiu na mídia</span>
+      <p class="footer-media-sub">A Laser &amp; Co é destaque em veículos especializados em franquia e estética.</p>
       <div class="footer-media-strip" id="footer-media-strip">
-        <div class="footer-media-slot"><span>Logo veículo 1</span></div>
-        <div class="footer-media-slot"><span>Logo veículo 2</span></div>
-        <div class="footer-media-slot"><span>Logo veículo 3</span></div>
-        <div class="footer-media-slot"><span>Logo veículo 4</span></div>
-        <div class="footer-media-slot"><span>Logo veículo 5</span></div>
+        <div class="footer-media-slot"><span>Exame</span></div>
+        <div class="footer-media-slot"><span>PEGN</span></div>
+        <div class="footer-media-slot"><span>Estadão</span></div>
+        <div class="footer-media-slot"><span>Folha de S.Paulo</span></div>
+        <div class="footer-media-slot"><span>ABF</span></div>
+        <div class="footer-media-slot"><span>Forbes</span></div>
       </div>
+      <p class="footer-media-note">Logos reais e links das matérias entram quando o cliente enviar.</p>
     </div>
     <div class="footer-bottom">
       <div>© 2026 Laser &amp; Co Brasil. Todos os direitos reservados.</div>
@@ -231,6 +245,29 @@
     }
     // marca o header como "rolado" depois de uns px (sombra mais forte, logo menor)
     bindHeaderScroll();
+    // popula o mega-menu de procedimentos a partir de window.LaserData
+    populateMegaMenu();
+  }
+
+  /* ---------- mega-menu de procedimentos ---------- */
+  function populateMegaMenu(retries) {
+    if (!window.LaserData || !window.LaserData.procedimentos) {
+      // o data.js ainda não carregou, tenta de novo em 100ms (até 30x)
+      if ((retries || 0) < 30) setTimeout(() => populateMegaMenu((retries || 0) + 1), 100);
+      return;
+    }
+    const procs = window.LaserData.procedimentos;
+    document.querySelectorAll('[data-mega-cat]').forEach(col => {
+      const cat = col.dataset.megaCat;
+      const list = col.querySelector('.nav-mega-list');
+      if (!list) return;
+      const items = (procs[cat] || []).slice(0, 6);
+      list.innerHTML = items.map(p => {
+        const id = p.id || (p.nome || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+        const label = p.nome || p.titulo || id;
+        return `<li><a class="nav-mega-link" href="procedimentos.html?tab=${cat}&proc=${id}">${label}</a></li>`;
+      }).join('');
+    });
   }
 
   /* ---------- SAC modal ---------- */

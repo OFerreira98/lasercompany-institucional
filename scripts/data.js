@@ -216,12 +216,97 @@ window.LaserData = {
     { nome: 'Juliana A.', cidade: 'Curitiba, PR', texto: 'A papada com ultrassom microfocado foi um divisor de águas. Sem cortes, sem recuperação. O contorno do meu rosto ficou definido.', avatar: null, exemplo: true },
   ],
 
+  /* --------- HERO CARROSSEL (3 a 5 banners, ordem aleatoria) ---------- */
+  hero: [
+    {
+      id: 'premium',
+      img: 'assets/img/hero.jpg',
+      eyebrow: 'Estética & Depilação a Laser e Ultrassom',
+      title: 'Estética premium,',
+      titleItalic: 'acessível a todos.',
+      sub: 'Laser, depilação e ultrassom em uma só rede. Procedimentos premium com parcelamento em até 12x sem juros.',
+      ctaPrimary: { label: 'Agendar avaliação grátis', href: 'agendamento.html' },
+      ctaGhost:   { label: 'Conhecer a rede',          href: '#sobre' },
+    },
+    {
+      id: 'estetica',
+      img: 'assets/img/estetica.jpg',
+      eyebrow: 'Estética a Laser',
+      title: '21 protocolos',
+      titleItalic: 'para a sua pele.',
+      sub: 'Rejuvenescimento 4D, melasma, manchas, cicatrizes e remoção de tatuagens. Tecnologia premium para resultados visíveis.',
+      ctaPrimary: { label: 'Ver protocolos de estética', href: 'procedimentos.html?tab=estetica' },
+      ctaGhost:   { label: 'Agendar avaliação',         href: 'agendamento.html' },
+    },
+    {
+      id: 'depilacao',
+      img: 'assets/img/depilacao.jpg',
+      eyebrow: 'Depilação a Laser',
+      title: 'Pele lisa,',
+      titleItalic: 'sem dor e segura.',
+      sub: 'Alexandrite e ND-YAG. Seguro para todos os fototipos da pele, do mais claro ao mais escuro. 14+ áreas tratadas.',
+      ctaPrimary: { label: 'Ver áreas de depilação',  href: 'procedimentos.html?tab=depilacao' },
+      ctaGhost:   { label: 'Agendar avaliação',       href: 'agendamento.html' },
+    },
+    {
+      id: 'ultrassom',
+      img: 'assets/img/ultrassom.jpg',
+      eyebrow: 'Ultrassom Ultracel',
+      title: 'Lifting',
+      titleItalic: 'sem cortes.',
+      sub: 'Papada, bichectomia, fox eyes e levantamento facial. 14 tratamentos com tecnologia microfocada.',
+      ctaPrimary: { label: 'Ver tratamentos de ultrassom', href: 'procedimentos.html?tab=ultrassom' },
+      ctaGhost:   { label: 'Agendar avaliação',            href: 'agendamento.html' },
+    },
+    {
+      id: 'avaliacao',
+      img: 'assets/img/hero.jpg',
+      eyebrow: 'Sem compromisso',
+      title: 'Avaliação gratuita',
+      titleItalic: 'na unidade mais perto de você.',
+      sub: 'Mais de 70 unidades em 15 estados. A franquia da sua região avalia sua pele e desenha o protocolo ideal.',
+      ctaPrimary: { label: 'Agendar minha avaliação grátis', href: 'agendamento.html' },
+      ctaGhost:   { label: 'Encontrar unidade',              href: 'unidades.html' },
+    },
+  ],
+
   /* --------- COMO FUNCIONA,4 passos ---------- */
   passos: [
     { n: '01', titulo: 'Escolha o procedimento', desc: 'Navegue pelas nossas três frentes (estética, depilação ou ultrassom) e encontre o tratamento ideal.' },
     { n: '02', titulo: 'Informe sua região', desc: 'Selecione estado, cidade e a unidade Laser & Co mais próxima de você.' },
     { n: '03', titulo: 'Fale com a sua unidade', desc: 'A franquia da sua região recebe seu pedido e entra em contato direto pelo WhatsApp.' },
     { n: '04', titulo: 'Comece agora', desc: 'Avaliação rápida, sem compromisso. Você escolhe o melhor horário.', cta: { label: 'Agendar minha avaliação', href: 'agendamento.html' } },
+  ],
+
+  /* --------- BLOG (3 cards iniciais, placeholders) ---------- */
+  blog: [
+    {
+      id: 'cuidados-pos-laser',
+      categoria: 'Cuidados',
+      titulo: 'Cuidados pós-laser: o que fazer nos primeiros dias',
+      preview: 'Hidratar, evitar sol e seguir o protocolo da sua avaliação. Veja o passo a passo recomendado pelas nossas profissionais.',
+      img: 'assets/img/blog-1.webp',
+      data: '15 de maio, 2026',
+      tempoLeitura: '4 min de leitura',
+    },
+    {
+      id: 'quantas-sessoes',
+      categoria: 'Procedimentos',
+      titulo: 'Quantas sessões são necessárias para cada tratamento?',
+      preview: 'Depilação, rejuvenescimento, manchas, melasma. Cada protocolo tem um número médio de sessões. Entenda como funciona o seu.',
+      img: 'assets/img/blog-2.webp',
+      data: '08 de maio, 2026',
+      tempoLeitura: '5 min de leitura',
+    },
+    {
+      id: 'mitos-depilacao',
+      categoria: 'Depilação',
+      titulo: 'Mitos e verdades sobre depilação a laser',
+      preview: 'Pode fazer no sol? Funciona em pele negra? Dói? Respondemos as dúvidas mais frequentes sobre o procedimento mais procurado.',
+      img: 'assets/img/blog-3.webp',
+      data: '22 de abril, 2026',
+      tempoLeitura: '6 min de leitura',
+    },
   ],
 
   /* --------- ESTATÍSTICAS DA REDE ---------- */

@@ -39,41 +39,20 @@
 
 <main>
 
-  <!-- ============ SEÇÃO 1, HERO (reduzido) ============ -->
-  <section class="hero hero-compact">
-    <div class="hero-bg" aria-hidden="true">
-      <div class="hero-bg-image" style="background-image: url('assets/img/hero.jpg');"></div>
-      <div class="hero-bg-overlay"></div>
-    </div>
-    <div class="laser-beam laser-beam-animated" style="top: 38%; left: 0; right: 0;" aria-hidden="true"></div>
+  <!-- ============ SEÇÃO 1, HERO CARROSSEL (3-5 banners aleatorios) ============ -->
+  <section class="hero hero-carousel" id="hero-carousel" aria-roledescription="carousel" aria-label="Banners principais">
+    <div class="hero-slides" id="hero-slides"></div>
 
-    <div class="container hero-content">
-      <div class="hero-grid">
-        <div class="hero-text">
-          <div class="glass-pill reveal">
-            <span class="dot"></span>
-            Estética &amp; Depilação a Laser e Ultrassom
-          </div>
+    <div class="laser-beam laser-beam-animated" style="top: 42%; left: 0; right: 0;" aria-hidden="true"></div>
 
-          <h1 class="hero-title reveal reveal-delay-1">
-            Estética premium, <br><span class="italic">acessível a todos.</span>
-          </h1>
+    <button class="hero-arrow hero-arrow-prev" id="hero-prev" aria-label="Banner anterior">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <button class="hero-arrow hero-arrow-next" id="hero-next" aria-label="Próximo banner">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
 
-          <p class="hero-sub reveal reveal-delay-2">
-            Laser, depilação e ultrassom em uma só rede. Procedimentos premium com parcelamento em até 12x sem juros.
-          </p>
-
-          <div class="hero-actions reveal reveal-delay-3">
-            <a href="agendamento.html" class="btn btn-primary btn-lg btn-pulse btn-arrow">Agendar avaliação grátis</a>
-            <a href="#sobre" class="btn btn-ghost btn-lg">Conhecer a rede</a>
-          </div>
-        </div>
-
-        <div class="hero-logo-floating reveal reveal-delay-4" aria-hidden="true">
-          <img src="assets/logos/avatar-andco-transparente.png" alt="">
-        </div>
-      </div>
-    </div>
+    <div class="hero-dots" id="hero-dots" role="tablist" aria-label="Selecionar banner"></div>
   </section>
 
   <!-- ============ SEÇÃO 2, SOBRE A EMPRESA ============ -->
@@ -206,6 +185,18 @@
         </p>
       </header>
       <div class="grid grid-2 reveal" id="depoimentos-grid"></div>
+    </div>
+  </section>
+
+  <!-- ============ SEÇÃO 8, BLOG (Conteúdo & Cuidados) ============ -->
+  <section class="section section-light section-light-snow" id="blog">
+    <div class="container">
+      <header class="section-header reveal">
+        <span class="eyebrow eyebrow-centered">Conteúdo &amp; Cuidados</span>
+        <h2 class="section-title">Aprenda com <span class="italic">nossas profissionais.</span></h2>
+        <p class="section-sub">Dicas, protocolos e respostas pras dúvidas mais comuns sobre cada tratamento.</p>
+      </header>
+      <div class="blog-grid" id="blog-grid"></div>
     </div>
   </section>
 

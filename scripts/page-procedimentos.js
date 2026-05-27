@@ -198,6 +198,13 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && modal.classList.contains('visible')) closeModal();
     });
+
+    // Se a URL traz ?proc=<id>, abre o procedimento direto (vindo do mega-menu do header)
+    const procParam = new URLSearchParams(window.location.search).get('proc');
+    if (procParam && window.LaserData.findProcedimento(procParam)) {
+      // pequeno delay pra deixar o tab ativar e a página estabilizar
+      setTimeout(() => openModal(procParam), 150);
+    }
   }
 
   if (document.readyState === 'loading') {
