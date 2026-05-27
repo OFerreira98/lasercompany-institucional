@@ -278,6 +278,18 @@ window.LaserData = {
     { n: '04', titulo: 'Comece agora', desc: 'Avaliação rápida, sem compromisso. Você escolhe o melhor horário.', cta: { label: 'Agendar minha avaliação', href: 'agendamento.html' } },
   ],
 
+  /* --------- REDES SOCIAIS (grid de 6 posts placeholder) ----------
+     Quando o cliente liberar, substituir por embed real ou puxada
+     via Instagram Graph API. Hoje cada card aponta pro perfil. */
+  social: [
+    { tipo: 'foto',  img: 'assets/img/proc-rejuv-facial.jpg', titulo: 'Rejuvenescimento 4D, antes e depois real',  href: 'https://instagram.com/lasercompanybrasil' },
+    { tipo: 'video', img: 'assets/img/proc-papada.jpg',       titulo: 'Ultrassom de papada, em 60 segundos',         href: 'https://instagram.com/lasercompanybrasil' },
+    { tipo: 'foto',  img: 'assets/img/proc-axila.jpg',        titulo: 'Depilação a laser, dúvidas frequentes',       href: 'https://instagram.com/lasercompanybrasil' },
+    { tipo: 'video', img: 'assets/img/proc-full-face.jpg',    titulo: 'Full Face, protocolo completo passo a passo', href: 'https://instagram.com/lasercompanybrasil' },
+    { tipo: 'foto',  img: 'assets/img/estetica.jpg',          titulo: 'Bastidores: nossa unidade Vila Mariana',      href: 'https://instagram.com/lasercompanybrasil' },
+    { tipo: 'video', img: 'assets/img/proc-abdomen.jpg',      titulo: 'Ultrassom no abdômen, resultado em 3 sessões', href: 'https://instagram.com/lasercompanybrasil' },
+  ],
+
   /* --------- BLOG (3 cards iniciais, placeholders) ---------- */
   blog: [
     {

@@ -154,6 +154,200 @@
 .section-light.section-light-snow  { background: #FBF6EC; }
 
 /* ============================================================
+   SEÇÃO VINHO REFORÇADO (.section-wine)
+   Aplicado em blocos que devem se destacar em pantone (redes sociais
+   e o futuro Quiz "Descubra seu Protocolo").
+   ============================================================ */
+.section-wine {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(200,160,100,0.10), transparent 50%),
+    radial-gradient(circle at 100% 100%, rgba(154,107,30,0.10), transparent 55%),
+    linear-gradient(180deg, #481712 0%, #2A0F0D 100%);
+  color: #F5EFE2;
+  position: relative;
+}
+.section-wine .eyebrow { color: #E8C088; }
+.section-wine .section-sub { color: rgba(245, 239, 226, 0.78); }
+
+/* ============================================================
+   SIGA-NOS NAS REDES SOCIAIS (grid Instagram-style)
+   ============================================================ */
+.social-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-3);
+  margin-top: var(--sp-6);
+}
+@media (max-width: 900px) { .social-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px) { .social-grid { grid-template-columns: 1fr; } }
+
+.social-card {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 12px;
+  display: block;
+  text-decoration: none;
+  border: 1px solid rgba(200, 160, 100, 0.18);
+  isolation: isolate;
+}
+.social-card-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.6s ease;
+  z-index: 1;
+}
+.social-card:hover .social-card-img { transform: scale(1.08); }
+.social-card-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: var(--sp-3) var(--sp-4) var(--sp-4);
+  background:
+    linear-gradient(180deg, transparent 35%, rgba(20,8,6,0.45) 80%, rgba(20,8,6,0.78) 100%);
+  color: #F5EFE2;
+  opacity: 0.75;
+  transition: opacity 0.3s ease;
+}
+.social-card:hover .social-card-overlay { opacity: 1; }
+.social-card-ico {
+  position: absolute;
+  top: var(--sp-3);
+  right: var(--sp-3);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(20, 8, 6, 0.55);
+  border: 1px solid rgba(245, 239, 226, 0.30);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #E8C088;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.social-card-ico svg { width: 16px; height: 16px; }
+.social-card-cap {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: #F5EFE2;
+  text-shadow: 0 1px 4px rgba(20, 8, 6, 0.7);
+}
+.social-actions {
+  margin-top: var(--sp-5);
+  text-align: center;
+}
+.section-wine .btn-outline {
+  color: #E8C088;
+  border-color: rgba(232,192,136,0.50);
+}
+.section-wine .btn-outline:hover {
+  background: #E8C088;
+  color: #1F0B0A;
+  border-color: #E8C088;
+}
+
+/* ============================================================
+   AGENDAMENTO CURTO NA HOME (form em fundo vinho)
+   ============================================================ */
+.agendamento-curto-card {
+  background: rgba(245, 239, 226, 0.04);
+  border: 1px solid rgba(232, 192, 136, 0.22);
+  border-radius: 16px;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.agendamento-curto-head { text-align: center; margin-bottom: var(--sp-5); }
+.ag-form { display: flex; flex-direction: column; gap: var(--sp-3); }
+.ag-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+}
+.ag-form-row.ag-form-row-uf {
+  grid-template-columns: 0.6fr 1fr 1fr;
+}
+@media (max-width: 720px) {
+  .ag-form-row, .ag-form-row.ag-form-row-uf { grid-template-columns: 1fr; }
+}
+.ag-form .field-label {
+  display: block;
+  font-family: var(--font-accent);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #E8C088;
+  margin-bottom: 0.35rem;
+}
+.ag-form .input {
+  width: 100%;
+  background: rgba(20, 8, 6, 0.55);
+  border: 1px solid rgba(232, 192, 136, 0.30);
+  color: #F5EFE2;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.92rem;
+  font-family: inherit;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.ag-form .input:focus {
+  outline: none;
+  border-color: #E8C088;
+  box-shadow: 0 0 0 3px rgba(232, 192, 136, 0.18);
+}
+.ag-form .input::placeholder { color: rgba(245, 239, 226, 0.45); }
+.ag-form .input:disabled {
+  background: rgba(20, 8, 6, 0.30);
+  color: rgba(245, 239, 226, 0.45);
+  cursor: not-allowed;
+}
+.ag-form .field-error {
+  font-size: 0.72rem;
+  color: #FF9A86;
+  margin-top: 0.3rem;
+  display: none;
+}
+.ag-form .field.has-error .input { border-color: #C03B2A; }
+.ag-form .field.has-error .field-error { display: block; }
+.ag-cta-field { display: flex; align-items: flex-end; }
+
+/* tela de sucesso do form curto */
+.ag-success {
+  text-align: center;
+  padding: var(--sp-5) var(--sp-3);
+}
+.ag-success-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(80, 200, 120, 0.18);
+  color: #7ee0a0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--sp-3);
+}
+.ag-success h3 {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  margin: 0 0 var(--sp-2);
+  color: #F5EFE2;
+}
+.ag-success p {
+  color: rgba(245, 239, 226, 0.85);
+  max-width: 50ch;
+  margin: 0 auto var(--sp-4);
+  line-height: 1.5;
+}
+
+/* ============================================================
    BLOG (3 cards de conteúdo)
    ============================================================ */
 .blog-grid {
@@ -1769,6 +1963,43 @@
   border-color: var(--color-accent);
   box-shadow: 0 0 0 2px var(--color-accent), var(--shadow-lg);
   animation: highlightPulse 1.2s var(--ease-out);
+}
+
+/* Em página clara (.section-light), os cards de unidade ficam VINHO
+   conforme pedido: contraste de loja sobre fundo creme. */
+.section-light .unidade-card {
+  background: linear-gradient(155deg, #481712 0%, #2A0F0D 100%);
+  color: #F5EFE2;
+  border-color: rgba(232, 192, 136, 0.25);
+}
+.section-light .unidade-card:hover {
+  border-color: #E8C088;
+  box-shadow: 0 18px 40px rgba(70, 25, 20, 0.20);
+}
+.section-light .unidade-card .unidade-card-nome,
+.section-light .unidade-card .unidade-card-cidade,
+.section-light .unidade-card h3,
+.section-light .unidade-card h4 { color: #F5EFE2; }
+.section-light .unidade-card .unidade-card-meta,
+.section-light .unidade-card p { color: rgba(245, 239, 226, 0.80); }
+.section-light .unidade-card .unidade-card-uf-badge {
+  background: rgba(232, 192, 136, 0.22);
+  color: #F5EFE2;
+  border-color: rgba(232, 192, 136, 0.40);
+}
+.section-light .unidade-card a { color: #E8C088; }
+.section-light .unidade-card a:hover { color: #F5EFE2; }
+.section-light .unidade-card.highlighted {
+  border-color: #E8C088;
+  box-shadow: 0 0 0 2px #E8C088, 0 18px 40px rgba(70, 25, 20, 0.30);
+}
+
+/* mapa numa moldura vinho leve em página clara */
+.section-light .unidades-map-wrap {
+  border: 1px solid rgba(70, 25, 20, 0.10);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(70, 25, 20, 0.06);
 }
 
 @keyframes highlightPulse {

@@ -179,6 +179,22 @@
     targets.forEach(el => io.observe(el));
   }
 
+  function renderSocial() {
+    const grid = document.getElementById('social-grid');
+    if (!grid || !window.LaserData.social) return;
+    const playIcon = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="8 5 19 12 8 19 8 5"/></svg>';
+    const igIcon   = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>';
+    grid.innerHTML = window.LaserData.social.map(s => `
+      <a class="social-card" href="${s.href}" target="_blank" rel="noopener" aria-label="${s.titulo}">
+        <div class="social-card-img" style="background-image:url('${s.img}')"></div>
+        <div class="social-card-overlay">
+          <span class="social-card-ico">${s.tipo === 'video' ? playIcon : igIcon}</span>
+          <span class="social-card-cap">${s.titulo}</span>
+        </div>
+      </a>
+    `).join('');
+  }
+
   function renderBlog() {
     const grid = document.getElementById('blog-grid');
     if (!grid || !window.LaserData.blog) return;
@@ -202,12 +218,106 @@
     `).join('');
   }
 
+  /* ---------- AGENDAMENTO CURTO (form no fim da home) ---------- */
+  function bindAgendamentoCurto() {
+    const form = document.getElementById('ag-curto-form');
+    if (!form || !window.LaserData) return;
+    const unidades = window.LaserData.unidades || [];
+    const selUF  = form.querySelector('[name="uf"]');
+    const selCid = form.querySelector('[name="cidade"]');
+    const selUni = form.querySelector('[name="unidade"]');
+    const whats  = form.querySelector('[name="whatsapp"]');
+    const dataIn = form.querySelector('[name="data"]');
+
+    // popula UFs
+    const ufs = Array.from(new Set(unidades.map(u => u.uf))).sort();
+    selUF.innerHTML = '<option value="">UF</option>' + ufs.map(uf => `<option value="${uf}">${uf}</option>`).join('');
+
+    selUF.addEventListener('change', () => {
+      const uf = selUF.value;
+      const cidades = uf
+        ? Array.from(new Set(unidades.filter(u => u.uf === uf).map(u => u.cidade))).sort((a, b) => a.localeCompare(b, 'pt-BR'))
+        : [];
+      selCid.innerHTML = '<option value="">Cidade</option>' + cidades.map(c => `<option value="${c}">${c}</option>`).join('');
+      selCid.disabled = !cidades.length;
+      selUni.innerHTML = '<option value="">Unidade</option>';
+      selUni.disabled = true;
+    });
+
+    selCid.addEventListener('change', () => {
+      const list = unidades.filter(u => u.uf === selUF.value && u.cidade === selCid.value);
+      selUni.innerHTML = '<option value="">Unidade</option>' + list.map(u => `<option value="${u.id}">${u.nome}</option>`).join('');
+      selUni.disabled = !list.length;
+      if (list.length === 1) selUni.value = list[0].id;
+    });
+
+    // máscara de whatsapp
+    whats.addEventListener('input', (e) => {
+      let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+      if (v.length > 6)      v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+      else if (v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+      else if (v.length > 0) v = `(${v}`;
+      e.target.value = v;
+    });
+
+    // data mínima = hoje
+    const today = new Date().toISOString().split('T')[0];
+    dataIn.setAttribute('min', today);
+
+    function validate(field) {
+      const el = field.querySelector('.input');
+      const v = (el.value || '').trim();
+      let ok = true;
+      if (el.required && !v) ok = false;
+      if (el.name === 'whatsapp' && v.replace(/\D/g, '').length < 10) ok = false;
+      field.classList.toggle('has-error', !ok);
+      return ok;
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fields = form.querySelectorAll('.field:not(.ag-cta-field)');
+      let ok = true;
+      fields.forEach(f => { if (!validate(f)) ok = false; });
+      if (!ok) return;
+
+      const unidade = unidades.find(u => u.id === selUni.value);
+      const payload = {
+        nome: form.querySelector('[name="nome"]').value.trim(),
+        whatsapp: whats.value.trim(),
+        uf: selUF.value,
+        cidade: selCid.value,
+        unidadeId: selUni.value,
+        unidadeNome: unidade ? unidade.nome : null,
+        data: dataIn.value,
+      };
+
+      window.LaserAnalytics && window.LaserAnalytics.trackLead && window.LaserAnalytics.trackLead('agendamento_home', payload);
+
+      // mostra sucesso
+      Array.from(form.children).forEach(c => { if (!c.classList.contains('ag-success')) c.style.display = 'none'; });
+      const ok2 = document.getElementById('ag-success');
+      ok2.hidden = false;
+      if (unidade) {
+        const dataBR = payload.data ? payload.data.split('-').reverse().join('/') : '';
+        document.getElementById('ag-success-title').textContent = 'Recebemos sua solicitação';
+        document.getElementById('ag-success-msg').textContent = `A unidade ${unidade.nome} (${unidade.cidade}/${unidade.uf}) vai te chamar pra confirmar o horário do dia ${dataBR}.`;
+        const num = (unidade.whatsapp || '').replace(/\D/g, '');
+        const msg = `Olá ${unidade.nome}! Sou ${payload.nome}, preenchi o agendamento no site da Laser & Co para o dia ${dataBR}.`;
+        const wa = document.getElementById('ag-success-wa');
+        wa.href = num ? `https://wa.me/${num}?text=${encodeURIComponent(msg)}` : '#';
+      }
+    });
+  }
+
   function init() {
     renderHero();
     renderMarqueePopulares();
     renderPassos();
+    renderSocial();
     renderDepoimentos();
     renderBlog();
+    bindAgendamentoCurto();
     animateCountUp();
   }
 
