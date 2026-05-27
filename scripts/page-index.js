@@ -123,7 +123,7 @@
     function prev() { go((current - 1 + total) % total); }
     function restartAuto() {
       clearInterval(auto);
-      auto = setInterval(next, 5000);
+      auto = setInterval(next, 4500);
     }
 
     document.getElementById('hero-next').addEventListener('click', () => go((current + 1) % total, true));
@@ -133,15 +133,19 @@
       if (b) go(Number(b.dataset.i), true);
     });
 
-    // pausa ao passar o mouse, retoma ao sair
-    const hero = document.getElementById('hero-carousel');
-    hero.addEventListener('mouseenter', () => clearInterval(auto));
-    hero.addEventListener('mouseleave', restartAuto);
-
     // suporte a teclado (← →) quando o carrossel está em foco
+    const hero = document.getElementById('hero-carousel');
     hero.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight') { next(); restartAuto(); }
       if (e.key === 'ArrowLeft')  { prev(); restartAuto(); }
+    });
+
+    // Pausa o autoplay quando a aba sai de foco (Page Visibility) pra economizar
+    // recursos, e retoma quando volta. NÃO pausa no hover, porque o cliente
+    // quer ver o carrossel passando sempre.
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) clearInterval(auto);
+      else restartAuto();
     });
 
     restartAuto();

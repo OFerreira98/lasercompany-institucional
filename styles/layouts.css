@@ -1768,8 +1768,13 @@ main { padding-top: 100px; }
 }
 
 /* Compensar o header fixo no fluxo: o main precisa começar abaixo do header.
-   Aplicado apenas a páginas públicas (body sem .painel-body). */
-body:not(.painel-body) { padding-top: 108px; }
+   Aplicado apenas a páginas públicas (body sem .painel-body).
+   Bg branco pra encostar perfeitamente com o header e não mostrar
+   nenhuma faixa do tema vinho do body acima do hero. */
+body:not(.painel-body) {
+  padding-top: 108px;
+  background: #FFFFFF;
+}
 @media (max-width: 980px) {
   body:not(.painel-body) { padding-top: 80px; }
 }
