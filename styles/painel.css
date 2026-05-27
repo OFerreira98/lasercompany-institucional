@@ -379,3 +379,199 @@
 .acct-name { font-family: var(--font-accent); font-weight: 600; font-size: var(--fs-lg); }
 .acct-photo-btn { display: inline-flex; cursor: pointer; }
 @media (max-width: 640px) { .painel-form { grid-template-columns: 1fr; } }
+
+/* ============================================================
+   TEMA CLEAN DO PAINEL (mai. 2026)
+   Sidebar mantém identidade vinho/dourado.
+   Área de conteúdo vira branco gelo, mesma família da Versão Clara.
+   ============================================================ */
+
+/* corpo do painel: fundo neutro creme */
+.painel-body {
+  background:
+    radial-gradient(circle at 88% -10%, rgba(154,107,30,0.08), transparent 55%),
+    radial-gradient(circle at 0% 100%, rgba(154,107,30,0.05), transparent 60%),
+    #F6F2EA;
+}
+
+/* sidebar = identidade vinho/dourado, hardcoded p/ não depender de tokens */
+.painel-sidebar {
+  background: linear-gradient(180deg, #1F0B0A 0%, #2A0F0D 60%, #1F0B0A 100%);
+  border-right: 1px solid rgba(200,160,100,0.18);
+  box-shadow: 1px 0 0 rgba(0,0,0,0.04);
+}
+.painel-sidebar-brand { border-bottom: 1px solid rgba(200,160,100,0.16); }
+.painel-sidebar-tag { color: rgba(232,192,136,0.85); }
+.painel-sidebar .painel-nav-head,
+.painel-sidebar .painel-nav-link {
+  color: rgba(245,240,230,0.72);
+}
+.painel-sidebar .painel-nav-head:hover,
+.painel-sidebar .painel-nav-link:hover {
+  background: rgba(200,160,100,0.10);
+  color: #F5EFE2;
+}
+.painel-sidebar .painel-nav-link.active,
+.painel-sidebar .painel-nav-head.active {
+  background: rgba(200,160,100,0.18);
+  color: #E8C088;
+  box-shadow: inset 3px 0 0 #C8A064;
+}
+.painel-sidebar .painel-nav-sub .painel-nav-link { color: rgba(245,240,230,0.55); }
+.painel-sidebar .painel-nav-sub .painel-nav-link:hover { color: #F5EFE2; }
+
+/* área de conteúdo: branco gelo + tipografia vinho */
+.painel-content {
+  --color-bg:           #F6F2EA;
+  --color-bg-alt:       #FFFFFF;
+  --color-bg-elevated:  #FFFFFF;
+  --color-surface:      #FFFFFF;
+  --color-surface-hover:#F4EFE6;
+
+  --color-text:         #1F0B0A;
+  --color-text-soft:    #4E1A15;
+  --color-text-muted:   #6E4A3A;
+  --color-text-dim:     rgba(31, 11, 10, 0.6);
+
+  --color-border:       rgba(70, 25, 20, 0.10);
+  --color-border-strong:rgba(70, 25, 20, 0.20);
+  --color-border-accent:rgba(154, 107, 30, 0.32);
+  --color-accent-pale:  #74302A;
+
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+.painel-content .painel-h1 { color: #1F0B0A; }
+.painel-content .painel-sub { color: #6E4A3A; }
+
+/* topbar branco, sem peso visual */
+.painel-content .painel-topbar {
+  background: #FFFFFF;
+  border-bottom: 1px solid rgba(70,25,20,0.08);
+}
+.painel-content .painel-topbar-title { color: #74302A; }
+
+/* cards, KPIs e tabelas em branco com sombra suave */
+.painel-content .kpi-card,
+.painel-content .painel-chart-card,
+.painel-content .painel-table-wrap,
+.painel-content .painel-card,
+.painel-content .acct-card {
+  background: #FFFFFF;
+  border-color: rgba(70, 25, 20, 0.08);
+  box-shadow: 0 1px 3px rgba(70, 25, 20, 0.04);
+}
+.painel-content .kpi-card.kpi-accent {
+  background: rgba(200, 160, 100, 0.07);
+  border-color: rgba(154, 107, 30, 0.28);
+}
+.painel-content .kpi-value { color: #481712; }
+
+/* banner do modo demonstração */
+.painel-content .painel-mode-banner {
+  background: rgba(245, 195, 66, 0.12);
+  border-color: rgba(245, 195, 66, 0.40);
+  color: #4E1A15;
+}
+
+/* status tags (atividade recente) com cores legíveis em fundo claro */
+.painel-content .vg-tag { border-color: rgba(70,25,20,0.18); }
+.painel-content .vg-tag.st-quente     { color: #B22E1F; border-color: rgba(232,90,70,0.35); }
+.painel-content .vg-tag.st-novo       { color: #4A5A6B; border-color: rgba(74,90,107,0.30); }
+.painel-content .vg-tag.st-morno      { color: #B57C0C; border-color: rgba(181,124,12,0.35); }
+.painel-content .vg-tag.st-frio       { color: #4A78A8; border-color: rgba(74,120,168,0.30); }
+.painel-content .vg-tag.st-contatado  { color: #6F4DB0; border-color: rgba(111,77,176,0.30); }
+.painel-content .vg-tag.st-convertido { color: #2F8F4B; border-color: rgba(47,143,75,0.35); }
+.painel-content .vg-tag.st-perdido    { color: #6E4A3A; }
+
+/* status select (na tabela de leads) */
+.painel-content .status-select {
+  background: #FFFFFF; color: #1F0B0A; border-color: rgba(70,25,20,0.18);
+}
+.painel-content .status-select.st-quente     { background: rgba(232,90,70,0.08);  color: #B22E1F; border-color: rgba(232,90,70,0.45); }
+.painel-content .status-select.st-morno      { background: rgba(245,195,66,0.10); color: #8E5C00; border-color: rgba(245,195,66,0.50); }
+.painel-content .status-select.st-convertido { background: rgba(47,143,75,0.08);  color: #2F8F4B; border-color: rgba(47,143,75,0.40); }
+
+/* delta (variação % mês) */
+.painel-content .kpi-delta.up   { color: #2F8F4B; }
+.painel-content .kpi-delta.down { color: #C03B2A; }
+.painel-content .kpi-live       { background: #2F8F4B; }
+
+/* inputs, selects, textarea */
+.painel-content .painel-input,
+.painel-content .painel-select,
+.painel-content .painel-textarea {
+  background: #FFFFFF;
+  border-color: rgba(70,25,20,0.18);
+  color: #1F0B0A;
+}
+.painel-content .painel-input:focus,
+.painel-content .painel-select:focus,
+.painel-content .painel-textarea:focus {
+  border-color: #9A6B1E;
+  box-shadow: 0 0 0 3px rgba(154,107,30,0.14);
+}
+
+/* tabelas */
+.painel-content .painel-table th {
+  color: #6E4A3A;
+  border-bottom: 1px solid rgba(70,25,20,0.12);
+  background: #FAF6EE;
+}
+.painel-content .painel-table td { border-bottom: 1px solid rgba(70,25,20,0.06); }
+.painel-content .painel-table tbody tr:hover { background: rgba(154,107,30,0.05); }
+
+/* ações da tabela (botões WhatsApp, etc.) */
+.painel-content .painel-act {
+  border-color: rgba(70,25,20,0.20); color: #4E1A15;
+}
+.painel-content .painel-act.wa:hover { background: rgba(80,200,120,0.12); color: #1F6B33; }
+
+/* theme picker (Aparência) */
+.painel-content .theme-opt {
+  background: #FFFFFF;
+  border-color: rgba(70,25,20,0.10);
+  color: #1F0B0A;
+}
+.painel-content .theme-opt:hover { border-color: #9A6B1E; }
+.painel-content .theme-opt.active {
+  border-color: #9A6B1E;
+  box-shadow: inset 0 0 0 1px #9A6B1E;
+}
+.painel-content .theme-tag { color: #9A6B1E; }
+.painel-content .theme-sw { border-color: rgba(70,25,20,0.10); }
+
+/* perm-chip */
+.painel-content .perm-chip {
+  background: #FAF6EE; border-color: rgba(70,25,20,0.15); color: #6E4A3A;
+}
+
+/* "em construção" stub */
+.painel-content .painel-stub {
+  background: #FFFFFF;
+  border-color: rgba(70,25,20,0.16);
+}
+.painel-content .painel-stub h3 { color: #481712; }
+.painel-content .painel-stub-tag { color: #9A6B1E; border-color: rgba(154,107,30,0.40); }
+
+/* botão sair no topbar */
+.painel-content .painel-logout {
+  border-color: rgba(70,25,20,0.20); color: #4E1A15;
+}
+.painel-content .painel-logout:hover { border-color: #9A6B1E; color: #481712; }
+
+/* burger (mobile) */
+.painel-content .painel-burger {
+  border-color: rgba(70,25,20,0.20); color: #1F0B0A;
+}
+
+/* rankings (linha por linha) */
+.painel-content .vg-rank-bar { background: rgba(70,25,20,0.08); }
+.painel-content .vg-rank-pos { color: #9A6B1E; }
+.painel-content .vg-rank-val { color: #481712; }
+.painel-content .vg-rank-item { border-bottom-color: rgba(70,25,20,0.07); }
+.painel-content .vg-act-item { border-bottom-color: rgba(70,25,20,0.07); }
+
+/* form do painel (login / configurações) */
+.painel-content .login-card,
+.painel-card.login-card { background: #FFFFFF; border-color: rgba(70,25,20,0.10); }

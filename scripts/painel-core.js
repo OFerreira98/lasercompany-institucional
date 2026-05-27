@@ -362,7 +362,7 @@ window.LaserPainel = (function () {
   /* ---- Visao Geral: agregacoes + graficos (Chart.js) ---- */
   let _charts = [];
   function destroyCharts() { _charts.forEach(function (c) { try { c.destroy(); } catch (e) {} }); _charts = []; }
-  const VG_PALETTE = ['#C8A064', '#9A6B1E', '#E8C088', '#8a3b3b', '#B7AD9D', '#5e1a16', '#d89b45'];
+  const VG_PALETTE = ['#9A6B1E', '#481712', '#C8A064', '#8E3B36', '#D88F3F', '#74302A', '#B57C0C'];
 
   function leadsPorDia(list, dias) {
     const now = new Date(); now.setHours(0, 0, 0, 0);
@@ -388,8 +388,8 @@ window.LaserPainel = (function () {
   function donutCfg(labels, data) {
     return {
       type: 'doughnut',
-      data: { labels: labels, datasets: [{ data: data, backgroundColor: VG_PALETTE, borderColor: 'rgba(20,6,6,0.5)', borderWidth: 2 }] },
-      options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { position: 'bottom', labels: { color: '#B9AF9C', font: { size: 10 }, boxWidth: 10, padding: 8 } } } },
+      data: { labels: labels, datasets: [{ data: data, backgroundColor: VG_PALETTE, borderColor: '#FFFFFF', borderWidth: 2 }] },
+      options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { position: 'bottom', labels: { color: '#6E4A3A', font: { size: 10 }, boxWidth: 10, padding: 8 } } } },
     };
   }
 
@@ -454,7 +454,7 @@ window.LaserPainel = (function () {
       vgChart('vg-line', {
         type: 'line',
         data: { labels: dias.map(function (d) { return d.key; }), datasets: [{ data: dias.map(function (d) { return d.count; }), borderColor: '#C8A064', borderWidth: 2, fill: true, backgroundColor: g, tension: 0.35, pointRadius: 0, pointHoverRadius: 4 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { color: '#B9AF9C', maxTicksLimit: 8, font: { size: 10 } } }, y: { beginAtZero: true, grid: { color: 'rgba(245,240,230,0.06)' }, ticks: { color: '#B9AF9C', precision: 0, font: { size: 10 } } } } },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { color: '#6E4A3A', maxTicksLimit: 8, font: { size: 10 } } }, y: { beginAtZero: true, grid: { color: 'rgba(70,25,20,0.06)' }, ticks: { color: '#6E4A3A', precision: 0, font: { size: 10 } } } } },
       });
     }
     const byTipo = countBy(list, function (l) { return TIPO_LABEL[l.tipo] || l.tipo; });
@@ -464,7 +464,7 @@ window.LaserPainel = (function () {
     vgChart('vg-proc', {
       type: 'bar',
       data: { labels: tp.map(function (x) { return x[0]; }), datasets: [{ data: tp.map(function (x) { return x[1]; }), backgroundColor: '#C8A064', borderRadius: 4 }] },
-      options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { color: '#B9AF9C', precision: 0, font: { size: 10 } } }, y: { grid: { display: false }, ticks: { color: '#DDD3C0', font: { size: 10 } } } } },
+      options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { color: '#6E4A3A', precision: 0, font: { size: 10 } } }, y: { grid: { display: false }, ticks: { color: '#4E1A15', font: { size: 10 } } } } },
     });
     const byOrig = countBy(list, function (l) { return l.origem || 'direto'; });
     vgChart('vg-origem', donutCfg(Object.keys(byOrig), Object.keys(byOrig).map(function (k) { return byOrig[k]; })));
@@ -504,7 +504,7 @@ window.LaserPainel = (function () {
   function kpiCard(v, l, accent) { return '<div class="kpi-card' + (accent ? ' kpi-accent' : '') + '"><div class="kpi-value">' + v + '</div><div class="kpi-label">' + l + '</div></div>'; }
   function card(t, sub, inner, flush) { return '<div class="painel-chart-card' + (flush ? ' flush' : '') + '"><div class="painel-chart-title">' + t + (sub ? ' <small>' + sub + '</small>' : '') + '</div>' + inner + '</div>'; }
   function cv(id, sm) { return '<div class="painel-chart-wrap' + (sm ? ' sm' : '') + '"><canvas id="' + id + '"></canvas></div>'; }
-  function barCfg(labels, data, horiz) { return { type: 'bar', data: { labels: labels, datasets: [{ data: data, backgroundColor: '#C8A064', borderRadius: 4 }] }, options: { indexAxis: horiz ? 'y' : 'x', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { color: '#B9AF9C', precision: 0, font: { size: 10 } } }, y: { beginAtZero: true, grid: { color: 'rgba(245,240,230,0.05)' }, ticks: { color: '#DDD3C0', font: { size: 10 } } } } } }; }
+  function barCfg(labels, data, horiz) { return { type: 'bar', data: { labels: labels, datasets: [{ data: data, backgroundColor: '#C8A064', borderRadius: 4 }] }, options: { indexAxis: horiz ? 'y' : 'x', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { color: '#6E4A3A', precision: 0, font: { size: 10 } } }, y: { beginAtZero: true, grid: { color: 'rgba(70,25,20,0.06)' }, ticks: { color: '#4E1A15', font: { size: 10 } } } } } }; }
   function rankList(pairs) { if (!pairs.length) return '<div class="painel-empty">Sem dados ainda.</div>'; var max = pairs[0][1]; return '<ul class="vg-ranking">' + pairs.map(function (p, i) { return '<li class="vg-rank-item"><span class="vg-rank-pos">' + (i + 1) + '</span><span class="vg-rank-nome">' + esc(p[0]) + '<div class="vg-rank-bar"><span style="width:' + Math.round(p[1] / max * 100) + '%"></span></div></span><span class="vg-rank-val">' + p[1] + '</span></li>'; }).join('') + '</ul>'; }
   function tableHTML(headers, rows) { return '<div class="painel-table-wrap"><table class="painel-table"><thead><tr>' + headers.map(function (h) { return '<th>' + h + '</th>'; }).join('') + '</tr></thead><tbody>' + rows.map(function (r) { return '<tr>' + r.map(function (c) { return '<td>' + c + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>'; }
   function origemPairs() { return topPairs(countBy(state.all, function (l) { return l.origem || 'direto'; }), 10); }
@@ -671,14 +671,14 @@ window.LaserPainel = (function () {
   function viewDesempPeriodo() {
     var dias = leadsPorDia(state.all, 30);
     setView(card('Seus leads por dia', 'últimos 30 dias', cv('dpd-line')));
-    var el = document.getElementById('dpd-line'); if (el && window.Chart) { var ctx = el.getContext('2d'); var g = ctx.createLinearGradient(0, 0, 0, 240); g.addColorStop(0, 'rgba(200,160,100,0.35)'); g.addColorStop(1, 'rgba(200,160,100,0)'); vgChart('dpd-line', { type: 'line', data: { labels: dias.map(function (d) { return d.key; }), datasets: [{ data: dias.map(function (d) { return d.count; }), borderColor: '#C8A064', borderWidth: 2, fill: true, backgroundColor: g, tension: 0.35, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { color: '#B9AF9C', maxTicksLimit: 8, font: { size: 10 } } }, y: { beginAtZero: true, grid: { color: 'rgba(245,240,230,0.06)' }, ticks: { color: '#B9AF9C', precision: 0, font: { size: 10 } } } } } }); }
+    var el = document.getElementById('dpd-line'); if (el && window.Chart) { var ctx = el.getContext('2d'); var g = ctx.createLinearGradient(0, 0, 0, 240); g.addColorStop(0, 'rgba(200,160,100,0.35)'); g.addColorStop(1, 'rgba(200,160,100,0)'); vgChart('dpd-line', { type: 'line', data: { labels: dias.map(function (d) { return d.key; }), datasets: [{ data: dias.map(function (d) { return d.count; }), borderColor: '#C8A064', borderWidth: 2, fill: true, backgroundColor: g, tension: 0.35, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { color: '#6E4A3A', maxTicksLimit: 8, font: { size: 10 } } }, y: { beginAtZero: true, grid: { color: 'rgba(70,25,20,0.06)' }, ticks: { color: '#6E4A3A', precision: 0, font: { size: 10 } } } } } }); }
   }
   function viewDesempRede() {
     var rede = (window.LaserPainelData ? window.LaserPainelData.seed() : []).map(normalize);
     var meus = leadsPorDia(state.all, 14), redeDias = leadsPorDia(rede, 14), nU = 14;
     setView(card('Comparação com a rede', 'seus leads/dia vs média da rede (14 dias)', cv('cr-line')));
     if (document.getElementById('cr-line') && window.Chart) {
-      vgChart('cr-line', { type: 'line', data: { labels: meus.map(function (d) { return d.key; }), datasets: [{ label: 'Sua unidade', data: meus.map(function (d) { return d.count; }), borderColor: '#C8A064', borderWidth: 2, tension: 0.35, pointRadius: 0 }, { label: 'Média da rede', data: redeDias.map(function (d) { return Math.round(d.count / nU * 10) / 10; }), borderColor: '#B7AD9D', borderWidth: 2, borderDash: [5, 4], tension: 0.35, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#DDD3C0', font: { size: 11 }, boxWidth: 12 } } }, scales: { x: { grid: { display: false }, ticks: { color: '#B9AF9C', font: { size: 10 } } }, y: { beginAtZero: true, grid: { color: 'rgba(245,240,230,0.06)' }, ticks: { color: '#B9AF9C', font: { size: 10 } } } } } });
+      vgChart('cr-line', { type: 'line', data: { labels: meus.map(function (d) { return d.key; }), datasets: [{ label: 'Sua unidade', data: meus.map(function (d) { return d.count; }), borderColor: '#C8A064', borderWidth: 2, tension: 0.35, pointRadius: 0 }, { label: 'Média da rede', data: redeDias.map(function (d) { return Math.round(d.count / nU * 10) / 10; }), borderColor: '#9A6B3A', borderWidth: 2, borderDash: [5, 4], tension: 0.35, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#4E1A15', font: { size: 11 }, boxWidth: 12 } } }, scales: { x: { grid: { display: false }, ticks: { color: '#6E4A3A', font: { size: 10 } } }, y: { beginAtZero: true, grid: { color: 'rgba(70,25,20,0.06)' }, ticks: { color: '#6E4A3A', font: { size: 10 } } } } } });
     }
   }
   function viewEquipeLogins() {
