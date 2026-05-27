@@ -48,6 +48,57 @@
 }
 
 /* ============================================================
+   SEÇÃO CLARA (.section-light), pedido do novo responsável (mai. 2026)
+   Cinza claro / branco gelo, com texto vinho escuro, contraste forte.
+   Aplicado em Sobre, Queridinhos, Como Funciona, Depoimentos.
+   ============================================================ */
+.section-light {
+  background: #F4ECDC;
+  color: #1F0B0A;
+  position: relative;
+}
+.section-light .eyebrow { color: #9A6B1E; }
+.section-light .section-title,
+.section-light .section-title-left { color: #1F0B0A; }
+.section-light .section-title .italic,
+.section-light .section-title-left .italic { color: #481712; }
+.section-light .section-sub,
+.section-light .demo-content-note { color: #6E4A3A; }
+.section-light .sobre-lead,
+.section-light .sobre-text { color: #3A140F; }
+.section-light .sobre-lead strong,
+.section-light .text-accent { color: #481712; }
+.section-light .stat-block .stat-num { color: #481712; }
+.section-light .stat-block .stat-label { color: #6E4A3A; }
+.section-light .stat-block { border-color: rgba(70,25,20,0.10); background: #FFFFFF; }
+.section-light .marquee-track { color: #1F0B0A; }
+.section-light .marquee-card,
+.section-light .testimonial-card,
+.section-light .step-card,
+.section-light .grid > * {
+  background: #FFFFFF;
+  color: #1F0B0A;
+  border-color: rgba(70,25,20,0.08);
+  box-shadow: 0 1px 3px rgba(70,25,20,0.04);
+}
+.section-light .step-card .step-num { color: #9A6B1E; }
+.section-light .testimonial-card .author,
+.section-light .testimonial-card .role { color: #6E4A3A; }
+.section-light .btn-outline {
+  color: #481712;
+  border-color: rgba(70,25,20,0.30);
+}
+.section-light .btn-outline:hover {
+  background: #481712;
+  color: #FFFFFF;
+  border-color: #481712;
+}
+/* fundo um pouco mais claro pra blocos "queridinhos" e "depoimentos" */
+.section-light.section-light-soft {
+  background: #F8F2E5;
+}
+
+/* ============================================================
    INDEX — Página Início
    ============================================================ */
 
@@ -880,6 +931,15 @@
   line-height: 1.6;
   max-width: 26ch;
 }
+
+.step-cta {
+  margin-top: var(--sp-3);
+  font-size: 0.78rem;
+  padding: 0.6rem 1.1rem;
+}
+.step-item-cta { padding-bottom: 0.4rem; }
+.section-light .step-cta { background: #481712; color: #FFF; border-color: #481712; }
+.section-light .step-cta:hover { background: #2A0F0D; border-color: #2A0F0D; }
 
 /* ---------- Depoimentos ---------- */
 .depoimento-card {

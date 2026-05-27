@@ -29,10 +29,11 @@
     const grid = document.getElementById('steps-grid');
     if (!grid) return;
     grid.innerHTML = window.LaserData.passos.map(p => `
-      <div class="step-item">
+      <div class="step-item${p.cta ? ' step-item-cta' : ''}">
         <div class="step-num">${p.n}</div>
         <h3 class="step-title">${p.titulo}</h3>
         <p class="step-desc">${p.desc}</p>
+        ${p.cta ? `<a class="btn btn-primary btn-arrow step-cta" href="${p.cta.href}">${p.cta.label}</a>` : ''}
       </div>
     `).join('');
   }

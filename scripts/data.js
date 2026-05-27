@@ -219,9 +219,9 @@ window.LaserData = {
   /* --------- COMO FUNCIONA,4 passos ---------- */
   passos: [
     { n: '01', titulo: 'Escolha o procedimento', desc: 'Navegue pelas nossas três frentes (estética, depilação ou ultrassom) e encontre o tratamento ideal.' },
-    { n: '02', titulo: 'Informe seu endereço', desc: 'Com seu CEP, identificamos em segundos a unidade Laser & Co mais próxima de você.' },
+    { n: '02', titulo: 'Informe sua região', desc: 'Selecione estado, cidade e a unidade Laser & Co mais próxima de você.' },
     { n: '03', titulo: 'Fale com a sua unidade', desc: 'A franquia da sua região recebe seu pedido e entra em contato direto pelo WhatsApp.' },
-    { n: '04', titulo: 'Agende sua avaliação grátis', desc: 'Você marca a avaliação no horário que preferir, sem custo e sem compromisso.' },
+    { n: '04', titulo: 'Comece agora', desc: 'Avaliação rápida, sem compromisso. Você escolhe o melhor horário.', cta: { label: 'Agendar minha avaliação', href: 'agendamento.html' } },
   ],
 
   /* --------- ESTATÍSTICAS DA REDE ---------- */
