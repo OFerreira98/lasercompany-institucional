@@ -184,3 +184,27 @@ strong, b { font-weight: var(--fw-semibold); color: var(--color-text); }
   height: 1px;
   background: var(--color-accent);
 }
+
+/* ============================================================
+   DROPDOWNS NATIVOS (<select> open)
+   Sem isto, o navegador usa cinza/branco do SO e fica ilegível.
+   Padrão (contextos dark, como o popup): fundo vinho escuro + texto creme.
+   Light (SAC, painel-content, section-light, Versão Clara): branco + vinho escuro.
+   ============================================================ */
+select option {
+  background: #2A0F0D;
+  color: #F5EFE2;
+}
+select optgroup { color: #C8A064; }
+
+.sac-modal select option,
+.painel-content select option,
+.section-light select option,
+:root[data-theme="roteiro-light"] select option {
+  background: #FFFFFF;
+  color: #1F0B0A;
+}
+.sac-modal select optgroup,
+.painel-content select optgroup,
+.section-light select optgroup,
+:root[data-theme="roteiro-light"] select optgroup { color: #481712; }

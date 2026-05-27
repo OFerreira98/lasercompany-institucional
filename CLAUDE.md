@@ -39,6 +39,23 @@ rede de franquias de estética a laser. Hospedado no GitHub e publicado na Verce
    must-revalidate` (CSS/JS) e curto nas imagens, senão o cliente fica preso na versão velha
    (já aconteceu: parecia "bug", era só cache; resolve com Ctrl+Shift+R + headers revalidando).
 9. **Painéis sempre vinho/dourado** (`data-theme="default"` fixo), não trocam com o tema do site.
+10. **TODA correção ou novo elemento segue o padrão de cores da marca.** Nada de cinza/branco
+    aleatório do navegador (problema clássico: `<option>` nativo saindo branco/cinza ilegível).
+    Cada novo componente ou ajuste tem que ser conferido no contexto em que aparece (fundo
+    vinho → texto creme; fundo branco/creme → texto vinho escuro). Paleta oficial:
+
+    **Vinho (escuro → médio):** `#1A0404`, `#1F0B0A`, `#2A0F0D`, `#481712`, `#5E211B`,
+    `#74302A`, `#8E3B36`
+    **Dourado (profundo → claro):** `#7A5418`, `#9A6B1E`, `#B57C0C`, `#C8A064`, `#D88F3F`,
+    `#E8C088`
+    **Creme / off-white:** `#F5EFE2`, `#FAF6EE`, `#F7EEDD`, `#F6F2EA`, `#FFFFFF`
+    **Muted warm (texto secundário):** `#4E1A15`, `#6E4A3A`, `#8A6850`
+
+    **Regra de contexto:**
+    - Fundo vinho escuro → texto creme + acentos dourados
+    - Fundo branco/creme (Versão Clara, painel-content, SAC, section-light) → texto vinho
+      escuro + acentos dourados
+    - **NUNCA** deixar elemento usando default do navegador (option, scrollbar, focus ring).
 
 ---
 

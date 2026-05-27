@@ -85,6 +85,18 @@ Feito, testado no preview e commitado (rodada com o Ferreira):
    must-revalidate` (CSS/JS) e curto nas imagens. Senão o cliente fica preso na versão velha
    (já pareceu "bug"; resolve com Ctrl+Shift+R + headers revalidando).
 9. **Painéis sempre vinho/dourado** (`data-theme="default"` fixo), não trocam com o tema do site.
+10. **TODA correção/novo elemento segue o padrão de cores da marca.** Nada de cinza/branco
+    aleatório do navegador (problema clássico: `<option>` nativo saindo ilegível). Cada
+    componente novo ou ajuste é conferido no contexto onde aparece. Paleta:
+
+    **Vinho:** `#1A0404`, `#1F0B0A`, `#2A0F0D`, `#481712`, `#5E211B`, `#74302A`, `#8E3B36`
+    **Dourado:** `#7A5418`, `#9A6B1E`, `#B57C0C`, `#C8A064`, `#D88F3F`, `#E8C088`
+    **Creme:** `#F5EFE2`, `#FAF6EE`, `#F7EEDD`, `#F6F2EA`, `#FFFFFF`
+    **Muted warm:** `#4E1A15`, `#6E4A3A`, `#8A6850`
+
+    Fundo vinho → texto creme + acentos dourados. Fundo claro → texto vinho escuro +
+    acentos dourados. Nunca deixar elemento com default do navegador (option, scrollbar,
+    focus ring). Local físico do rule global: `styles/base.css` no fim do arquivo.
 
 ---
 
