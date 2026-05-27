@@ -1554,14 +1554,16 @@ body:not(.painel-body) { padding-top: 92px; }
   background: rgba(20, 8, 6, 0.55);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   opacity: 0;
   transition: opacity 0.22s ease;
   padding: 1rem;
+  pointer-events: none;
 }
-.sac-overlay:not([hidden]) { display: flex; }
+.sac-overlay[hidden] { display: none !important; }
+.sac-overlay:not([hidden]) { display: flex; pointer-events: auto; }
 .sac-overlay.visible { opacity: 1; }
 .sac-modal {
   background: #FFFFFF;
