@@ -349,14 +349,32 @@
     });
   }
 
-  /* ---------- header scroll state ---------- */
+  /* ---------- header scroll behavior ---------- */
+  // Esconde quando o usuário rola pra baixo, mostra quando volta a rolar
+  // pra cima ou está no topo da página.
   function bindHeaderScroll() {
     const h = document.getElementById('site-header');
     if (!h) return;
+    let lastY = window.scrollY;
+    const threshold = 8; // px mínimos pra contar como rolagem
+    const topZone   = 80; // dentro dessa faixa do topo o header sempre aparece
+
     const onScroll = () => {
-      if (window.scrollY > 16) h.classList.add('scrolled');
-      else h.classList.remove('scrolled');
+      const y = window.scrollY;
+      const diff = y - lastY;
+
+      if (y <= topZone) {
+        h.classList.remove('is-hidden');
+      } else if (diff > threshold) {
+        // rolou pra baixo
+        h.classList.add('is-hidden');
+      } else if (diff < -threshold) {
+        // rolou pra cima
+        h.classList.remove('is-hidden');
+      }
+      lastY = y;
     };
+
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
   }

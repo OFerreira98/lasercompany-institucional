@@ -123,7 +123,7 @@
     function prev() { go((current - 1 + total) % total); }
     function restartAuto() {
       clearInterval(auto);
-      auto = setInterval(next, 7000);
+      auto = setInterval(next, 5000);
     }
 
     document.getElementById('hero-next').addEventListener('click', () => go((current + 1) % total, true));

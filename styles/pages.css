@@ -1966,32 +1966,71 @@
 }
 
 /* Em página clara (.section-light), os cards de unidade ficam VINHO
-   conforme pedido: contraste de loja sobre fundo creme. */
+   conforme pedido. O card precisa reverter as variáveis pra paleta
+   escura (texto creme/dourado), senão filhos que usam var(--color-text)
+   ou var(--color-accent-pale) saem com cor de fundo claro e ficam
+   ilegíveis sobre o card vinho. */
 .section-light .unidade-card {
+  /* Reverter pra escopo dark dentro do card */
+  --color-bg:            #2A0F0D;
+  --color-bg-alt:        #481712;
+  --color-bg-elevated:   #481712;
+  --color-surface:       rgba(232,192,136,0.06);
+  --color-surface-hover: rgba(232,192,136,0.12);
+
+  --color-text:          #F5EFE2;
+  --color-text-soft:     rgba(245,239,226,0.85);
+  --color-text-muted:    rgba(245,239,226,0.60);
+
+  --color-border:        rgba(232,192,136,0.20);
+  --color-border-strong: rgba(232,192,136,0.35);
+  --color-border-accent: rgba(232,192,136,0.45);
+
+  --color-accent:        #C8A064;
+  --color-accent-pale:   #E8C088;
+  --color-accent-deep:   #9A6B1E;
+  --color-accent-glow:   rgba(200, 160, 100, 0.28);
+
   background: linear-gradient(155deg, #481712 0%, #2A0F0D 100%);
-  color: #F5EFE2;
-  border-color: rgba(232, 192, 136, 0.25);
+  color: var(--color-text);
+  border-color: var(--color-border);
 }
 .section-light .unidade-card:hover {
-  border-color: #E8C088;
-  box-shadow: 0 18px 40px rgba(70, 25, 20, 0.20);
+  border-color: var(--color-accent-pale);
+  box-shadow: 0 18px 40px rgba(70, 25, 20, 0.22);
 }
-.section-light .unidade-card .unidade-card-nome,
-.section-light .unidade-card .unidade-card-cidade,
-.section-light .unidade-card h3,
-.section-light .unidade-card h4 { color: #F5EFE2; }
-.section-light .unidade-card .unidade-card-meta,
-.section-light .unidade-card p { color: rgba(245, 239, 226, 0.80); }
+.section-light .unidade-card .unidade-card-cidade { color: var(--color-accent-pale); }
 .section-light .unidade-card .unidade-card-uf-badge {
-  background: rgba(232, 192, 136, 0.22);
+  background: rgba(232, 192, 136, 0.18);
   color: #F5EFE2;
-  border-color: rgba(232, 192, 136, 0.40);
+  border-color: rgba(232, 192, 136, 0.45);
 }
-.section-light .unidade-card a { color: #E8C088; }
-.section-light .unidade-card a:hover { color: #F5EFE2; }
+.section-light .unidade-card .unidade-card-info { color: rgba(245, 239, 226, 0.86); }
+.section-light .unidade-card .unidade-card-info li::before { background: var(--color-accent-pale); }
 .section-light .unidade-card.highlighted {
-  border-color: #E8C088;
-  box-shadow: 0 0 0 2px #E8C088, 0 18px 40px rgba(70, 25, 20, 0.30);
+  border-color: var(--color-accent-pale);
+  box-shadow: 0 0 0 2px var(--color-accent-pale), 0 18px 40px rgba(70, 25, 20, 0.30);
+}
+/* Botão Agendar: gold gradient com texto vinho escuro, glow leve */
+.section-light .unidade-card .btn-primary {
+  color: #1F0B0A;
+  box-shadow: 0 6px 18px rgba(200, 160, 100, 0.22);
+}
+.section-light .unidade-card .btn-ghost {
+  color: #F5EFE2;
+  border-color: rgba(232, 192, 136, 0.45);
+}
+.section-light .unidade-card .btn-ghost:hover {
+  background: rgba(232, 192, 136, 0.14);
+  color: #FFF;
+}
+/* Pino do mapa em cima da imagem do card */
+.section-light .unidade-card .unidade-card-pin {
+  background: rgba(232, 192, 136, 0.20);
+  color: #FFF;
+}
+.section-light .unidade-card .unidade-card-pin:hover {
+  background: rgba(232, 192, 136, 0.35);
 }
 
 /* mapa numa moldura vinho leve em página clara */
