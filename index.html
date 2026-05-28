@@ -174,7 +174,10 @@
     </div>
   </section>
 
-  <!-- ============ SEÇÃO 6.5, REDES SOCIAIS (NOVO) ============ -->
+  <!-- ============ SEÇÃO 6.5, REDES SOCIAIS (feed Behold.so) ============
+       Para ativar: criar conta gratuita em behold.so, conectar a conta
+       @lasercompanybrasil, pegar o feed ID e colar no data-behold-id
+       abaixo. Enquanto não tiver ID, mostra o grid placeholder. -->
   <section class="section section-wine" id="redes-sociais">
     <div class="container">
       <header class="section-header reveal">
@@ -182,7 +185,14 @@
         <h2 class="section-title">Siga a gente <span class="italic">nas redes sociais.</span></h2>
         <p class="section-sub">Resultados reais, dicas das nossas profissionais e bastidores da rede.</p>
       </header>
+
+      <!-- BEHOLD: troque PASTE_BEHOLD_ID_AQUI pelo ID real e o feed
+           do Instagram aparece direto. -->
+      <div data-behold-id="PASTE_BEHOLD_ID_AQUI" id="behold-feed" hidden></div>
+
+      <!-- Fallback enquanto o ID não foi colado (mostra as 6 imagens atuais) -->
       <div class="social-grid" id="social-grid"></div>
+
       <div class="social-actions">
         <a href="https://instagram.com/lasercompanybrasil" target="_blank" rel="noopener" class="btn btn-outline btn-arrow">Ver mais no Instagram</a>
       </div>
@@ -306,5 +316,30 @@
 <script src="scripts/whatsapp.js"></script>
 <script src="scripts/chatbot.js"></script>
 <script src="scripts/page-index.js"></script>
+
+<!-- ============ EMBED BEHOLD.SO (feed do Instagram) ============
+     Só ativa quando o data-behold-id tiver um ID real. Enquanto isso o
+     script do Behold é carregado, mas não renderiza nada porque o
+     container começa com hidden + placeholder ID.
+     Quando o ID for plugado no index.html, ele troca pelo feed real e
+     o page-index.js esconde o grid placeholder. -->
+<script async src="https://w.behold.so/widget.js" type="module"></script>
+<script>
+  (function() {
+    const container = document.getElementById('behold-feed');
+    const grid = document.getElementById('social-grid');
+    if (!container) return;
+    const id = container.getAttribute('data-behold-id');
+    const isPlaceholder = !id || id === 'PASTE_BEHOLD_ID_AQUI';
+    if (isPlaceholder) {
+      // ID ainda não plugado: mostra o grid placeholder (com as 6 imagens
+      // que o page-index.js renderiza) e mantém o behold-feed hidden.
+      return;
+    }
+    // ID real: mostra o widget Behold e esconde o grid placeholder.
+    container.hidden = false;
+    if (grid) grid.style.display = 'none';
+  })();
+</script>
 </body>
 </html>
