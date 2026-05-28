@@ -170,7 +170,29 @@
 .section-wine .section-sub { color: rgba(245, 239, 226, 0.78); }
 
 /* ============================================================
-   SIGA-NOS NAS REDES SOCIAIS (grid Instagram-style)
+   SIGA-NOS NAS REDES SOCIAIS, widget Behold.so (Instagram real)
+   ============================================================ */
+.behold-wrap {
+  margin-top: var(--sp-6);
+  margin-bottom: var(--sp-5);
+}
+/* CSS vars que o web component <behold-widget> aceita.
+   Lista oficial: https://behold.so/docs/widget/customize/
+   Harmonizamos o feed com a paleta da marca. */
+.behold-wrap behold-widget {
+  --behold-image-aspect-ratio: 1 / 1;             /* posts quadrados, igual o IG */
+  --behold-image-radius: 8px;                      /* cantos suaves */
+  --behold-grid-gap: var(--sp-3, 16px);            /* mesmo gap do resto do site */
+  --behold-grid-columns: 6;                         /* uma única linha de 6 */
+  --behold-grid-mobile-columns: 2;                  /* 2 colunas no mobile */
+  --behold-image-overlay-color: rgba(31, 11, 10, 0.55); /* hover em vinho escuro */
+  --behold-image-overlay-text-color: #F5EFE2;     /* texto creme no hover */
+  --behold-image-overlay-icon-color: #E8C088;     /* ícone dourado no hover */
+  --behold-loader-color: #C8A064;                  /* spinner dourado */
+}
+
+/* ============================================================
+   SIGA-NOS NAS REDES SOCIAIS (grid placeholder, mantido como fallback)
    ============================================================ */
 .social-grid {
   display: grid;
