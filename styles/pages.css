@@ -2803,87 +2803,82 @@
   line-height: 1.5;
 }
 
+/* NUMEROS DA FRANQUIA — redesign 05/2026
+   Card grande com número em destaque (estilo "Por que investir"
+   espelhado do site Rafael). Verticalmente equilibrado, sem ícones,
+   foco no número grande dourado. */
 .numeros-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--sp-5);
 }
 
-@media (max-width: 900px) { .numeros-grid { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 520px) { .numeros-grid { grid-template-columns: 1fr; } }
+@media (max-width: 1100px) { .numeros-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px)  { .numeros-grid { grid-template-columns: 1fr; } }
 
 .numero-card {
   position: relative;
-  background: var(--color-bg-elevated);
+  padding: var(--sp-6);
+  background: linear-gradient(135deg, var(--color-bg-elevated), var(--color-bg-alt));
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  text-align: center;
-  transition: transform var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out), border-color var(--duration-base) var(--ease-out);
+  transition: transform 0.4s cubic-bezier(0.22, 0.95, 0.36, 1),
+              border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.numero-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -25%;
+  width: 70%;
+  height: 200%;
+  background: radial-gradient(circle, var(--color-accent-glow), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
 }
 
 .numero-card:hover {
   border-color: var(--color-border-accent);
-  transform: translateY(-4px);
+  transform: translateY(-6px);
   box-shadow: var(--shadow-lg);
 }
-
-.numero-card-head {
-  position: relative;
-  height: 58px;
-  background: var(--color-accent-grad);
-}
-.numero-card-head::after {
-  content: '';
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 1px;
-  background: rgba(0, 0, 0, 0.18);
-}
-
-.numero-card-icon {
-  position: absolute;
-  left: 50%;
-  bottom: -22px;
-  transform: translateX(-50%);
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--color-bg);
-  border: 1px solid var(--color-accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-accent);
-  z-index: 2;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.32);
-}
-.numero-card-icon svg { width: 20px; height: 20px; stroke-width: 1.6; }
-
-.numero-body {
-  padding: var(--sp-7) var(--sp-4) var(--sp-5);
-}
+.numero-card:hover::before { opacity: 0.55; }
+.numero-card > * { position: relative; }
 
 .numero-big {
   font-family: var(--font-serif);
-  font-size: var(--fs-xl);
+  font-size: clamp(2.4rem, 4.6vw, 3.2rem);
   font-weight: var(--fw-light);
   background: var(--color-accent-grad);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   letter-spacing: var(--ls-tight);
-  line-height: 1.15;
-  margin-bottom: var(--sp-2);
+  line-height: 1;
+  margin-bottom: var(--sp-3);
+}
+.numero-suffix {
+  font-size: 0.55em;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
-.numero-label {
-  font-family: var(--font-accent);
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: var(--ls-wider);
-  color: var(--color-text-muted);
-  line-height: 1.4;
+.numero-title {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: var(--fw-light);
+  color: var(--color-text);
+  margin-bottom: var(--sp-2);
+  line-height: 1.25;
+}
+
+.numero-desc {
+  font-size: 0.88rem;
+  color: var(--color-text-soft);
+  line-height: 1.55;
 }
 
 .modelo-list {
