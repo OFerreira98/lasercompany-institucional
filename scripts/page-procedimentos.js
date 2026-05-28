@@ -76,7 +76,7 @@
 
   /* Placeholder da marca quando o procedimento ainda não tem foto */
   function procMediaStyle(p) {
-    if (p.img) return `background-image:url('${p.img}')`;
+    if (p.img) return `background-image:url('${encodeURI(p.img)}')`;
     let hash = 0;
     for (let i = 0; i < p.id.length; i++) hash = p.id.charCodeAt(i) + ((hash << 5) - hash);
     const hue = Math.abs(hash) % 30 + 20;
@@ -86,13 +86,30 @@
       linear-gradient(135deg, var(--color-bg-elevated), var(--color-bg-alt))`;
   }
 
+  /* Mídia do card: vídeo autoplay quando p.video existe (autoplay+muted+loop,
+     pausado fora do viewport via motion.js), imagem quando p.img, placeholder
+     da marca caso contrário. */
+  function procMediaHTML(p) {
+    if (p.video) {
+      const poster = p.img ? ` poster="${encodeURI(p.img)}"` : '';
+      return `
+        <div class="procedimento-card-media procedimento-card-media-video" aria-hidden="true">
+          <video data-motion-autoplay muted loop playsinline preload="metadata"${poster}>
+            <source src="${encodeURI(p.video)}" type="video/${p.video.endsWith('.mov') ? 'quicktime' : 'mp4'}">
+          </video>
+        </div>
+      `;
+    }
+    return `<div class="procedimento-card-media" style="${procMediaStyle(p)}" aria-hidden="true">${p.img ? '' : PH_HTML}</div>`;
+  }
+
   function renderGrid(cat) {
     const grid = document.getElementById(`grid-${cat}`);
     if (!grid) return;
     const items = window.LaserData.procedimentos[cat];
     grid.innerHTML = items.map(p => `
       <article class="procedimento-card${p.popular ? ' popular' : ''}" data-id="${p.id}" data-cat="${cat}" tabindex="0" role="button" aria-label="Ver detalhes de ${p.nome}">
-        <div class="procedimento-card-media" style="${procMediaStyle(p)}" aria-hidden="true">${p.img ? '' : PH_HTML}</div>
+        ${procMediaHTML(p)}
         <div class="procedimento-card-body">
           <h3 class="procedimento-card-title">${p.nome}</h3>
           <p class="procedimento-card-desc">${p.sub}</p>
@@ -100,6 +117,9 @@
         </div>
       </article>
     `).join('');
+
+    // re-registra videos no observer de autoplay
+    if (window.LaserMotion) window.LaserMotion.setupAutoVideos(grid);
 
     grid.querySelectorAll('.procedimento-card').forEach(card => {
       const open = () => openModal(card.dataset.id);
@@ -110,9 +130,33 @@
     });
   }
 
-  /* Bloco antes/depois (prova social). Usa proc.antes / proc.depois
-     se houver foto real; caso contrário, mostra placeholder da marca. */
+  /* Bloco antes/depois (prova social).
+     - Se proc.antesDepois existir, mostra a foto combo (antes|depois em
+       uma única imagem) ocupando a largura toda.
+     - Senão, se proc.antes/depois existirem, monta o split clássico.
+     - Senão, se proc.video existir, usa o vídeo como destaque (mostra o
+       resultado em movimento, melhor que placeholder).
+     - Último caso: placeholder da marca. */
   function antesDepoisHTML(proc) {
+    if (proc.antesDepois) {
+      return `
+        <div class="proc-antes-depois proc-antes-depois-combo">
+          <img src="${encodeURI(proc.antesDepois)}" alt="Antes e depois de ${proc.nome}" loading="lazy">
+          <span class="proc-ad-tag proc-ad-tag-l">Antes</span>
+          <span class="proc-ad-tag proc-ad-tag-r">Depois</span>
+        </div>
+        <p class="proc-ad-caption">Resultado real de cliente Laser & Co. Cada caso é avaliado individualmente na avaliação grátis.</p>
+      `;
+    }
+    if (proc.video && !proc.antes && !proc.depois) {
+      // sem foto antes/depois mas tem vídeo: usa vídeo como hero
+      return `
+        <div class="proc-antes-depois proc-antes-depois-video">
+          <video src="${encodeURI(proc.video)}" autoplay muted loop playsinline aria-label="Vídeo de ${proc.nome}"></video>
+        </div>
+        <p class="proc-ad-caption">Procedimento em demonstração. Resultado individual avaliado na consulta grátis.</p>
+      `;
+    }
     const antesStyle  = proc.antes  ? ` style="background-image:url('${proc.antes}')"`  : '';
     const depoisStyle = proc.depois ? ` style="background-image:url('${proc.depois}')"` : '';
     const antesEmpty  = proc.antes  ? '' : PH_HTML;

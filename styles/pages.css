@@ -1630,11 +1630,12 @@
 }
 
 .procedimento-card-media {
-  height: 160px;
+  height: 180px;
   background-size: cover;
   background-position: center;
   border-bottom: 1px solid var(--color-border);
   position: relative;
+  overflow: hidden;
 }
 
 .procedimento-card-media::after {
@@ -1642,6 +1643,34 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.35));
+  pointer-events: none;
+}
+
+/* Mídia em vídeo: <video> preenche o card, mute autoplay loop.
+   O motion.js ativa play apenas quando o card está no viewport. */
+.procedimento-card-media-video video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* Pequeno indicador "PLAY" no canto pra deixar claro que é vídeo */
+.procedimento-card-media-video::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(31, 11, 10, 0.65);
+  backdrop-filter: blur(6px);
+  z-index: 2;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='%23E8C088'><path d='M8 5v14l11-7z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: 9px center;
 }
 
 .procedimento-card-body {
@@ -1698,6 +1727,52 @@
   margin-bottom: var(--sp-5);
   border: 1px solid var(--color-border-accent);
   box-shadow: 0 0 40px var(--color-accent-glow);
+}
+
+/* Variante COMBO: a foto já tem antes E depois lado a lado (foto única).
+   Mostramos full-width e colocamos os labels "Antes / Depois" sobrepostos
+   nas pontas. */
+.proc-antes-depois-combo {
+  display: block;
+  position: relative;
+  aspect-ratio: 3 / 2;
+  background: var(--color-bg-elevated);
+}
+.proc-antes-depois-combo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.proc-ad-tag {
+  position: absolute;
+  top: 12px;
+  font-family: var(--font-accent);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wider);
+  font-weight: var(--fw-bold);
+  padding: 0.32rem 0.85rem;
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(6px);
+  z-index: 2;
+}
+.proc-ad-tag-l { left: 12px;  background: rgba(0,0,0,0.55); color: #F5EFE2; }
+.proc-ad-tag-r { right: 12px; background: var(--color-accent); color: var(--color-bg); }
+
+/* Variante VIDEO: o procedimento não tem foto antes/depois mas tem vídeo.
+   Mostramos o vídeo no lugar como "demonstração do procedimento". */
+.proc-antes-depois-video {
+  display: block;
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+.proc-antes-depois-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .proc-ad-cell {
