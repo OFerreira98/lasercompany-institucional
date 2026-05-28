@@ -65,6 +65,9 @@ window.LaserUI = (function() {
       });
     }, { rootMargin: '0px 0px -80px 0px', threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    // expõe global pra que renderizadores dinâmicos (blog rotativo, etc)
+    // possam registrar novos elementos depois.
+    window._revealObs = io;
   }
 
   function initSmoothAnchors() {

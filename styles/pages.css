@@ -348,15 +348,67 @@
 }
 
 /* ============================================================
-   BLOG (3 cards de conteúdo)
+   BLOG (cards de conteúdo, importados do site oficial)
    ============================================================ */
 .blog-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--sp-5);
   margin-top: var(--sp-6);
+  /* fade-in/out suave quando o set rotaciona */
+  transition: opacity 0.35s ease;
 }
+.blog-grid-4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1100px) { .blog-grid-4 { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 900px) { .blog-grid { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .blog-grid-4 { grid-template-columns: 1fr; } }
+
+/* Linha do CTA "Ver todas as matérias" */
+.blog-cta-row {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--sp-6);
+}
+
+/* Filtro/busca da página /blog.html */
+.blog-filter-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--sp-3);
+  align-items: center;
+  margin-bottom: var(--sp-6);
+}
+@media (max-width: 700px) {
+  .blog-filter-row { grid-template-columns: 1fr; }
+}
+.blog-count {
+  font-family: var(--font-accent);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6E4A3A;
+  white-space: nowrap;
+}
+
+/* Placeholder pros 2 posts sem imagem (gradiente vinho/dourado) */
+.blog-card-img-placeholder {
+  background:
+    radial-gradient(ellipse at 30% 25%, rgba(232, 192, 136, 0.30), transparent 60%),
+    linear-gradient(135deg, #481712 0%, #2A0F0D 55%, #1F0B0A 100%);
+  position: relative;
+}
+.blog-card-img-placeholder::after {
+  content: 'Laser & Co';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 1.6rem;
+  color: rgba(232, 192, 136, 0.85);
+  letter-spacing: 0.04em;
+}
 
 .blog-card {
   background: #FFFFFF;

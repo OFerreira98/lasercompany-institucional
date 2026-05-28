@@ -199,27 +199,97 @@
     `).join('');
   }
 
+  /* ---------- BLOG (4 cards rotativos, embaralhados a cada load) ----------
+     A home tem 40 matérias importadas do site oficial. Mostra 4 por vez,
+     embaralhadas a cada carga da página. A cada ~9s troca pra outras 4
+     (visibility-aware: pausa quando a aba não está visível). */
+  const BLOG_VISIBLE = 4;
+  const BLOG_ROTATE_MS = 9000;
+  let _blogPool = [];
+  let _blogTimer = null;
+
+  function shuffleBlog(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // Fallback bonito pros 2 posts que vieram sem imagem
+  // (gradiente vinho/dourado da marca, com a logo aparecendo discreta).
+  function blogCover(p) {
+    if (p.img) {
+      return `<div class="blog-card-img" style="background-image:url('${p.img}')"></div>`;
+    }
+    return `<div class="blog-card-img blog-card-img-placeholder"></div>`;
+  }
+
+  function blogCardHTML(p) {
+    const safe = p.titulo.replace(/"/g, '&quot;');
+    return `
+      <article class="blog-card reveal">
+        <a class="blog-card-cover" href="${p.url}" target="_blank" rel="noopener" aria-label="${safe}">
+          ${blogCover(p)}
+        </a>
+        <div class="blog-card-body">
+          <h3 class="blog-card-title">
+            <a href="${p.url}" target="_blank" rel="noopener">${p.titulo}</a>
+          </h3>
+          <p class="blog-card-preview">${p.preview}</p>
+          <a class="blog-card-cta" href="${p.url}" target="_blank" rel="noopener">
+            Continue lendo &rarr;
+          </a>
+        </div>
+      </article>
+    `;
+  }
+
+  function renderBlogSet(grid) {
+    if (!_blogPool.length) return;
+    // pega os próximos N e remove-os do pool. quando esvazia, reshuffle.
+    if (_blogPool.length < BLOG_VISIBLE) {
+      _blogPool = shuffleBlog(window.LaserData.blog);
+    }
+    const visible = _blogPool.splice(0, BLOG_VISIBLE);
+    // fade-out + replace + fade-in
+    grid.style.opacity = '0';
+    setTimeout(() => {
+      grid.innerHTML = visible.map(blogCardHTML).join('');
+      grid.style.opacity = '1';
+      // observa os novos cards pro IntersectionObserver de .reveal
+      if (window._revealObs) {
+        grid.querySelectorAll('.reveal').forEach(el => window._revealObs.observe(el));
+      } else {
+        // se ainda não tem observer global, deixa visíveis direto
+        grid.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+      }
+    }, 250);
+  }
+
   function renderBlog() {
     const grid = document.getElementById('blog-grid');
     if (!grid || !window.LaserData.blog) return;
-    grid.innerHTML = window.LaserData.blog.map(p => `
-      <article class="blog-card">
-        <a class="blog-card-cover" href="#" aria-label="${p.titulo}">
-          <div class="blog-card-img" style="background-image:url('${p.img}')"></div>
-        </a>
-        <div class="blog-card-body">
-          <span class="blog-card-cat">${p.categoria}</span>
-          <h3 class="blog-card-title"><a href="#">${p.titulo}</a></h3>
-          <p class="blog-card-preview">${p.preview}</p>
-          <div class="blog-card-meta">
-            <span>${p.data}</span>
-            <span aria-hidden="true">•</span>
-            <span>${p.tempoLeitura}</span>
-          </div>
-          <a class="blog-card-cta" href="#">Ler artigo &rarr;</a>
-        </div>
-      </article>
-    `).join('');
+    grid.style.transition = 'opacity 0.35s ease';
+    _blogPool = shuffleBlog(window.LaserData.blog);
+    renderBlogSet(grid);
+
+    // limpa qualquer rotação anterior
+    if (_blogTimer) { clearInterval(_blogTimer); _blogTimer = null; }
+    // só auto-roda se houver mais matérias além das visíveis
+    if (window.LaserData.blog.length > BLOG_VISIBLE) {
+      _blogTimer = setInterval(() => renderBlogSet(grid), BLOG_ROTATE_MS);
+    }
+
+    // pausa quando a aba sai de foco, retoma quando volta
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && _blogTimer) {
+        clearInterval(_blogTimer); _blogTimer = null;
+      } else if (!document.hidden && !_blogTimer && window.LaserData.blog.length > BLOG_VISIBLE) {
+        _blogTimer = setInterval(() => renderBlogSet(grid), BLOG_ROTATE_MS);
+      }
+    });
   }
 
   /* ---------- AGENDAMENTO CURTO (form no fim da home) ---------- */

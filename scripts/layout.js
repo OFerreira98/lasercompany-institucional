@@ -191,6 +191,7 @@
           <a href="procedimentos.html">Procedimentos</a>
           <a href="agendamento.html">Agendamento</a>
           <a href="unidades.html">Unidades</a>
+          <a href="blog.html">Blog</a>
           <a href="vagas.html">Vagas / Trabalhe Conosco</a>
           <a href="franqueado.html">Seja um Franqueado</a>
         </nav>
