@@ -219,8 +219,15 @@ strong, b { font-weight: var(--fw-semibold); color: var(--color-text); }
               background 0.35s ease;
 }
 
-/* Suavização global de scroll por âncora */
-:root { scroll-behavior: smooth; }
+/* Suavização global de scroll por âncora — só quando Lenis não está
+   ativo. Quando Lenis carrega, ele toma conta do smooth (e adiciona
+   .lenis-active no html), então desligamos o smooth nativo pra evitar
+   briga. */
+:root:not(.lenis-active) { scroll-behavior: smooth; }
+html.lenis-active { scroll-behavior: auto; }
+/* Lenis adiciona estas classes durante o scroll; mantemos opcional pra
+   integração com CSS custom no futuro. */
+html.lenis.lenis-smooth { scroll-behavior: auto !important; }
 
 /* Underline animado nos links de mapa do site / footer */
 .footer-links a {

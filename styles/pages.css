@@ -94,34 +94,8 @@
   background: linear-gradient(0deg, rgba(70,25,20,0.35) 0%, transparent 55%);
 }
 
-/* Step (Como Funciona, 4 passos): elementos não eram cards, agora
-   ficam destacados com fundo branco e cores legíveis. */
-.section-light .step-item {
-  background: #FFFFFF;
-  border: 1px solid rgba(70, 25, 20, 0.08);
-  border-radius: 14px;
-  padding: var(--sp-5) var(--sp-4) var(--sp-4);
-  align-items: center;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-2);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-}
-.section-light .step-item:hover {
-  transform: translateY(-4px);
-  border-color: rgba(154, 107, 30, 0.35);
-  box-shadow: 0 12px 30px rgba(70, 25, 20, 0.10);
-}
-.section-light .step-item .step-num {
-  background: #FFFFFF;
-  border-color: rgba(154, 107, 30, 0.45);
-  color: #9A6B1E;
-  box-shadow: 0 0 0 4px rgba(154, 107, 30, 0.06);
-}
-.section-light .step-item .step-title { color: #1F0B0A; }
-.section-light .step-item .step-desc { color: #4E1A15; }
-.section-light .steps-grid::before { opacity: 0.18; }
+/* Step (Como Funciona, 4 passos): estilos principais ficam em ".steps-grid"
+   mais abaixo neste arquivo (redesign 05/2026 com ícone + linha conectora). */
 
 /* Depoimentos: card branco e tipografia escura */
 .section-light .depoimento-card {
@@ -559,26 +533,47 @@
 .sobre-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--sp-3);
+  gap: var(--sp-4);
 }
 
 .stat-block {
-  padding: var(--sp-4);
+  padding: var(--sp-5) var(--sp-4);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  text-align: left;
-  transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;             /* CENTRALIZADO: número grande no meio, label embaixo */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: transform 0.4s cubic-bezier(0.22, 0.95, 0.36, 1),
+              border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
   position: relative;
   overflow: hidden;
+  min-height: 150px;
+}
+
+/* "linha dourada" sutil que cresce no hover (sensação tech) */
+.stat-block::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+  transform: translateX(-50%);
+  transition: width 0.6s cubic-bezier(0.22, 0.95, 0.36, 1);
 }
 
 .stat-block:hover {
   border-color: var(--color-border-accent);
   background: var(--color-surface-hover);
-  transform: translateY(-4px);
-  box-shadow: 0 14px 30px rgba(154, 107, 30, 0.14);
+  transform: translateY(-6px);
+  box-shadow: 0 18px 38px rgba(154, 107, 30, 0.16);
 }
+.stat-block:hover::after { width: 70%; }
 
 /* "12x sem juros": destaque pulsante (chama atenção pro parcelamento) */
 .stat-block.stat-pulse {
@@ -614,12 +609,14 @@
 .stat-num {
   display: block;
   font-family: var(--font-serif);
-  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-size: clamp(2.6rem, 5.2vw, 3.4rem);  /* MAIOR: mais protagonismo */
   font-weight: var(--fw-light);
   color: var(--color-accent);
   line-height: 1;
   letter-spacing: var(--ls-tight);
-  margin-bottom: var(--sp-2);
+  margin-bottom: 0;
+  font-variant-numeric: tabular-nums;        /* dígitos com mesma largura,
+                                                não "pula" durante o counter */
 }
 
 .stat-label {
@@ -629,6 +626,8 @@
   text-transform: uppercase;
   letter-spacing: var(--ls-wider);
   color: var(--color-text-muted);
+  max-width: 22ch;
+  line-height: 1.4;
 }
 
 /* ---------- SEGMENTOS COM FOTO ---------- */
@@ -1331,66 +1330,149 @@
   color: var(--color-warning);
 }
 
-/* ---------- Como funciona (4 passos) ---------- */
+/* ---------- Como funciona (4 passos) — redesign 05/2026 ----------
+   Grid 4 colunas (1 → 2 → 1 col em breakpoints). Linha dourada
+   horizontal animada conectando os 4 ícones, desenhada via GSAP
+   no first scroll (.motion-draw-line). Ícone com anel pulsante,
+   número como pequeno badge dourado, hover-lift no card. */
 .steps-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--sp-4);
+  gap: var(--sp-5);
   position: relative;
+  padding-top: var(--sp-4);
 }
 
-.steps-grid::before {
-  content: '';
+/* linha dourada conectando os 4 passos (no nível do ícone, ~50px do topo) */
+.steps-line {
   position: absolute;
-  top: 32px;
-  left: 12%;
-  right: 12%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-border-accent), transparent);
+  top: 52px;                                   /* alinha com centro do ícone */
+  left: 12.5%;
+  right: 12.5%;
+  height: 2px;
+  background: rgba(154, 107, 30, 0.18);
+  border-radius: 1px;
   pointer-events: none;
+  z-index: 0;
+}
+.steps-line-fill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    #C8A064 12%,
+    #E8C088 50%,
+    #C8A064 88%,
+    transparent 100%);
+  border-radius: inherit;
+  box-shadow: 0 0 16px rgba(200, 160, 100, 0.35);
 }
 
-@media (max-width: 900px) { .steps-grid { grid-template-columns: 1fr 1fr; } .steps-grid::before { display: none; } }
-@media (max-width: 600px) { .steps-grid { grid-template-columns: 1fr; } }
+@media (max-width: 900px) {
+  .steps-grid { grid-template-columns: repeat(2, 1fr); }
+  .steps-line { display: none; }
+}
+@media (max-width: 600px) {
+  .steps-grid { grid-template-columns: 1fr; }
+}
 
 .step-item {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  position: relative;
+  padding: var(--sp-4) var(--sp-3) var(--sp-5);
+  background: transparent;
+  transition: transform 0.4s cubic-bezier(0.22, 0.95, 0.36, 1);
 }
+.step-item:hover { transform: translateY(-6px); }
 
-.step-num {
-  width: 64px;
-  height: 64px;
+/* ÍCONE: círculo grande dourado-creme com anel pulsante ao hover */
+.step-icon {
+  width: 76px;
+  height: 76px;
   border-radius: 50%;
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border-accent);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(232, 192, 136, 0.30), transparent 60%),
+    linear-gradient(155deg, #FAF6EE 0%, #F5EFE2 60%, #F7EEDD 100%);
+  border: 1px solid rgba(154, 107, 30, 0.30);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-serif);
-  font-size: var(--fs-lg);
-  color: var(--color-accent);
-  margin-bottom: var(--sp-4);
+  color: #9A6B1E;
   position: relative;
-  z-index: 1;
-  box-shadow: 0 0 24px var(--color-accent-glow);
+  margin-bottom: var(--sp-4);
+  transition: transform 0.4s cubic-bezier(0.22, 0.95, 0.36, 1),
+              border-color 0.3s ease,
+              box-shadow 0.4s ease;
+  box-shadow:
+    0 6px 18px rgba(154, 107, 30, 0.10),
+    inset 0 0 0 4px rgba(255, 255, 255, 0.6);
+}
+.step-icon svg { width: 36px; height: 36px; }
+
+.step-item:hover .step-icon {
+  border-color: rgba(154, 107, 30, 0.7);
+  box-shadow:
+    0 12px 32px rgba(154, 107, 30, 0.22),
+    inset 0 0 0 4px rgba(255, 255, 255, 0.85);
+  transform: scale(1.06);
+}
+/* anel pulsante atrás do ícone (chama atenção, vibe tech) */
+.step-icon::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid rgba(154, 107, 30, 0.35);
+  opacity: 0;
+  animation: stepIconPulse 3.2s ease-in-out infinite;
+}
+.step-item:nth-child(2) .step-icon::before { animation-delay: 0.4s; }
+.step-item:nth-child(3) .step-icon::before { animation-delay: 0.8s; }
+.step-item:nth-child(4) .step-icon::before { animation-delay: 1.2s; }
+@keyframes stepIconPulse {
+  0%   { opacity: 0; transform: scale(0.9); }
+  40%  { opacity: 0.6; }
+  100% { opacity: 0; transform: scale(1.18); }
+}
+
+/* Número como pequeno badge dourado, sobreposto ao ícone */
+.step-num {
+  position: absolute;
+  top: 0;
+  right: calc(50% - 50px);                     /* offset relativo ao ícone */
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #9A6B1E 0%, #C8A064 100%);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  box-shadow: 0 4px 10px rgba(154, 107, 30, 0.28);
+  border: 2px solid var(--color-bg, #FAF6EE);
 }
 
 .step-title {
   font-family: var(--font-serif);
-  font-size: var(--fs-lg);
+  font-size: 1.25rem;
   font-weight: var(--fw-light);
+  line-height: 1.25;
   margin-bottom: var(--sp-2);
 }
 
 .step-desc {
-  font-size: var(--fs-sm);
+  font-size: 0.92rem;
   color: var(--color-text-soft);
   line-height: 1.6;
-  max-width: 26ch;
+  max-width: 28ch;
 }
 
 .step-cta {
@@ -1401,6 +1483,10 @@
 .step-item-cta { padding-bottom: 0.4rem; }
 .section-light .step-cta { background: #481712; color: #FFF; border-color: #481712; }
 .section-light .step-cta:hover { background: #2A0F0D; border-color: #2A0F0D; }
+
+/* === Section-light overrides (cores ajustadas pro fundo claro) === */
+.section-light .step-title { color: #1F0B0A; }
+.section-light .step-desc { color: #4E1A15; }
 
 /* ---------- Depoimentos ---------- */
 .depoimento-card {

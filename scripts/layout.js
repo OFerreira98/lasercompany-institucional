@@ -248,6 +248,41 @@
     bindHeaderScroll();
     // popula o mega-menu de procedimentos a partir de window.LaserData
     populateMegaMenu();
+    // carrega GSAP + ScrollTrigger + Lenis + motion.js (em ordem)
+    injectMotionScripts();
+  }
+
+  /* ---------- MOTION (GSAP + ScrollTrigger + Lenis) ----------
+     Carrega via CDN em sequência. Não roda no painel (data-body do
+     dashboard). Cada página automaticamente ganha as animações sem
+     precisar adicionar <script> no HTML. */
+  function injectMotionScripts() {
+    if (window._motionInjected) return;
+    if (document.body.classList.contains('painel-body')) return;
+    window._motionInjected = true;
+
+    const scripts = [
+      'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js',
+      'https://unpkg.com/lenis@1.0.42/dist/lenis.min.js',
+      'scripts/motion.js',
+    ];
+
+    let i = 0;
+    function next() {
+      if (i >= scripts.length) return;
+      const url = scripts[i++];
+      const s = document.createElement('script');
+      s.src = url;
+      s.async = false;
+      s.onload = next;
+      s.onerror = () => {
+        console.warn('motion: falha ao carregar', url);
+        next();
+      };
+      document.body.appendChild(s);
+    }
+    next();
   }
 
   /* ---------- mega-menu de procedimentos ---------- */

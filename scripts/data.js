@@ -270,12 +270,14 @@ window.LaserData = {
     },
   ],
 
-  /* --------- COMO FUNCIONA,4 passos ---------- */
+  /* --------- COMO FUNCIONA, 4 passos ----------
+     icone: chave SVG (gerada inline pelo page-index.js a partir do
+     dicionário ICONES_PASSOS) pra dar identidade visual a cada passo. */
   passos: [
-    { n: '01', titulo: 'Escolha o procedimento', desc: 'Navegue pelas nossas três frentes (estética, depilação ou ultrassom) e encontre o tratamento ideal.' },
-    { n: '02', titulo: 'Informe sua região', desc: 'Selecione estado, cidade e a unidade Laser & Co mais próxima de você.' },
-    { n: '03', titulo: 'Fale com a sua unidade', desc: 'A franquia da sua região recebe seu pedido e entra em contato direto pelo WhatsApp.' },
-    { n: '04', titulo: 'Comece agora', desc: 'Avaliação rápida, sem compromisso. Você escolhe o melhor horário.', cta: { label: 'Agendar minha avaliação', href: 'agendamento.html' } },
+    { n: '01', icone: 'spark',     titulo: 'Escolha o procedimento', desc: 'Navegue pelas nossas três frentes (estética, depilação ou ultrassom) e encontre o tratamento ideal.' },
+    { n: '02', icone: 'map-pin',   titulo: 'Informe sua região',     desc: 'Selecione estado, cidade e a unidade Laser & Co mais próxima de você.' },
+    { n: '03', icone: 'whatsapp',  titulo: 'Fale com a sua unidade', desc: 'A franquia da sua região recebe seu pedido e entra em contato direto pelo WhatsApp.' },
+    { n: '04', icone: 'calendar-check', titulo: 'Comece agora',      desc: 'Avaliação rápida, sem compromisso. Você escolhe o melhor horário.', cta: { label: 'Agendar minha avaliação', href: 'agendamento.html' } },
   ],
 
   /* --------- REDES SOCIAIS (grid de 6 posts placeholder) ----------

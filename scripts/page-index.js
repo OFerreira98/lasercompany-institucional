@@ -25,17 +25,42 @@
     `).join('');
   }
 
+  /* ---------- ÍCONES DOS 4 PASSOS ----------
+     SVG inline pra cada chave usada em window.LaserData.passos[i].icone.
+     Stroke aceita 'currentColor' (herda do card). */
+  const ICONES_PASSOS = {
+    'spark': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3"/></svg>`,
+    'map-pin': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+    'whatsapp': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.4L4 21l2.2-4A8.5 8.5 0 1 1 20.5 11.5z"/><path d="M9.3 9.7c0 .8.4 1.8 1.2 2.8.8 1 1.7 1.7 2.6 2 .6.2 1.2.2 1.7-.1l.7-.5c.2-.1.5-.1.7.1l1 .8c.2.2.3.4.2.7-.3.6-.8 1-1.5 1.2-.7.2-1.6.1-2.6-.3-1.4-.5-2.7-1.4-3.8-2.5-1.1-1.1-1.9-2.4-2.4-3.7-.3-.9-.4-1.7-.2-2.4.2-.7.6-1.2 1.1-1.5.3-.1.6 0 .7.2l.8 1c.2.2.2.5.1.7l-.5.7c-.2.2-.3.4-.2.6z"/></svg>`,
+    'calendar-check': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/><path d="M9 15l2 2 4-4"/></svg>`,
+  };
+
   function renderPassos() {
     const grid = document.getElementById('steps-grid');
     if (!grid) return;
-    grid.innerHTML = window.LaserData.passos.map(p => `
-      <div class="step-item${p.cta ? ' step-item-cta' : ''}">
-        <div class="step-num">${p.n}</div>
-        <h3 class="step-title">${p.titulo}</h3>
-        <p class="step-desc">${p.desc}</p>
-        ${p.cta ? `<a class="btn btn-primary btn-arrow step-cta" href="${p.cta.href}">${p.cta.label}</a>` : ''}
-      </div>
-    `).join('');
+    const passos = window.LaserData.passos;
+
+    // Quando o GSAP estiver carregado, motion.js dispara o stagger.
+    grid.setAttribute('data-motion-stagger', '.step-item');
+
+    grid.innerHTML = `
+      <div class="steps-line" aria-hidden="true"><span class="steps-line-fill motion-draw-line"></span></div>
+      ${passos.map((p, i) => `
+        <div class="step-item${p.cta ? ' step-item-cta' : ''}" data-step="${i + 1}">
+          <div class="step-icon" aria-hidden="true">${ICONES_PASSOS[p.icone] || ''}</div>
+          <div class="step-num">${p.n}</div>
+          <h3 class="step-title">${p.titulo}</h3>
+          <p class="step-desc">${p.desc}</p>
+          ${p.cta ? `<a class="btn btn-primary btn-arrow step-cta" href="${p.cta.href}">${p.cta.label}</a>` : ''}
+        </div>
+      `).join('')}
+    `;
+
+    // re-registra novos elementos com classes/data-attrs no motion
+    if (window.LaserMotion) {
+      window.LaserMotion.setupStagger(grid);
+      window.LaserMotion.setupDrawLine(grid);
+    }
   }
 
   function renderDepoimentos() {
@@ -151,36 +176,13 @@
     restartAuto();
   }
 
-  /* ---------- Count-up dos stats do Sobre ---------- */
+  /* ---------- Count-up dos stats do Sobre ----------
+     Função agora gerenciada pelo motion.js via GSAP/ScrollTrigger
+     (usa data-counter, data-prefix, data-suffix, data-duration nos
+     <span class="stat-num">). Mantido aqui só como no-op pra não
+     quebrar o init que chamava animateCountUp(). */
   function animateCountUp() {
-    const targets = document.querySelectorAll('.sobre-stats .stat-num');
-    if (!targets.length) return;
-
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting || entry.target.dataset.counted) return;
-        entry.target.dataset.counted = '1';
-        const el = entry.target;
-        const original = el.textContent.trim();
-        // extrai número e sufixo/prefixo (ex: "+70", "12x", "15", "5")
-        const match = original.match(/^([^\d]*)(\d+)(.*)$/);
-        if (!match) return;
-        const prefix = match[1], target = parseInt(match[2], 10), suffix = match[3];
-        let cur = 0;
-        const duration = 1100;
-        const start = performance.now();
-        function tick(now) {
-          const t = Math.min(1, (now - start) / duration);
-          const eased = 1 - Math.pow(1 - t, 3);
-          cur = Math.round(target * eased);
-          el.textContent = `${prefix}${cur}${suffix}`;
-          if (t < 1) requestAnimationFrame(tick);
-        }
-        requestAnimationFrame(tick);
-      });
-    }, { threshold: 0.4 });
-
-    targets.forEach(el => io.observe(el));
+    // intencionalmente vazio: ver scripts/motion.js -> setupCounters()
   }
 
   function renderSocial() {
