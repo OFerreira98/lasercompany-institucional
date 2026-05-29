@@ -103,10 +103,19 @@
     return `<div class="procedimento-card-media" style="${procMediaStyle(p)}" aria-hidden="true">${p.img ? '' : PH_HTML}</div>`;
   }
 
+  // 28/mai (cliente): procedimentos COM foto/vídeo aparecem antes; os SEM
+  // mídia caem pro fim. Preserva a ordem relativa dentro de cada grupo.
+  function temMidia(p) { return !!(p.img || p.video || p.antesDepois); }
+  function ordenarPorMidia(arr) {
+    const comMidia = arr.filter(temMidia);
+    const semMidia = arr.filter(p => !temMidia(p));
+    return [...comMidia, ...semMidia];
+  }
+
   function renderGrid(cat) {
     const grid = document.getElementById(`grid-${cat}`);
     if (!grid) return;
-    const items = window.LaserData.procedimentos[cat];
+    const items = ordenarPorMidia(window.LaserData.procedimentos[cat]);
     grid.innerHTML = items.map(p => `
       <article class="procedimento-card${p.popular ? ' popular' : ''}" data-id="${p.id}" data-cat="${cat}" tabindex="0" role="button" aria-label="Ver detalhes de ${p.nome}">
         ${procMediaHTML(p)}

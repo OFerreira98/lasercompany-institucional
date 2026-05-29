@@ -7,7 +7,9 @@
   function renderMarqueePopulares() {
     const track = document.getElementById('populares-marquee');
     if (!track) return;
-    const populares = window.LaserData.getPopulares();
+    // 28/mai (cliente): nos "queridinhos" só entram procedimentos COM foto.
+    // Sem foto, o card branco fica visualmente quebrado.
+    const populares = window.LaserData.getPopulares().filter(p => !!p.img);
     const catLabel = { estetica: 'Estética', depilacao: 'Depilação', ultrassom: 'Ultrassom' };
 
     // Para um loop infinito perfeito, duplicamos o conteúdo
@@ -44,7 +46,21 @@
     grid.setAttribute('data-motion-stagger', '.step-item');
 
     grid.innerHTML = `
-      <div class="steps-line" aria-hidden="true"><span class="steps-line-fill motion-draw-line"></span></div>
+      <div class="steps-line" aria-hidden="true">
+        <svg class="steps-wave motion-draw-line" preserveAspectRatio="none" viewBox="0 0 1000 14" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="stepsWaveGrad" x1="0" x2="1" y1="0" y2="0">
+              <stop offset="0%"  stop-color="#C8A064" stop-opacity="0"/>
+              <stop offset="14%" stop-color="#C8A064" stop-opacity="0.85"/>
+              <stop offset="50%" stop-color="#E8C088" stop-opacity="1"/>
+              <stop offset="86%" stop-color="#C8A064" stop-opacity="0.85"/>
+              <stop offset="100%" stop-color="#C8A064" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M 0 7 C 62 1, 124 13, 187 7 S 312 1, 375 7 S 500 13, 562 7 S 687 1, 750 7 S 875 13, 937 7 S 1000 7, 1000 7"
+                stroke="url(#stepsWaveGrad)" fill="none" stroke-width="1" stroke-linecap="round"/>
+        </svg>
+      </div>
       ${passos.map((p, i) => `
         <div class="step-item${p.cta ? ' step-item-cta' : ''}" data-step="${i + 1}">
           <div class="step-icon" aria-hidden="true">${ICONES_PASSOS[p.icone] || ''}</div>
@@ -66,18 +82,24 @@
   function renderDepoimentos() {
     const grid = document.getElementById('depoimentos-grid');
     if (!grid) return;
-    grid.innerHTML = window.LaserData.depoimentos.map(d => `
-      <article class="depoimento-card">
-        <p class="depoimento-texto">${d.texto}</p>
-        <div class="depoimento-autor">
-          <div class="depoimento-avatar" aria-hidden="true">${d.nome.split(' ').map(w=>w[0]).slice(0,2).join('')}</div>
-          <div>
-            <div class="depoimento-info-nome">${d.nome}</div>
-            <div class="depoimento-info-cidade">${d.cidade}</div>
+    grid.innerHTML = window.LaserData.depoimentos.map(d => {
+      const initials = d.nome.split(' ').map(w => w[0]).slice(0, 2).join('');
+      const avatar = d.foto
+        ? `<div class="depoimento-avatar depoimento-avatar-photo" style="background-image:url('${d.foto}'); background-position:${d.fotoPos || 'center 30%'};" aria-hidden="true"></div>`
+        : `<div class="depoimento-avatar" aria-hidden="true">${initials}</div>`;
+      return `
+        <article class="depoimento-card">
+          <p class="depoimento-texto">${d.texto}</p>
+          <div class="depoimento-autor">
+            ${avatar}
+            <div>
+              <div class="depoimento-info-nome">${d.nome}</div>
+              <div class="depoimento-info-cidade">${d.cidade}</div>
+            </div>
           </div>
-        </div>
-      </article>
-    `).join('');
+        </article>
+      `;
+    }).join('');
   }
 
   /* ---------- HERO CARROSSEL ---------- */

@@ -17,7 +17,7 @@ window.LaserData = {
   unidades: [
     { id: 'jatiuca-maceio-al', nome: 'Jatiúca', cidade: 'Maceió', uf: 'AL', endereco: 'Avenida Doutor Antônio Gomes de Barros, 637, LJ 04 - Jatiúca - Maceió/AL, 57036-001', horario: 'Segunda: 08h às 19h e Sábado: 08h às 16h. Domingo: Fechado', whatsapp: '5582991509502', whatsappFmt: '(82) 99150-9502', instagram: 'laserco.jatiuca', email: 'jatiuca@lasercompany.com', foto: 'assets/img/unidades/jatiuca-maceio-al.jpeg', lat: -9.6476843, lng: -35.7339264, cepPrefixos: ['570'] },
     { id: 'shopping-ponta-negra-manaus-am', nome: 'Shopping Ponta Negra', cidade: 'Manaus', uf: 'AM', endereco: 'Avenida Coronel Teixeira, 5705, Loja 31B e 32.2 - Ponta Negra - Manaus/AM, 69037-000', horario: 'Segunda/ Sábado: 10h às 22h Domingo: 14h às 21h', whatsapp: '5592981111170', whatsappFmt: '(92) 98111-1170', instagram: 'laserco.pontanegra', email: 'pontanegra@lasercompany.com', foto: 'assets/img/unidades/shopping-ponta-negra-manaus-am.jpeg', lat: -3.1316333, lng: -59.9825041, cepPrefixos: ['690'] },
-    { id: 'jua-garden-shopping-juazeiro-ba', nome: 'Juá Garden Shopping', cidade: 'Juazeiro', uf: 'BA', endereco: 'Rodovia BR-407, 5318 - Distrito Industrial - Juazeiro/BA, 48909-901', horario: 'Segunda a Sábado: 10h às 22h / Domingo: 14h às 20h', whatsapp: '557499396474', whatsappFmt: '(74) 99396-474', instagram: 'laserco.juagardenshopping', email: 'juagarden@lasercompany.com', foto: 'assets/img/unidades/jua-garden-shopping-juazeiro-ba.jpg', lat: -9.5137512, lng: -40.3078985, cepPrefixos: ['489'] },
+    { id: 'jua-garden-shopping-juazeiro-ba', nome: 'Juá Garden Shopping', cidade: 'Juazeiro', uf: 'BA', endereco: 'Rodovia BR-407, 5318 - Distrito Industrial - Juazeiro/BA, 48909-901', horario: 'Segunda a Sábado: 10h às 22h / Domingo: 14h às 20h', whatsapp: '557499396474', whatsappFmt: '(74) 99396-474', instagram: 'laserco.juagardenshopping', email: 'juagarden@lasercompany.com', foto: 'assets/img/unidades/jua-garden-shopping-juazeiro-ba.png', lat: -9.5137512, lng: -40.3078985, cepPrefixos: ['489'] },
     { id: 'fortaleza-aldeota-ce', nome: 'Fortaleza', cidade: 'Aldeota', uf: 'CE', endereco: 'Rua Desembargador Leite Albuquerque, 1057 , Loja 03 - Aldeota - Fortaleza/CE, 60150-150', horario: 'Segunda a sábado: 09h às 20h', whatsapp: '5585981171464', whatsappFmt: '(85) 98117-1464', instagram: 'laserco.aldeota', email: 'aldeota@lasercompany.com', foto: 'assets/img/unidades/fortaleza-aldeota-ce.jpg', lat: -3.7341528, lng: -38.5096997, cepPrefixos: ['601'] },
     { id: 'alto-da-gloria-goiania-go', nome: 'Alto da Glória', cidade: 'Goiânia', uf: 'GO', endereco: 'Avenida Engenheiro Eurico Viana, 114, Quadra 03 Lote 08 - Alto da Glória - Goiânia/GO, 74815-725', horario: 'Segunda/Sexta: 8h às 19h. Sábado: 8h às 13h.', whatsapp: '556296335583', whatsappFmt: '(62) 96335-583', instagram: 'laserco.altodagloria.go', email: 'altodagloria@lasercompany.com', foto: 'assets/img/unidades/alto-da-gloria-goiania-go.jpg', lat: -16.680882, lng: -49.2532691, cepPrefixos: ['748'] },
     { id: 'setor-marista-goiania-go', nome: 'Setor Marista', cidade: 'Goiânia', uf: 'GO', endereco: 'Alameda Ricardo Paranhos, 140 , Quadra 225, Lote 03 - Setor Marista - Goiânia/GO, 74175-020', horario: 'Segunda a sexta-feira: das 09h às 18h / Sábado: das 08h às 12h', whatsapp: '556298107205', whatsappFmt: '(62) 98107-205', instagram: 'laserco.setormarista', email: 'setormarista@lasercompany.com', foto: 'assets/img/unidades/setor-marista-goiania-go.jpg', lat: -16.680882, lng: -49.2532691, cepPrefixos: ['741'] },
@@ -86,7 +86,7 @@ window.LaserData = {
       { id: 'melasma', nome: 'Melasma', sub: 'Clareamento de manchas profundas e persistentes.', popular: true, video: 'assets/img/procedimentos/melasma-video.mp4' },
       { id: 'cicatriz-acne', nome: 'Cicatriz de Acne', sub: 'Suavização e remodelamento de cicatrizes.', video: 'assets/img/procedimentos/cicatriz-acne-video.mp4' },
       { id: 'acne-ativa', nome: 'Acne Ativa', sub: 'Controle de acne em atividade com laser.', video: 'assets/img/procedimentos/acne-ativa-video.mp4' },
-      { id: 'bb-glow', nome: 'BB Glow', sub: 'Pele uniforme com efeito de base natural.' },
+      { id: 'bb-glow', nome: 'BB Glow', sub: 'Pele uniforme com efeito de base natural.', img: 'assets/img/procedimentos/bb-glow-img.jpg', video: 'assets/img/procedimentos/bb-glow-video.mp4' },
       { id: 'cicatriz-corporal', nome: 'Cicatriz Corporal', sub: 'Tratamento de cicatrizes em qualquer parte do corpo.', img: 'assets/img/procedimentos/cicatriz-corporal-img.jfif', video: 'assets/img/procedimentos/cicatriz-corporal-video.mp4' },
       { id: 'clareamento-virilha', nome: 'Clareamento de Virilha, Axila e Coxa', sub: 'Uniformização de áreas íntimas e sensíveis.', img: 'assets/img/procedimentos/clareamento-virilha-img.jfif', video: 'assets/img/procedimentos/clareamento-virilha-video.mp4' },
       { id: 'reducao-foliculite', nome: 'Redução de Foliculite', sub: 'Eliminação de pelos encravados e foliculite.', img: 'assets/img/procedimentos/reducao-foliculite-img.png', video: 'assets/img/procedimentos/reducao-foliculite-video.mp4' },
@@ -105,7 +105,7 @@ window.LaserData = {
     ],
     depilacao: [
       { id: 'dep-axila', nome: 'Axila', sub: 'Depilação a laser na axila.', popular: true, img: 'assets/img/procedimentos/dep-axila-img.jfif', antesDepois: 'assets/img/procedimentos/dep-axila-antes-depois.jpg' },
-      { id: 'dep-virilha', nome: 'Virilha Completa', sub: 'Virilha total com tecnologia segura.', popular: true },
+      { id: 'dep-virilha', nome: 'Virilha Completa', sub: 'Virilha total com tecnologia segura.' },
       { id: 'dep-perna', nome: 'Perna Inteira', sub: 'Depilação completa das pernas.', popular: true, img: 'assets/img/procedimentos/dep-perna-img.jfif' },
       { id: 'dep-meia-perna', nome: 'Meia Perna', sub: 'Depilação da metade inferior das pernas.' },
       { id: 'dep-costas', nome: 'Costas', sub: 'Costas inteiras com laser.', img: 'assets/img/procedimentos/dep-costas-img.jfif', antesDepois: 'assets/img/procedimentos/dep-costas-antes-depois.jpg' },
@@ -177,10 +177,10 @@ window.LaserData = {
      conforme exigido pelo roteiro.
   */
   depoimentos: [
-    { nome: 'Marina S.', cidade: 'São Paulo, SP', texto: 'Fiz 6 sessões de rejuvenescimento facial 4D na unidade Vila Mariana e o resultado foi acima da expectativa. Pele uniforme, mais firme e com brilho saudável.', avatar: null, exemplo: true },
-    { nome: 'Camila R.', cidade: 'Rio de Janeiro, RJ', texto: 'Atendimento impecável na unidade de Ipanema. Depilação a laser sem dor, super rápido. Já recomendei para todas as amigas.', avatar: null, exemplo: true },
-    { nome: 'Patrícia M.', cidade: 'Belo Horizonte, MG', texto: 'O tratamento de melasma mudou minha vida. Anos tentando outras técnicas, em poucos meses na Laser & Co o resultado apareceu.', avatar: null, exemplo: true },
-    { nome: 'Juliana A.', cidade: 'Curitiba, PR', texto: 'A papada com ultrassom microfocado foi um divisor de águas. Sem cortes, sem recuperação. O contorno do meu rosto ficou definido.', avatar: null, exemplo: true },
+    { nome: 'Gabi S.',     cidade: 'São Paulo, SP',      texto: 'Fiz 6 sessões de rejuvenescimento facial 4D na unidade Vila Mariana e o resultado foi acima da expectativa. Pele uniforme, mais firme e com brilho saudável.', foto: 'assets/img/depoimentos/cliente-1-gabi.jpg',     fotoPos: 'center 28%', exemplo: true },
+    { nome: 'Thaina B.',   cidade: 'Cabo Frio, RJ',      texto: 'Atendimento impecável na unidade Park Lagos. Depilação a laser sem dor, super rápido. Já recomendei para todas as amigas.',                                  foto: 'assets/img/depoimentos/cliente-2-thaina.jpg',   fotoPos: '40% 30%',    exemplo: true },
+    { nome: 'Patrícia M.', cidade: 'Belo Horizonte, MG', texto: 'O tratamento de melasma mudou minha vida. Anos tentando outras técnicas, em poucos meses na Laser & Co o resultado apareceu.',                                foto: 'assets/img/depoimentos/cliente-3-patricia.jpg', fotoPos: 'center 30%', exemplo: true },
+    { nome: 'Hanna F.',    cidade: 'São Paulo, SP',      texto: 'Fiz Erbium + PDRN e o resultado depois de 4 dias já estava visível. Pele macia, uniforme e com brilho. Recomendo de olhos fechados.',                         foto: 'assets/img/depoimentos/cliente-4-hanna.jpg',    fotoPos: 'center 28%', exemplo: true },
   ],
 
   /* --------- HERO CARROSSEL (3 a 5 banners, ordem aleatoria) ---------- */
@@ -218,7 +218,7 @@ window.LaserData = {
     {
       id: 'ultrassom',
       img: 'assets/img/ultrassom.jpg',
-      eyebrow: 'Ultrassom Ultracel',
+      eyebrow: 'Ultrassom',
       title: 'Lifting',
       titleItalic: 'sem cortes.',
       sub: 'Papada, bichectomia, fox eyes e levantamento facial. 14 tratamentos com tecnologia microfocada.',

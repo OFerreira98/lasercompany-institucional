@@ -30,7 +30,7 @@
             <a href="procedimentos.html?tab=depilacao" class="nav-mega-all">Ver todas as áreas &rarr;</a>
           </div>
           <div class="nav-mega-col" data-mega-cat="ultrassom">
-            <a href="procedimentos.html?tab=ultrassom" class="nav-mega-title">Ultrassom Ultracel</a>
+            <a href="procedimentos.html?tab=ultrassom" class="nav-mega-title">Ultrassom</a>
             <ul class="nav-mega-list" aria-label="Tratamentos de ultrassom"></ul>
             <a href="procedimentos.html?tab=ultrassom" class="nav-mega-all">Ver todos os tratamentos &rarr;</a>
           </div>
@@ -388,12 +388,21 @@
   /* ---------- header scroll behavior ---------- */
   // Esconde quando o usuário rola pra baixo, mostra quando volta a rolar
   // pra cima ou está no topo da página.
+  // Na home: header começa transparente sobre o hero e ganha .scrolled
+  // (fundo branco) assim que o usuário passa do hero.
   function bindHeaderScroll() {
     const h = document.getElementById('site-header');
     if (!h) return;
+    const isHome = document.body.classList.contains('page-home');
     let lastY = window.scrollY;
     const threshold = 8; // px mínimos pra contar como rolagem
     const topZone   = 80; // dentro dessa faixa do topo o header sempre aparece
+
+    const heroBreakpoint = () => {
+      // ponto onde o header deixa de ser transparente: ~85% da altura do hero
+      // (deixa um respiro pra evitar o flicker bem na borda do slide).
+      return Math.max(window.innerHeight * 0.85, 240);
+    };
 
     const onScroll = () => {
       const y = window.scrollY;
@@ -402,12 +411,22 @@
       if (y <= topZone) {
         h.classList.remove('is-hidden');
       } else if (diff > threshold) {
-        // rolou pra baixo
         h.classList.add('is-hidden');
       } else if (diff < -threshold) {
-        // rolou pra cima
         h.classList.remove('is-hidden');
       }
+
+      if (isHome) {
+        if (y > heroBreakpoint()) {
+          h.classList.add('scrolled');
+        } else {
+          h.classList.remove('scrolled');
+        }
+      } else {
+        // nas demais páginas, header é sempre "scrolled" (branco)
+        h.classList.add('scrolled');
+      }
+
       lastY = y;
     };
 

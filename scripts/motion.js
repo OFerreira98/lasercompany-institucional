@@ -142,22 +142,42 @@
     });
   }
 
-  // Desenha uma linha horizontal (escala X de 0 a 1).
-  // Uso: <div class="motion-draw-line"></div>
+  // Desenha uma linha horizontal.
+  // - <div class="motion-draw-line"></div>  ->  scaleX de 0 a 1
+  // - <svg class="motion-draw-line">...</svg>  ->  clipPath inset(0 100% 0 0) -> inset(0 0 0 0)
+  //   (assim a forma do path SVG não distorce; ele só é revelado).
   function setupDrawLine(root = document) {
     if (!hasGSAP || !hasScrollTrigger) return;
     root.querySelectorAll('.motion-draw-line').forEach(el => {
       if (el._drawn) return;
       el._drawn = true;
-      gsap.set(el, { scaleX: 0, transformOrigin: 'left center' });
-      ScrollTrigger.create({
-        trigger: el,
-        start: 'top 90%',
-        once: true,
-        onEnter: () => {
-          gsap.to(el, { scaleX: 1, duration: 1.8, ease: 'expo.inOut' });
-        },
-      });
+      const isSvg = el.tagName && el.tagName.toLowerCase() === 'svg';
+      if (isSvg) {
+        gsap.set(el, { clipPath: 'inset(0 100% 0 0)', webkitClipPath: 'inset(0 100% 0 0)' });
+        ScrollTrigger.create({
+          trigger: el,
+          start: 'top 90%',
+          once: true,
+          onEnter: () => {
+            gsap.to(el, {
+              clipPath: 'inset(0 0% 0 0)',
+              webkitClipPath: 'inset(0 0% 0 0)',
+              duration: 1.8,
+              ease: 'expo.inOut',
+            });
+          },
+        });
+      } else {
+        gsap.set(el, { scaleX: 0, transformOrigin: 'left center' });
+        ScrollTrigger.create({
+          trigger: el,
+          start: 'top 90%',
+          once: true,
+          onEnter: () => {
+            gsap.to(el, { scaleX: 1, duration: 1.8, ease: 'expo.inOut' });
+          },
+        });
+      }
     });
   }
 

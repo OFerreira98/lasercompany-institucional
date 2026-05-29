@@ -90,6 +90,20 @@
 .section-light .stat-block {
   box-shadow: 0 1px 3px rgba(70, 25, 20, 0.04);
 }
+/* 28/mai (cliente): card branco sumindo no fundo creme.
+   Sombra mais presente + leve borda dourada pra destacar sem mudar a cor. */
+.section-light .marquee-card {
+  border: 1px solid rgba(154, 107, 30, 0.18);
+  box-shadow:
+    0 1px 2px rgba(70, 25, 20, 0.05),
+    0 10px 30px rgba(70, 25, 20, 0.10);
+}
+.section-light .marquee-card:hover {
+  border-color: rgba(154, 107, 30, 0.45);
+  box-shadow:
+    0 2px 4px rgba(70, 25, 20, 0.06),
+    0 18px 44px rgba(70, 25, 20, 0.16);
+}
 .section-light .marquee-card-image::after {
   background: linear-gradient(0deg, rgba(70,25,20,0.35) 0%, transparent 55%);
 }
@@ -609,8 +623,10 @@
 .stat-num {
   display: block;
   font-family: var(--font-serif);
-  font-size: clamp(2.6rem, 5.2vw, 3.4rem);  /* MAIOR: mais protagonismo */
-  font-weight: var(--fw-light);
+  font-size: clamp(2.6rem, 5.2vw, 3.4rem);
+  /* mais grosso (pedido do cliente, 28/mai): de 300 -> 500 dá presença sem
+     perder a elegância do serif */
+  font-weight: 500;
   color: var(--color-accent);
   line-height: 1;
   letter-spacing: var(--ls-tight);
@@ -826,26 +842,31 @@
 }
 
 .marquee-card-cat {
+  /* 28/mai (cliente): mais grosso pra aparecer no card branco/creme */
   font-family: var(--font-accent);
-  font-size: 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: var(--ls-widest);
-  color: var(--color-accent);
+  color: var(--color-accent-deep, #481712);
 }
 
 .marquee-card-title {
+  /* 28/mai (cliente): de light(300) -> 500 (medium). Mantém o serif elegante
+     mas com presença suficiente sobre o card branco. */
   font-family: var(--font-serif);
   font-size: var(--fs-lg);
-  font-weight: var(--fw-light);
+  font-weight: 500;
   letter-spacing: var(--ls-snug);
 }
 
 .marquee-card-cta {
   font-family: var(--font-accent);
-  font-size: var(--fs-xs);
+  font-size: 0.78rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: var(--ls-wider);
-  color: var(--color-accent);
+  color: var(--color-accent-deep, #481712);
   margin-top: var(--sp-2);
 }
 
@@ -1343,29 +1364,22 @@
   padding-top: var(--sp-4);
 }
 
-/* linha dourada conectando os 4 passos (no nível do ícone, ~50px do topo) */
+/* linha dourada conectando os 4 passos (no nível do ícone, ~50px do topo).
+   28/mai (cliente): trocada de linha reta grossa por onda fininha, mais sutil. */
 .steps-line {
   position: absolute;
-  top: 52px;                                   /* alinha com centro do ícone */
+  top: 45px;                                   /* alinha com centro do ícone (76/2 + 7) */
   left: 12.5%;
   right: 12.5%;
-  height: 2px;
-  background: rgba(154, 107, 30, 0.18);
-  border-radius: 1px;
+  height: 14px;
   pointer-events: none;
   z-index: 0;
 }
-.steps-line-fill {
+.steps-wave {
   display: block;
+  width: 100%;
   height: 100%;
-  background: linear-gradient(90deg,
-    transparent 0%,
-    #C8A064 12%,
-    #E8C088 50%,
-    #C8A064 88%,
-    transparent 100%);
-  border-radius: inherit;
-  box-shadow: 0 0 16px rgba(200, 160, 100, 0.35);
+  filter: drop-shadow(0 0 6px rgba(200, 160, 100, 0.30));
 }
 
 @media (max-width: 900px) {
@@ -1543,6 +1557,15 @@
   color: var(--color-bg);
   font-weight: var(--fw-bold);
   font-family: var(--font-accent);
+  flex-shrink: 0;
+}
+
+/* 28/mai (cliente): avatar com foto real (recorte do rosto via background-position) */
+.depoimento-avatar-photo {
+  background-size: cover;
+  background-repeat: no-repeat;
+  border: 2px solid rgba(154, 107, 30, 0.40);
+  box-shadow: 0 2px 8px rgba(70, 25, 20, 0.18);
 }
 
 .depoimento-info-nome {
@@ -1868,6 +1891,68 @@
   pointer-events: none;
 }
 .page-hero-photo-wrap .container { position: relative; z-index: 1; }
+
+/* 28/mai (cliente): hero da página /procedimentos com foto real de fundo
+   (em vez de só texto sobre creme). Foto + overlay vinho garantindo leitura
+   mesmo em fotos com áreas claras (rosto, jaleco, equipamento). */
+.page-hero-photo-bg {
+  background: #1F0B0A;
+  padding-block: clamp(6rem, 12vw, 10rem) clamp(4rem, 8vw, 7rem);
+  border-bottom: none;
+}
+.page-hero-photo-bg::before {
+  background:
+    /* mancha vinho atrás do texto pra contrastar com áreas claras */
+    radial-gradient(ellipse 65% 60% at 50% 55%, rgba(10,6,6,0.70), transparent 80%),
+    /* leve glow dourado no topo */
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(232,192,136,0.08), transparent 60%),
+    /* base vinho forte (88/92) — garante leitura mesmo sobre fotos claras */
+    linear-gradient(180deg, rgba(10,6,6,0.85) 0%, rgba(10,6,6,0.92) 100%);
+}
+.page-hero-photo-cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* default genérico (foto retrato com foco no centro-superior) */
+  object-position: center 35%;
+  z-index: 0;
+  /* foto bem mais escura pra não competir com o texto (brightness 0.55) */
+  filter: saturate(1.10) contrast(1.10) brightness(0.55);
+}
+/* Override por página: unidades = foto da recepção (parede verde + &Co. dourado).
+   29/mai: foto nova HD 1672x941 paisagem. O foco (recepção + &Co.) fica no
+   centro, então object-position center 50% funciona bem. Brilho mais leve
+   (0.70 em vez de 0.55) pra preservar o tom quente da decoração. */
+body.page-unidades .page-hero-photo-cover {
+  object-position: center 50%;
+  filter: saturate(1.05) contrast(1.05) brightness(0.70);
+}
+/* Overlay mais leve na unidades (deixa a decoração respirar) */
+body.page-unidades .page-hero-photo-bg::before {
+  background:
+    radial-gradient(ellipse 65% 60% at 50% 55%, rgba(10,6,6,0.55), transparent 80%),
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(232,192,136,0.08), transparent 60%),
+    linear-gradient(180deg, rgba(10,6,6,0.68) 0%, rgba(10,6,6,0.78) 100%);
+}
+.page-hero-photo-bg .page-hero-title,
+.page-hero-photo-bg .page-hero-sub,
+.page-hero-photo-bg .eyebrow {
+  color: #FAF6EE;
+}
+.page-hero-photo-bg .page-hero-title .italic { color: #E8C088; }
+.page-hero-photo-bg .eyebrow { color: #E8C088; }
+.page-hero-photo-bg .page-hero-title {
+  text-shadow:
+    0 2px 4px rgba(0,0,0,0.55),
+    0 4px 22px rgba(0,0,0,0.45);
+}
+.page-hero-photo-bg .page-hero-sub {
+  text-shadow:
+    0 1px 3px rgba(0,0,0,0.70),
+    0 2px 12px rgba(0,0,0,0.55);
+}
 
 .procedimento-card-desc {
   font-size: var(--fs-sm);
@@ -2657,23 +2742,36 @@
   padding-block: clamp(4rem, 10vw, 8rem);
   border-bottom: 1px solid var(--color-border);
   overflow: hidden;
+  background: #1A0404;
 }
 
+/* 28/mai (cliente): foto da capa "Franquias" (letreiro LASER & COMPANY)
+   como background do hero do franqueado. Overlay vinho+gradient garante
+   leitura do título "Invista no setor..." sobre a foto.
+   29/mai: troca pra Franquias-hero.png (HD 1672x941). */
 .franqueado-hero-bg {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(ellipse at center, var(--color-accent-glow), transparent 60%),
-    var(--color-bg);
+  background-image:
+    /* mancha vinho mais densa no canto esquerdo onde fica o título */
+    radial-gradient(ellipse 65% 80% at 25% 50%, rgba(10,6,6,0.78), transparent 75%),
+    /* base vinho top-bottom */
+    linear-gradient(180deg, rgba(10,6,6,0.55) 0%, rgba(10,6,6,0.72) 100%),
+    /* foto */
+    url('../assets/img/Franquias-hero.png');
+  background-size: cover, cover, cover;
+  background-position: center, center, center center;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  filter: saturate(1.05);
 }
 
 .franqueado-hero-bg::after {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+  background-image: linear-gradient(90deg, rgba(232,192,136,0.06) 1px, transparent 1px);
   background-size: 12.5% 100%;
-  opacity: 0.2;
+  opacity: 0.35;
 }
 
 .fundador-section {
@@ -2803,82 +2901,111 @@
   line-height: 1.5;
 }
 
-/* NUMEROS DA FRANQUIA — redesign 05/2026
-   Card grande com número em destaque (estilo "Por que investir"
-   espelhado do site Rafael). Verticalmente equilibrado, sem ícones,
-   foco no número grande dourado. */
+/* NUMEROS DA FRANQUIA — refatorado 28/mai (idêntico ao Rafael)
+   Card branco, header dourado com círculo vinho + ícone branco no centro,
+   body com label cinza escuro, número GRANDE em cinza, subtitle leve.
+   Visual da landing https://franquias.lasercompany.com */
 .numeros-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);  /* 2x2 igual ao Rafael */
   gap: var(--sp-5);
+  max-width: 760px;
+  margin: 0 auto;
 }
 
-@media (max-width: 1100px) { .numeros-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 520px)  { .numeros-grid { grid-template-columns: 1fr; } }
+@media (max-width: 520px) {
+  .numeros-grid { grid-template-columns: 1fr; }
+}
 
 .numero-card {
   position: relative;
-  padding: var(--sp-6);
-  background: linear-gradient(135deg, var(--color-bg-elevated), var(--color-bg-alt));
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  background: #FFFFFF;
+  border: 1px solid rgba(70,25,20,0.10);
+  border-radius: 14px;
   overflow: hidden;
-  transition: transform 0.4s cubic-bezier(0.22, 0.95, 0.36, 1),
-              border-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 18px rgba(70,25,20,0.10);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.35s cubic-bezier(0.22,0.95,0.36,1),
+              box-shadow 0.35s ease;
+}
+.numero-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 32px rgba(70,25,20,0.16);
 }
 
-.numero-card::before {
-  content: '';
+/* HEAD = faixa dourada com glow no meio (gradient horizontal escuro-claro-escuro) */
+.numero-card-head {
+  background: linear-gradient(90deg,
+    #7A5418 0%,
+    #B89460 30%,
+    #E0B677 50%,
+    #B89460 70%,
+    #7A5418 100%);
+  padding: 1.25rem 1rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.numero-card-head::after {
+  /* leve sombra interna na parte de baixo da faixa, dá profundidade */
+  content: "";
   position: absolute;
-  top: -50%;
-  right: -25%;
-  width: 70%;
-  height: 200%;
-  background: radial-gradient(circle, var(--color-accent-glow), transparent 60%);
-  opacity: 0;
-  transition: opacity 0.45s ease;
+  inset: auto 0 0 0;
+  height: 6px;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,0.18));
   pointer-events: none;
 }
-
-.numero-card:hover {
-  border-color: var(--color-border-accent);
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-lg);
+.numero-card-ico {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #1A0404;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+  border: 2px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
 }
-.numero-card:hover::before { opacity: 0.55; }
-.numero-card > * { position: relative; }
+.numero-card-ico svg { width: 28px; height: 28px; }
 
-.numero-big {
-  font-family: var(--font-serif);
-  font-size: clamp(2.4rem, 4.6vw, 3.2rem);
-  font-weight: var(--fw-light);
-  background: var(--color-accent-grad);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  letter-spacing: var(--ls-tight);
-  line-height: 1;
-  margin-bottom: var(--sp-3);
+/* BODY = branco, texto em escala de cinza (mantém visual exato do Rafael) */
+.numero-card-body {
+  background: #FFFFFF;
+  padding: 1.25rem 1.25rem 1.5rem;
+  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem;
 }
-.numero-suffix {
-  font-size: 0.55em;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
+.numero-card-label {
+  font-family: var(--font-sans, "Open Sans", system-ui, sans-serif);
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #5C5C5C;
+  line-height: 1.2;
+  margin: 0;
 }
-
-.numero-title {
-  font-family: var(--font-serif);
-  font-size: 1.15rem;
-  font-weight: var(--fw-light);
-  color: var(--color-text);
-  margin-bottom: var(--sp-2);
-  line-height: 1.25;
+.numero-card-value {
+  font-family: var(--font-sans, "Open Sans", system-ui, sans-serif);
+  font-size: clamp(1.8rem, 3.6vw, 2.4rem);
+  font-weight: 800;
+  color: #8A8A8A;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 0;
 }
-
-.numero-desc {
-  font-size: 0.88rem;
-  color: var(--color-text-soft);
-  line-height: 1.55;
+.numero-card-sub {
+  font-family: var(--font-sans, "Open Sans", system-ui, sans-serif);
+  font-size: 0.92rem;
+  font-weight: 400;
+  color: #9A9A9A;
+  margin: 0;
 }
 
 .modelo-list {
