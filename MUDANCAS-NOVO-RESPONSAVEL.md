@@ -467,20 +467,253 @@ Agora:
 
 ---
 
-## Estado atual do site, recap pro cliente
+## ONDA H, refinamentos pós-revisão do cliente (28-29/05), commit `05c0a46`
+
+Rodada de feedback do Ferreira em cima do que tinha sido entregue
+até a Onda G. Ele revisou tela por tela e mandou print/áudio do
+que tinha incomodado. O cliente também passou novas fotos reais
+(loja conceito, recepção HD, capa Franquias) e instruções precisas
+de ordem e copy.
+
+**Header transparente sobre o hero (na home), commit `05c0a46`**
+
+Cliente: "essa linha branca do menu não sei se foi uma instrução
+dele mas, eu gostava do menu como estava antes sabe? A imagem maior
+né, aparecendo mais, do hero ali embaixo, e o menu sobre a imagem
+sem essa faixa branca atrás aí do menu sabe? Só que ele tem que
+ficar nítido".
+
+Solução:
+- `body.page-home .site-header-clean:not(.scrolled)` vira transparente
+  com gradient sutil no topo (`linear-gradient 0.55 → 0` em 200%
+  de altura via `::before`).
+- Logo ganha drop-shadow mais forte + contraste/saturação reforçados.
+- Links do menu viram creme com `text-shadow` pra leitura sobre foto.
+- Botão "Seja um franqueado" mantém o dourado mas em `transparent`
+  com borda dourada.
+- `bindHeaderScroll()` em `layout.js` adiciona/remove a classe
+  `.scrolled` quando passa de ~85% da altura da viewport — fora dos
+  85vh do hero, header volta branco sólido. Em outras páginas
+  (não-home), `.scrolled` é sempre aplicada na entrada.
+
+**Engrossar números dos cards (+70, 15, 5, 12X), commit `05c0a46`**
+
+`.stat-num` foi de `font-weight: 300` (light) pra `500` (medium).
+Mantém o serif Cormorant Garamond elegante mas com mais presença.
+
+**"Ultrassom Ultracel" → "Ultrassom" em 4 lugares, commit `05c0a46`**
+
+Cliente: "temos três produtos né? Depilação a laser, estética a
+laser e ultrassom. Você colocou ultrassom, ultracel ali. É só
+ultrassom".
+
+Renomeado em:
+1. Card "3 frentes" da home (`index.html`).
+2. Mega-menu Procedimentos (`scripts/layout.js`).
+3. Eyebrow da aba ultrassom no `data.js` (página procedimentos).
+4. Lista de tecnologias no "Sobre" (passou a terminar em "Ultracel"
+   só, igual aos outros nomes de máquina: Alexandrite, ND-YAG,
+   Erbium, Q-Switched).
+
+Subtítulo da página `/procedimentos` ("Ultrassom Microfocado") também
+caiu pra "Ultrassom".
+
+**Queridinhos: só com foto + tipografia bolder + sombra, commit `05c0a46`**
+
+Cliente: "deixar aparecendo ali só os procedimentos que tem foto"
++ "a escrita... está fininha, então não está dando pra aparecer"
++ "talvez, sei lá, dar uma destacada nele [no card branco] pra que
+ele apareça sem mudar a cor".
+
+- `renderMarqueePopulares()` em `page-index.js` filtra por `!!p.img`.
+- Categoria (`.marquee-card-cat`) de `0.65rem` regular pra
+  `0.72rem` bold 700 + cor accent-deep (vinho profundo).
+- Título (`.marquee-card-title`) de `fw-light (300)` pra `500`.
+- CTA (`.marquee-card-cta`) de `0.7rem` regular pra `0.78rem` bold 700.
+- Cards no fundo creme ganharam `border: 1px solid rgba(154,107,30,0.18)`
+  dourado sutil + sombra mais densa (`0 10px 30px rgba(70,25,20,0.10)`).
+  Hover aumenta sombra e densidade da borda.
+- Bonus: `dep-virilha` perdeu o `popular: true` (não tinha foto, ficava
+  fora pelo filtro novo de qualquer jeito).
+
+**4 passos: linha mais fina e ondulada, commit `05c0a46`**
+
+Cliente: "a linha poderia ter um toque mais sutil, mais fino. Ela
+poderia ser em ondas, ao invés de ser uma linha reta".
+
+- Trocada a linha reta `2px` por uma onda SVG com `stroke-width: 1`,
+  altura 14px, path com `C` + `S` (Bézier suaves) gerando 7 ondulações.
+- Gradient horizontal dourado: transparente nas pontas, dourado claro
+  no meio (`#C8A064 → #E8C088 → #C8A064`).
+- `setupDrawLine()` em `motion.js` foi estendida pra suportar SVG:
+  detecta `el.tagName === 'svg'` e anima via `clipPath` (`inset(0 100% 0 0)`
+  → `inset(0 0% 0 0)`) em vez de `scaleX` (que comprimiria a onda
+  no eixo X durante a transição).
+- `drop-shadow(0 0 6px rgba(200,160,100,0.30))` no SVG dá um glow
+  dourado sutil.
+
+**Depoimentos com fotos reais do Instagram, commit `05c0a46`**
+
+Cliente: "os clientes não têm foto. Então eu peguei ali no Instagram
+de clientes e rosto de cliente tem um nome também de algumas, as
+que não tivessem mantém o nome que está".
+
+5 prints de stories em `assets/img/Clientes/` (já estavam no repo).
+Identificados 3 @s: `gabstent`, `thainabaxtos`, `hannafernandes`.
+2 sem @ específico.
+
+Estratégia: usar 4 das 5 fotos (skip o "red velvet" que não tinha @).
+- `Marina S.` → **Gabi S.** (foto curly green tank)
+- `Camila R.` → **Thaina B.** (foto blonde, "Cabo Frio/RJ" porque
+  tag era `@laserco.parklagos`)
+- `Patrícia M.` mantida (foto loira pós aula, sem @)
+- `Juliana A.` → **Hanna F.** (foto turtleneck, texto adaptado pra
+  Erbium + PDRN que é o procedimento real dela)
+
+`renderDepoimentos()` em `page-index.js` agora renderiza
+`<div class="depoimento-avatar depoimento-avatar-photo">` com
+`background-image:url(...); background-position:<fotoPos>;` quando
+o lead tem `foto:` (caso contrário cai no avatar com iniciais).
+CSS novo `.depoimento-avatar-photo` com borda dourada sutil + sombra.
+
+Fotos copiadas pra `assets/img/depoimentos/cliente-{1-gabi,2-thaina,
+3-patricia,4-hanna}.jpg`.
+
+**Hero das páginas internas legível (criação da regra geral), commit `05c0a46`**
+
+Cliente: "da pra ler ???" (sobre `/agendamento.html` com título
+"Agende em três passos." quase invisível em creme sobre creme).
+
+Causa: `.page-hero-title` herdava cor `--color-text` (creme, do tema
+escuro padrão), mas `body:not(.painel-body)` é branco. Resultado:
+texto creme sobre branco = invisível.
+
+Solução em `layouts.css`, `.page-hero` padrão:
+- `background: #FAF6EE` (creme suave, não mais branco puro).
+- `::before` gradient dourado mais sutil (era `--color-accent-glow`
+  + `rgba(58,16,16,0.45)`; agora `rgba(232,192,136,0.20)` +
+  `rgba(154,107,30,0.10)`).
+- `.page-hero-title { color: #1F0B0A }` (vinho escuro).
+- `.page-hero-title .italic { color: #9A6B1E }` (dourado escuro).
+- `.page-hero-sub { color: #4E1A15 }` (vinho médio).
+- `.page-hero .eyebrow { color: #9A6B1E }`.
+
+Pega automaticamente: `/agendamento`, `/contato`, `/blog`, `/unidades`
+(antes do override de foto), `/vagas` (que já usava `.page-hero-photo-wrap`
+de watermark).
+
+**Hero photo em /procedimentos, /unidades e /franqueado, commit `05c0a46`**
+
+3 páginas ganharam foto real de fundo seguindo um padrão único
+`.page-hero-photo-bg`:
+
+```html
+<section class="page-hero page-hero-photo-bg">
+  <img class="page-hero-photo-cover" src="..." onerror="this.remove()">
+  <div class="container">...</div>
+</section>
+```
+
+CSS:
+- `.page-hero-photo-bg`: fundo `#1F0B0A` (vinho escuro fallback).
+- `::before`: triple-overlay vinho (`mancha vinho radial 70%` atrás
+  do texto + glow dourado sutil 8% no topo + base `linear-gradient
+  0.85 → 0.92`).
+- `.page-hero-photo-cover`: `position:absolute; inset:0; object-fit:cover;
+  object-position: center 35%; filter: saturate(1.10) contrast(1.10)
+  brightness(0.55)` (foto bem escura pra não competir com o texto).
+- Cores do texto: tudo creme (`#FAF6EE`) + dourado claro (`#E8C088`)
+  no italic e eyebrow + sombras de texto duplas pra leitura.
+
+Por página (override em `body.page-*`):
+
+- **`/procedimentos`**: `proc-hero.jpg` (`ImagemEstetica.jpg` copiada
+  do site oficial antigo, mulher em sessão laser facial com jaleco
+  LASER & CO).
+- **`/unidades`**: `unidades-hero.png` (HD 1672×941 da recepção com
+  parede verde + círculo dourado `&Co.`, poltronas vinho, letreiro
+  LASER & COMPANY na parede esquerda). Override `brightness: 0.70`
+  e overlay mais leve (68/78% em vez de 85/92%) pra preservar o
+  tom quente da decoração.
+- **`/franqueado`**: NÃO usa o `.page-hero-photo-bg` porque a página
+  tem `.franqueado-hero` próprio. A `.franqueado-hero-bg` ganhou a
+  `Franquias-hero.png` (HD 1672×941 do letreiro LASER & COMPANY
+  ESTÉTICA A LASER dourado) como `background-image` com triplo
+  layer: mancha vinho 78% à esquerda (onde o título sai) + base
+  vinho 55/72% + foto. Grid dourado sutil mantido em cima.
+
+`body.page-unidades` e `body.page-home` adicionados aos respectivos
+HTMLs pra os overrides pegarem.
+
+**Procedimentos: ordenados por mídia + BB Glow linkado, commit `05c0a46`**
+
+Cliente: "os procedimentos que não têm foto nem vídeo você coloca
+por último" + "BB gloss... na pasta tem ali vídeo e foto do Baby
+Gloss".
+
+- `BB Glow.jpg` + `BB Glow.mp4` copiados de `assets/img/` raiz pra
+  `assets/img/procedimentos/bb-glow-img.jpg` + `bb-glow-video.mp4`.
+  `data.js` ganhou as referências.
+- `ordenarPorMidia()` em `page-procedimentos.js` separa entradas com
+  `img/video/antesDepois` das sem mídia e concatena (com mídia
+  primeiro). Preserva ordem relativa.
+- Aplicado em todos os 3 tabs (estética/depilação/ultrassom):
+  - Estética: 20 com mídia + 1 sem (Manchas Corporais no fim).
+  - Depilação: 7 com + 7 sem (Virilha Completa cai pro fim).
+  - Ultrassom: 12 com + 2 sem (Bichectomia sem cortes + Terço
+    Inferior Lifting no fim).
+
+**Cards "O que esperar" no padrão exato Rafael, commit `05c0a46`**
+
+Cliente: "Os números do site Rafael eu quero idêntico" (mandou
+screenshot dos 4 cards Payback/Margem/Royalties/Rentabilidade).
+
+Refeitos os 4 cards em `franqueado.html` + CSS `.numero-card` em
+`pages.css`. Grid `2x2` centralizado (`max-width: 760px`).
+
+Cada card:
+- Branco arredondado `radius: 14px` + sombra suave.
+- `.numero-card-head`: faixa dourada com gradient horizontal
+  `#7A5418 → #B89460 → #E0B677 → #B89460 → #7A5418` + microsombra
+  inferior. No centro um círculo `56px` vinho `#1A0404` com ícone
+  SVG branco.
+- `.numero-card-body`: fundo branco, texto centralizado.
+  - `.numero-card-label`: dark gray `#5C5C5C` weight 500 ("Payback:").
+  - `.numero-card-value`: light gray `#8A8A8A` weight 800
+    `clamp(1.8rem, 3.6vw, 2.4rem)` ("18 a 24 meses").
+  - `.numero-card-sub`: lighter gray `#9A9A9A` ("em média").
+
+Conteúdo final dos 4 cards:
+1. **Payback:** 18 a 24 meses · em média (ícone refresh+clock).
+2. **Margem de faturamento:** 20 a 30% · em média (ícone bar chart).
+3. **Royalties:** 10% · sobre o faturamento bruto (ícone hand+coin).
+4. **Rentabilidade:** 20% · em média (ícone $+arrows).
+
+(Substitui o card "Faturamento médio anual R$ 1.5MM a 3MM" antigo.)
+
+**Foto da unidade Juazeiro atualizada, commit `05c0a46`**
+
+Cliente mandou a foto real da fachada do Juá Garden Shopping (com
+os cartazes de preço RIJU FACIAL 4D, LASER + PDRN, EXTRAÇÃO FULL
+FACE, DEPIL VIRILHA + CLAREAMENTO).
+
+Salvou como `.png` em `assets/img/unidades/jua-garden-shopping-juazeiro-ba.png`.
+`data.js` atualizada pra apontar pra `.png` (era `.jpg`).
+
+---
 
 **No ar em** `https://lasercompany-institucional.vercel.app`
 
 | Bloco | Estado |
 |---|---|
-| Header | Branco fixo, logo grande dourada, esconde no scroll, SAC + franqueado + agendamento |
+| Header | Transparente sobre o hero na home (vira branco ao rolar fora); branco fixo nas outras páginas. Logo grande, SAC + franqueado + agendamento, esconde no scroll |
 | Hero | Carrossel de 5 banners, auto-roda 4.5s, embaralha a cada visit |
-| Sobre, números | Counter 3s, centralizado, pulse no 5/12x, stagger entry |
-| Três frentes | Vinho, 3 cards de segmento, stagger |
-| Queridinhos | Marquee infinito de procedimentos populares |
-| Como funciona | 4 passos com ícones, anel pulsante, linha dourada conectando |
+| Sobre, números | Counter 3s, números bolder (weight 500), pulse no 5/12x, stagger entry |
+| Três frentes | Vinho, 3 cards de segmento (Estética/Depilação/Ultrassom, sem "Ultracel"), stagger |
+| Queridinhos | Marquee infinito filtrado por procedimentos COM foto, categoria+CTA bold, sombra dourada nos cards |
+| Como funciona | 4 passos com ícones, anel pulsante, onda dourada fina conectando |
 | Redes sociais | Feed real do Instagram (Behold), 6 últimos posts |
-| Depoimentos | 4 depoimentos placeholder (esperando reais) |
+| Depoimentos | 4 cards com FOTOS reais do Instagram (recorte do rosto), nomes Gabi S./Thaina B./Patrícia M./Hanna F.; textos ainda são demo |
 | Agendamento curto | Form na home com UF/cidade/unidade/WhatsApp |
 | Blog | 4 cards rotativos a cada 9s, do pool de 40 matérias reais |
 | Footer | "Saiu na mídia" + mapa do site + card franquia + acesso painel |
@@ -489,13 +722,13 @@ Agora:
 
 | URL | Estado |
 |---|---|
-| `/procedimentos` | Cards com vídeo autoplay + foto + antes/depois combo |
-| `/unidades` | 59 unidades reais com foto da fachada, mapa, busca por CEP |
-| `/agendamento` | Stepper 3 passos com lead salvo no painel |
-| `/blog` | Lista completa das 40 matérias, busca por palavra-chave |
-| `/franqueado` | Persona do Rafael + 4 cards no estilo do site oficial |
-| `/vagas` | Hero com foto + estrutura preservada |
-| `/contato` | Foco em SAC e WhatsApp |
+| `/procedimentos` | Hero com foto real (sessão laser facial) + cards ordenados (com foto/vídeo primeiro, sem por último). BB Glow linkado |
+| `/unidades` | Hero com foto HD da recepção (parede verde + &Co.) + 59 unidades reais com foto da fachada (Juazeiro com foto nova), mapa, busca por CEP |
+| `/agendamento` | Hero legível (creme com texto vinho) + stepper 3 passos com lead salvo no painel |
+| `/blog` | Hero legível + lista completa das 40 matérias, busca por palavra-chave |
+| `/franqueado` | Hero com foto HD do letreiro LASER & COMPANY + persona do Rafael + 4 cards "O que esperar" no padrão IDÊNTICO da landing oficial (header dourado + ícone vinho + número cinza bold) |
+| `/vagas` | Hero com foto (recepção) + estrutura preservada |
+| `/contato` | Hero legível + foco em SAC e WhatsApp |
 | `/painel` | Login + 2 dashboards (franqueador / franqueado) |
 
 **Bibliotecas externas em uso (todas CDN free)**
@@ -510,16 +743,24 @@ Agora:
 
 ## Pendências (esperando cliente ou desenvolvimento)
 
-1. **Logos reais** dos veículos no "Saiu na mídia" (Exame, PEGN,
-   Estadão, Folha, ABF, Forbes) + URLs das matérias publicadas.
-2. **Fotos reais do hero** (5 banners) substituindo os placeholders.
-3. **Depoimentos reais com foto/autorização** (hoje são 4 placeholders).
-4. **Antes e depois reais** dos procedimentos (autorização dos clientes).
-5. **Banco Postgres + AUTH_SECRET** pra ativar painel em produção
+1. **URLs das matérias** no bloco "Saiu na mídia" (logos já estão; faltam
+   os links das publicações em Exame, PEGN, Estadão, Folha, ABF, Forbes).
+2. **Fotos reais do hero da home** (5 banners do carrossel) substituindo
+   os placeholders. Hero das páginas internas (procedimentos/unidades/
+   franqueado) já tem foto real.
+3. **3 fotos dos cards de segmento na home** (Estética/Depilação/Ultrassom)
+   - cliente mencionou "pasta nova" mas não chegou a apontar; as atuais
+   em `assets/img/estetica.jpg`/`depilacao.jpg`/`ultrassom.jpg` seguem
+   no ar.
+4. **Textos dos depoimentos** — as 4 fotos já são reais do Instagram
+   (Gabi S./Thaina B./Patrícia M./Hanna F.) mas os textos ainda são
+   demo. Trocar pelos textos reais com autorização.
+5. **Antes e depois reais** dos procedimentos (autorização dos clientes).
+6. **Banco Postgres + AUTH_SECRET** pra ativar painel em produção
    (hoje painel roda em modo demo, ver `BACKEND.md`).
-6. **Quiz "Descubra seu protocolo ideal"** (pediu o novo responsável,
+7. **Quiz "Descubra seu protocolo ideal"** (pediu o novo responsável,
    precisa de perguntas + mapeamento pra protocolo).
-7. **Geocoding preciso das unidades do RJ/SP** (paga, opcional).
+8. **Geocoding preciso das unidades do RJ/SP** (paga, opcional).
 
 ---
 
@@ -545,6 +786,36 @@ Agora:
 - **Parser de HTML salvo do navegador** com regex captura grupos por
   classe e estrutura (`<div class="blog-item col-md-3 mb-5" data-uf="XX">`
   é estável o suficiente pra extrair 40 ou 59 itens sem DOM parser).
+- **`object-position` em foto retrato dentro de container landscape**
+  exige cálculo manual: foto cobre o container (`object-fit: cover`),
+  vira `scaled = container_w × (img_h/img_w)`, e a slice visível depende
+  da `object-position` Y × `overflow_y`. Pra centralizar um ponto Y do
+  original, fórmula é `(Y_orig × scale - container_h/2) / (scaled - container_h)`.
+- **`scaleX` no GSAP distorce SVG path** (a forma comprime horizontalmente
+  durante o reveal). Pra desenhar uma linha/onda preservando a geometria,
+  usar `clipPath: inset(0 100% 0 0)` → `inset(0 0% 0 0)` em vez de
+  `scaleX`. `setupDrawLine` em `motion.js` agora detecta `tagName === 'svg'`
+  e escolhe automaticamente.
+- **CSS sem cor de texto explícita herda do tema** — quebra quando
+  o body troca de cor. `.page-hero-title` herdava `--color-text` (creme
+  do tema escuro padrão) e ficava invisível em páginas internas (body
+  branco). Solução: sempre setar cor explícita em componentes que
+  aparecem em contextos múltiplos (`.page-hero-title { color: #1F0B0A }`).
+- **Foto + overlay vinho denso + texto creme** é o combo que funciona
+  pra hero photo bg quando a foto tem áreas claras (rosto, jaleco,
+  vidro). Brilho `0.55` na foto + `linear-gradient 0.85 → 0.92` no
+  overlay + `radial 0.70` mancha central atrás do texto + `text-shadow`
+  dupla. Em fotos com tom mais natural (recepção decorada) afrouxar
+  pra `brightness 0.70` e overlay `0.68 → 0.78`.
+- **Filter de override por página** com `body.page-<slug>` em CSS é
+  mais barato que duplicar CSS por página. Usado em `body.page-home`
+  (header transparente), `body.page-unidades` (object-position + brightness
+  específico), `body.page-procedimentos` (idem). Funciona em conjunto
+  com o `.page-hero-photo-bg` genérico em `pages.css`.
+- **`onerror="this.remove()"` em `<img>`** é uma rede de segurança
+  útil pra fotos opcionais (hero, fachada de unidade): se o arquivo
+  não existir, o img desaparece e o CSS fallback do container (cor
+  sólida ou gradient) cuida do visual.
 
 ---
 
