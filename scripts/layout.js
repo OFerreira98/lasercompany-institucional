@@ -393,15 +393,24 @@
   function bindHeaderScroll() {
     const h = document.getElementById('site-header');
     if (!h) return;
-    const isHome = document.body.classList.contains('page-home');
+    // Qualquer página com hero escuro (home, unidades, procedimentos,
+    // franqueado) usa o mesmo padrão: header transparente sobre a foto e
+    // fica branco depois que o usuário rola pra fora do hero.
+    const darkHero = document.querySelector('.hero, .page-hero-photo-bg, .franqueado-hero');
+    const isOverlayMode = !!darkHero;
+    if (isOverlayMode) document.body.classList.add('page-has-dark-hero');
+
     let lastY = window.scrollY;
     const threshold = 8; // px mínimos pra contar como rolagem
     const topZone   = 80; // dentro dessa faixa do topo o header sempre aparece
 
     const heroBreakpoint = () => {
-      // ponto onde o header deixa de ser transparente: ~85% da altura do hero
-      // (deixa um respiro pra evitar o flicker bem na borda do slide).
-      return Math.max(window.innerHeight * 0.85, 240);
+      if (!darkHero) return 0;
+      // ~85% da altura real do hero (não do viewport) — deixa um respiro
+      // pra evitar flicker bem na borda do slide / da foto.
+      const r = darkHero.getBoundingClientRect();
+      const heroBottom = r.top + window.scrollY + r.height;
+      return Math.max(heroBottom * 0.85, 240);
     };
 
     const onScroll = () => {
@@ -416,14 +425,14 @@
         h.classList.remove('is-hidden');
       }
 
-      if (isHome) {
+      if (isOverlayMode) {
         if (y > heroBreakpoint()) {
           h.classList.add('scrolled');
         } else {
           h.classList.remove('scrolled');
         }
       } else {
-        // nas demais páginas, header é sempre "scrolled" (branco)
+        // páginas sem hero escuro (contato/blog/agendamento/vagas): branco sempre
         h.classList.add('scrolled');
       }
 

@@ -26,15 +26,114 @@
 
 <main>
 
-  <section class="page-hero">
+  <!-- ============ HERO COM FUNDO VINHO + DECORAÇÕES (LASER THEME) ============ -->
+  <section class="page-hero page-hero-photo-bg page-hero-ag" id="agendamento-hero">
+    <!-- Decorações: feixes de laser e glows -->
+    <div class="ag-decor" aria-hidden="true">
+      <span class="ag-laser-beam ag-laser-beam-1"></span>
+      <span class="ag-laser-beam ag-laser-beam-2"></span>
+      <span class="ag-laser-beam ag-laser-beam-3"></span>
+      <span class="ag-glow ag-glow-tl"></span>
+      <span class="ag-glow ag-glow-br"></span>
+      <span class="ag-grid" aria-hidden="true"></span>
+    </div>
+
     <div class="container">
       <span class="eyebrow eyebrow-centered">Avaliação grátis</span>
       <h1 class="page-hero-title">Agende em <span class="italic">três passos.</span></h1>
       <p class="page-hero-sub">Escolha o procedimento, deixe seus dados e fale com a unidade Laser &amp; Co da sua região no WhatsApp.</p>
+
+      <!-- Pilares de confiança -->
+      <ul class="ag-trust" aria-label="Garantias">
+        <li class="ag-trust-item">
+          <svg class="ag-trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 12l2 2 4-4"/>
+            <circle cx="12" cy="12" r="10"/>
+          </svg>
+          <span>100% grátis</span>
+        </li>
+        <li class="ag-trust-item">
+          <svg class="ag-trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span>Menos de 1 minuto</span>
+        </li>
+        <li class="ag-trust-item">
+          <svg class="ag-trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+          </svg>
+          <span>WhatsApp direto da unidade</span>
+        </li>
+      </ul>
+
+      <!-- Preview dos 3 passos: cards numerados que apontam pra baixo -->
+      <div class="ag-steps-preview" aria-hidden="true">
+        <div class="ag-step-card ag-step-card-1">
+          <span class="ag-step-num">01</span>
+          <span class="ag-step-label">Escolha o procedimento</span>
+          <span class="ag-step-arrow"></span>
+        </div>
+        <div class="ag-step-card ag-step-card-2">
+          <span class="ag-step-num">02</span>
+          <span class="ag-step-label">Deixe seus dados</span>
+          <span class="ag-step-arrow"></span>
+        </div>
+        <div class="ag-step-card ag-step-card-3">
+          <span class="ag-step-num">03</span>
+          <span class="ag-step-label">Fale no WhatsApp</span>
+          <span class="ag-step-arrow"></span>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="section section-light">
+  <!-- ============ TRANSIÇÃO CINEMATOGRÁFICA: feixe de laser desce e acende o stepper ============ -->
+  <div class="ag-transition" aria-hidden="true">
+    <svg class="ag-transition-svg" viewBox="0 0 1200 220" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="agBgGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+          <stop offset="0%"   stop-color="#1A0404"/>
+          <stop offset="55%"  stop-color="#2A0F0D"/>
+          <stop offset="100%" stop-color="#FAF6EE"/>
+        </linearGradient>
+        <linearGradient id="agBeamGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+          <stop offset="0%"   stop-color="#E8C088" stop-opacity="0.95"/>
+          <stop offset="60%"  stop-color="#D88F3F" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="#B57C0C" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="agSpreadGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stop-color="#B57C0C" stop-opacity="0"/>
+          <stop offset="22%"  stop-color="#D88F3F" stop-opacity="0.9"/>
+          <stop offset="50%"  stop-color="#E8C088" stop-opacity="1"/>
+          <stop offset="78%"  stop-color="#D88F3F" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#B57C0C" stop-opacity="0"/>
+        </linearGradient>
+        <filter id="agBeamGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3.2"/>
+          <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- fundo: gradient vinho profundo -> creme -->
+      <rect x="0" y="0" width="1200" height="220" fill="url(#agBgGrad)"/>
+
+      <!-- 3 raios converging para 3 pontos: hero (centro topo) -> 3 stepper dots na linha 180 -->
+      <path d="M 600 0 Q 600 60 360 180" stroke="url(#agBeamGrad)" stroke-width="1.4" fill="none" filter="url(#agBeamGlow)" class="ag-tx-ray ag-tx-ray-1"/>
+      <path d="M 600 0 L 600 180" stroke="url(#agBeamGrad)" stroke-width="1.6" fill="none" filter="url(#agBeamGlow)" class="ag-tx-ray ag-tx-ray-2"/>
+      <path d="M 600 0 Q 600 60 840 180" stroke="url(#agBeamGrad)" stroke-width="1.4" fill="none" filter="url(#agBeamGlow)" class="ag-tx-ray ag-tx-ray-3"/>
+
+      <!-- pontos de impacto onde cada raio acerta -->
+      <circle cx="360" cy="180" r="3.5" fill="#E8C088" filter="url(#agBeamGlow)" class="ag-tx-dot ag-tx-dot-1"/>
+      <circle cx="600" cy="180" r="4"   fill="#E8C088" filter="url(#agBeamGlow)" class="ag-tx-dot ag-tx-dot-2"/>
+      <circle cx="840" cy="180" r="3.5" fill="#E8C088" filter="url(#agBeamGlow)" class="ag-tx-dot ag-tx-dot-3"/>
+
+      <!-- linha horizontal de luz que conecta os 3 (após o impacto) -->
+      <line x1="240" y1="180" x2="960" y2="180" stroke="url(#agSpreadGrad)" stroke-width="1" filter="url(#agBeamGlow)" class="ag-tx-spread"/>
+    </svg>
+  </div>
+
+  <section class="section section-light section-light-soft section-stepper">
     <div class="container">
       <div class="agendamento-shell">
 

@@ -142,11 +142,9 @@ window.LaserData = {
      Tecnologias oficiais conforme materiais da rede
   */
   lasers: [
-    { sigla: 'Alexandrite', nome: 'Laser Alexandrite', desc: 'Padrão-ouro em depilação a laser. Resfriamento contínuo durante toda a sessão, velocidade superior e resultados duradouros.', img: 'assets/img/maquinas/alexandrite.jpg' },
-    { sigla: 'ND-YAG', nome: 'Laser ND-YAG', desc: 'Comprimento de onda de 1064nm. Seguro para todos os fototipos da pele, da branca à negra, inclusive bronzeada.', img: 'assets/img/maquinas/nd-yag.jpg' },
-    { sigla: 'Erbium', nome: 'Laser Erbium', desc: 'A mesma família do Fotona. Renovação profunda da pele, indicado para rejuvenescimento, cicatrizes e textura.', img: 'assets/img/maquinas/erbium.jpg' },
-    { sigla: 'Q-Switched', nome: 'Laser Q-Switched', desc: 'Tecnologia premium para remoção de tatuagens, melasma, manchas profundas e micropigmentação.', img: 'assets/img/maquinas/q-switched.jpg' },
-    { sigla: 'Ultracel', nome: 'Ultrassom Ultracel', desc: 'Lifting não-invasivo. Estimula colágeno em camadas profundas, bichectomia sem cortes, full face, papada e fox eyes.', img: 'assets/img/maquinas/ultracel.jpg' },
+    { sigla: 'Alexandrite + ND-YAG', nome: 'Vydence Alex One', desc: 'Padrão-ouro em depilação. Alexandrite com resfriamento contínuo e ND-YAG 1064nm. Seguro para todos os fototipos, da pele branca à negra, inclusive bronzeada.', img: 'assets/img/maquinas/Vydence Alex One.png' },
+    { sigla: 'Q-Switched', nome: 'Quanta Q Plus', desc: 'Tecnologia premium para rejuvenescimento, remoção de tatuagens, melasma, manchas profundas e micropigmentação. Renovação real da pele em camadas.', img: 'assets/img/maquinas/Quanta Q Plus.png' },
+    { sigla: 'Ultrassom', nome: 'Ultracel Q+', desc: 'Lifting não invasivo. Estimula colágeno em camadas profundas. Bichectomia sem cortes, full face, papada e fox eyes.', img: 'assets/img/maquinas/Ultracel Q+.png' },
   ],
 
   /* --------- PROMOÇÕES DO MÊS ---------

@@ -258,7 +258,7 @@
     if (!grid) return;
     grid.innerHTML = window.LaserData.lasers.map(l => `
       <div class="tech-card reveal">
-        ${l.img ? `<div class="tech-card-media" style="background-image:url('${l.img}')" aria-hidden="true"></div>` : `<div class="tech-card-media" style="position:relative" aria-hidden="true">${PH_HTML}</div>`}
+        ${l.img ? `<div class="tech-card-media tech-card-media--product" style="--product:url('/${l.img}')" aria-hidden="true"></div>` : `<div class="tech-card-media" style="position:relative" aria-hidden="true">${PH_HTML}</div>`}
         <div class="tech-sigla">${l.sigla}</div>
         <div class="tech-nome">${l.nome}</div>
         <p class="tech-desc">${l.desc}</p>
