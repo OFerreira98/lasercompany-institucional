@@ -51,6 +51,33 @@ Feito, testado no preview e commitado (rodada com o Ferreira):
 - Antes tinha 6 fake (Exame, PEGN, Estadão, Folha de S.Paulo, ABF, Forbes) que eu inventei.
   Apagados em 30/mai. Não inventar veículo de mídia, NUNCA.
 
+### Mobile da home, ajustes (jun/2026)
+Revisão do cliente no celular. Tudo em `@media` (desktop intacto):
+- **Menu mobile** (`layouts.css` bloco "MENU MOBILE, correções"): bug era os
+  nav-links herdarem cor escura (#1F0B0A) e sumirem no fundo escuro, OU
+  misturarem dourado (Início/Procedimentos). Fix: `body .site-header-clean
+  .header-nav.header-capsule .nav-item > .nav-link { color:#F5EFE2 !important }`
+  (creme uniforme), franqueado vira BOTÃO dourado, fundo `rgba(31,11,10,.98)`.
+  Submenu Procedimentos estava abrindo sozinho (regra desktop `.nav-mega{display:grid}`
+  vencia o `display:none`) → forçado fechado com `.nav-item.open` no mobile.
+- **Hero**: setas escondidas em `<=768px` (`.hero-arrow{display:none}`), só autoplay+dots.
+- **Seções menores**: segments 2col→1col com alturas menores; marquee card 210px;
+  Como Funciona 2x2 (mantido até telas pequenas) + botão "Agendar" em `.steps-cta-row`
+  abaixo (render duplicado no `page-index.js`, escondido no desktop via CSS);
+  depoimentos menores; blog 2 colunas no mobile (1col <380px); popup e ficha
+  agendamento-curto compactados. Bloco "HOME MOBILE, compactação" no fim do `pages.css`.
+- **Rodapé**: removido o card grande `.footer-franchise-card` (redundante: já tem
+  botão no header + item no menu + link no mapa). `footer-grid` 3→2 colunas (1.6fr 1fr).
+
+### Instagram / Behold (autoplay, jun/2026)
+- Feed do Instagram na home usa **widget Behold** (`<behold-widget feed-id="4STJ1LI7bMsbBpcQIQxL">`
+  + script `w.behold.so/widget.js`). Código intacto, ambos respondem 200.
+- Cliente: vídeos não dão autoplay (funcionava antes). **Não é o código do site** —
+  autoplay é config do PAINEL Behold (não atributo HTML), e vídeo do Instagram só
+  autoplay se MUTED (política do browser). "Funcionava e parou" cheira a **estouro da
+  cota do plano free (1.200 views/mês)** → widget degrada. Ação do cliente no painel
+  Behold: conferir autoplay ON + muted + cota do mês (se estourou, upgrade de plano).
+
 ### Performance, otimização de imagens (30/mai)
 - Imagens >600KB redimensionadas pra max 1600px + JPEG q82 via **System.Drawing**
   (PowerShell, nativo Windows, NÃO precisa instalar nada). Função no histórico do chat.
