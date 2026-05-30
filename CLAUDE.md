@@ -226,3 +226,52 @@ Construído de forma autônoma. Detalhes completos em `BACKEND.md`.
   `eval` (`LaserAPI.login` + `LaserPainel.setSession`) e navegar direto.
 - `_gen.cjs` e `_serve.cjs` são ferramentas de dev, NÃO versionadas (ficam na raiz).
   Permissão de `node _gen.cjs` está em `.claude/settings.local.json`.
+- **Otimizar imagens SEM instalar nada:** usar `System.Drawing` via PowerShell (nativo
+  Windows). Resize pra max 1600px + JPEG q82 derruba .jfif/.jpg de 3-5MB pra ~100KB.
+  PNG de FOTO (sem transparência) → converter pra `.jpg` (atualizar refs). `rembg`,
+  `ffmpeg`, `pip install` são BLOQUEADOS pelo classificador de auto-mode; pra remover
+  fundo o cliente usa remove.bg. Funções prontas no histórico (memoria.md aponta).
+- **Vídeos .mp4 dos procedimentos** (~270MB, 34 em `procedimentos/`) seguem pesados:
+  recompressão precisa de `ffmpeg` (não instalado). Já usam `preload="metadata"` +
+  autoplay só quando visível, então não pesam no load inicial. Os 33 da RAIZ de
+  `assets/img` são backup e estão no `.gitignore`+`.vercelignore` (não sobem).
+- **Instagram (home) = widget Behold** (`<behold-widget>` + `w.behold.so/widget.js`).
+  Autoplay de vídeo é config do PAINEL Behold (não atributo HTML) e exige vídeo MUTED
+  (política do browser). "Funcionava e parou" = provável estouro da cota free
+  (1.200 views/mês). NÃO é o código do site. Ação do cliente no painel Behold.
+- **Menu mobile, guerra de especificidade:** as regras `body.page-has-dark-hero
+  .site-header-clean:not(.scrolled) .nav-link` são bem específicas. Pra sobrescrever
+  cor/fundo no menu mobile aberto, usar `!important` + seletor `body .site-header-clean
+  .header-nav.header-capsule ...`. Bug clássico: nav-link herdava `#1F0B0A` e sumia no
+  fundo escuro; mega de Procedimentos abria sozinho (regra desktop `display:grid`
+  vencia `display:none`).
+- **Preview headless com cache podre:** nesta máquina o preview do `_serve.cjs` às vezes
+  trava screenshots (UnknownVizError/timeout) e serve CSS cacheado mesmo com `?v=`.
+  Quando suspeitar, validar direto no CSS/JS de PRODUÇÃO via `curl` (fonte da verdade).
+- `.gitignore` alinhado ao `.vercelignore`: ignora `_*` (dev/mockups), `assets/img/*.mp4`,
+  pastas de referência, `RELATORIO-CLIENTE.pdf`, `test_*`, `download.js`, `generate_images*`.
+
+## Leva jun/2026 (entregue em produção, detalhes em memoria.md)
+
+Sequência de pedidos do cliente, todos no ar:
+1. **Hero da home**: 4 banners de IA → fotos reais de `procedimentos/` (campo `pos` p/
+   background-position por slide).
+2. **Saiu na mídia (rodapé)**: pool de 6 matérias reais (3 promo + 3 procedimento Veja Rio)
+   em `data.js > naMidia`, sorteio aleatório de 3 por pageload (`layout.js renderFooterMedia`).
+   Mini-cards CLAROS centralizados, pulsando, só a imagem da matéria (que já tem o título) +
+   nome do veículo embaixo. Imagens em `assets/img/midia/`. NÃO repetir título (vem na imagem).
+3. **Chats flutuantes**: WhatsApp + agente lado a lado no canto inf. direito, ambos bolinha
+   redonda 56px. Agente se apresenta como "Agente de Atendimento" (regra 13).
+4. **CEP honesto** (regra 12): não afirma "sua unidade é X" quando é cidade distante.
+5. **Agendamento 50/50**: foto `hero.jpg` (2 mulheres) à esquerda com mask, form 3 passos à
+   direita, fundo creme único. Variante A (mask) aprovada.
+6. **Máquinas premium** (procedimentos > Tecnologia): 3 PNGs sem fundo em `maquinas/`, nome
+   grande + tipo + benefícios curtos com check dourado.
+7. **Performance**: imagens usadas ~101MB → ~13MB (System.Drawing); PNGs foto → JPEG.
+8. **Mobile da home**: menu (links creme uniformes, franqueado = botão dourado, mega fechado,
+   fundo vinho), hero sem setas, seções compactas (Como Funciona 2x2, blog 2 col, etc.),
+   popup/ficha menores, rodapé sem o card franqueado (footer 2 col).
+
+**Próximo provável:** cliente revisa o mobile da home, depois partimos pras OUTRAS páginas
+(ele pediu pra fechar a home primeiro). Pendência herdada: imagens IA dos ~43 procedimentos,
+banco real, integração do painel, fotos reais de fachada/antes-depois.
