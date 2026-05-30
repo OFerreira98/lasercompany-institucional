@@ -2058,11 +2058,12 @@ body.page-unidades .page-hero-photo-bg::before {
    AGENDAMENTO — Página
    ============================================================ */
 
-/* HERO: fundo vinho + feixes de laser, glows, grid sutil e cards-preview */
+/* HERO LEVE: fundo creme com arcos dourados sutis (sem laser pesado) */
 .page-hero-ag {
-  padding-block: clamp(7rem, 13vw, 11rem) clamp(3rem, 6vw, 5rem);
+  padding-block: clamp(5rem, 10vw, 8rem) clamp(2.5rem, 5vw, 4rem);
   position: relative;
   overflow: hidden;
+  border-bottom: none;
 }
 
 .ag-decor {
@@ -2070,73 +2071,39 @@ body.page-unidades .page-hero-photo-bg::before {
   inset: 0;
   pointer-events: none;
   overflow: hidden;
-  z-index: 1;
+  z-index: 0;
 }
 
-/* Feixes horizontais que cruzam o hero (laser sweep) */
-.ag-laser-beam {
+/* Arcos dourados translúcidos nos cantos (decoração quieta) */
+.ag-arc {
   position: absolute;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg,
-    transparent 0%,
-    rgba(216, 143, 63, 0.0) 10%,
-    rgba(232, 192, 136, 0.85) 50%,
-    rgba(216, 143, 63, 0.0) 90%,
-    transparent 100%);
-  box-shadow: 0 0 14px rgba(232, 192, 136, 0.55), 0 0 32px rgba(216, 143, 63, 0.28);
-  opacity: 0.85;
-  animation: ag-sweep 6s var(--ease-in-out) infinite;
-}
-.ag-laser-beam-1 { top: 22%; animation-delay: 0s;   animation-duration: 7s; }
-.ag-laser-beam-2 { top: 55%; animation-delay: 1.6s; animation-duration: 5.5s; opacity: 0.55; }
-.ag-laser-beam-3 { top: 82%; animation-delay: 3s;   animation-duration: 8s;   opacity: 0.4; }
-
-@keyframes ag-sweep {
-  0%   { transform: translateX(-100%); opacity: 0; }
-  8%   { opacity: 1; }
-  92%  { opacity: 1; }
-  100% { transform: translateX(100%);  opacity: 0; }
-}
-
-/* Glow blobs nos cantos */
-.ag-glow {
-  position: absolute;
-  width: 520px;
-  height: 520px;
+  width: 560px;
+  height: 560px;
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.55;
+  border: 1px solid rgba(184, 124, 12, 0.12);
+  opacity: 0.6;
 }
-.ag-glow-tl {
-  top: -180px;
-  left: -120px;
-  background: radial-gradient(circle, rgba(216, 143, 63, 0.45) 0%, rgba(216, 143, 63, 0) 70%);
+.ag-arc-tl {
+  top: -380px;
+  left: -260px;
 }
-.ag-glow-br {
-  bottom: -200px;
-  right: -160px;
-  background: radial-gradient(circle, rgba(180, 84, 60, 0.42) 0%, rgba(180, 84, 60, 0) 70%);
+.ag-arc-br {
+  bottom: -400px;
+  right: -280px;
+  border-color: rgba(184, 124, 12, 0.10);
 }
-
-/* Grid sutil de "pontos de mira" (foco do laser) */
-.ag-grid {
+.ag-arc::after {
+  content: "";
   position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(circle, rgba(232, 192, 136, 0.07) 1px, transparent 1.5px);
-  background-size: 36px 36px;
-  background-position: center;
-  mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 30%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 30%, transparent 100%);
-  opacity: 0.8;
+  inset: 60px;
+  border-radius: 50%;
+  border: 1px solid rgba(184, 124, 12, 0.08);
 }
 
 /* Conteúdo do hero acima das decorações */
-.page-hero-ag > .container { position: relative; z-index: 2; }
+.page-hero-ag > .container { position: relative; z-index: 1; }
 
-/* Pilares de confiança */
+/* Pilares de confiança em pílulas leves */
 .ag-trust {
   list-style: none;
   margin: var(--sp-5) 0 0;
@@ -2150,161 +2117,89 @@ body.page-unidades .page-hero-photo-bg::before {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  padding: 0.55rem 1rem;
+  padding: 0.55rem 1.1rem;
   border-radius: 999px;
-  background: rgba(10, 6, 6, 0.45);
-  border: 1px solid rgba(232, 192, 136, 0.35);
-  color: #F5EFE2;
+  background: #FFFFFF;
+  border: 1px solid rgba(184, 124, 12, 0.22);
+  color: #481712;
   font-family: var(--font-accent);
   font-size: var(--fs-sm);
   font-weight: 500;
-  letter-spacing: 0.02em;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  letter-spacing: 0.01em;
+  box-shadow: 0 2px 8px rgba(70, 25, 20, 0.04);
 }
 .ag-trust-icon {
   width: 18px;
   height: 18px;
-  color: #E8C088;
+  color: #B57C0C;
   flex-shrink: 0;
 }
 
-/* Preview dos 3 passos (cards no rodapé do hero) */
+/* Preview dos 3 passos: cards com numero e label, conectados por linha */
 .ag-steps-preview {
-  margin-top: clamp(2.5rem, 5vw, 4rem);
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(1rem, 2.5vw, 1.75rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0;
   max-width: 920px;
   margin-inline: auto;
 }
 .ag-step-card {
+  flex: 1;
+  max-width: 240px;
   position: relative;
-  padding: 1.25rem 1rem 2.25rem;
-  border-radius: 14px;
-  background: linear-gradient(180deg, rgba(232, 192, 136, 0.10) 0%, rgba(10, 6, 6, 0.0) 100%);
-  border: 1px solid rgba(232, 192, 136, 0.22);
+  padding: 1.1rem 0.9rem;
+  border-radius: 12px;
+  background: #FFFFFF;
+  border: 1px solid rgba(70, 25, 20, 0.08);
   text-align: center;
-  transition: transform 0.4s var(--ease-out), border-color 0.3s, background 0.3s;
-  animation: ag-card-rise 0.9s var(--ease-out) backwards;
-}
-.ag-step-card-1 { animation-delay: 0.15s; }
-.ag-step-card-2 { animation-delay: 0.30s; }
-.ag-step-card-3 { animation-delay: 0.45s; }
-@keyframes ag-card-rise {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+  transition: transform 0.3s var(--ease-out), border-color 0.3s, box-shadow 0.3s;
+  box-shadow: 0 2px 10px rgba(70, 25, 20, 0.04);
 }
 .ag-step-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(232, 192, 136, 0.55);
-  background: linear-gradient(180deg, rgba(232, 192, 136, 0.16) 0%, rgba(10, 6, 6, 0.0) 100%);
+  transform: translateY(-2px);
+  border-color: rgba(184, 124, 12, 0.30);
+  box-shadow: 0 6px 18px rgba(70, 25, 20, 0.08);
 }
 .ag-step-num {
   display: block;
   font-family: var(--font-serif);
-  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-size: clamp(1.5rem, 2.8vw, 1.9rem);
   font-weight: var(--fw-light);
-  color: #E8C088;
+  color: #B57C0C;
   line-height: 1;
   letter-spacing: -0.02em;
-  margin-bottom: 0.55rem;
+  margin-bottom: 0.4rem;
 }
 .ag-step-label {
   display: block;
   font-family: var(--font-accent);
   font-size: var(--fs-sm);
   font-weight: 500;
-  color: #F5EFE2;
-  letter-spacing: 0.02em;
+  color: #481712;
+  letter-spacing: 0.01em;
 }
-/* Seta dourada apontando pra baixo (em direção ao stepper) */
-.ag-step-arrow {
-  position: absolute;
-  left: 50%;
-  bottom: 0.6rem;
-  transform: translateX(-50%);
-  width: 1px;
-  height: 18px;
-  background: linear-gradient(180deg, rgba(232, 192, 136, 0.85), rgba(232, 192, 136, 0));
+/* Conector entre cards: linha horizontal dourada com ponto */
+.ag-step-connector {
+  flex: 0 0 auto;
+  width: 36px;
+  align-self: center;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(184, 124, 12, 0.0) 0%, rgba(184, 124, 12, 0.55) 50%, rgba(184, 124, 12, 0.0) 100%);
+  position: relative;
 }
-.ag-step-arrow::after {
+.ag-step-connector::after {
   content: "";
   position: absolute;
-  bottom: -2px;
   left: 50%;
-  transform: translateX(-50%) rotate(45deg);
-  width: 6px;
-  height: 6px;
-  border-right: 1px solid rgba(232, 192, 136, 0.85);
-  border-bottom: 1px solid rgba(232, 192, 136, 0.85);
-}
-.ag-step-card:hover .ag-step-arrow {
-  height: 26px;
-  transition: height 0.3s var(--ease-out);
-}
-
-/* ============ TRANSIÇÃO CINEMATOGRÁFICA: vinho -> creme com feixes ============ */
-.ag-transition {
-  position: relative;
-  width: 100%;
-  height: clamp(160px, 18vw, 220px);
-  margin: 0;
-  overflow: hidden;
-  /* faz a transição "morder" um pouco o hero pra eliminar a linha de costura */
-  margin-top: -1px;
-}
-.ag-transition-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-/* Animação dos 3 raios: cada um "se desenha" do alto pra baixo */
-.ag-tx-ray {
-  stroke-dasharray: 260;
-  stroke-dashoffset: 260;
-  animation: ag-ray-draw 1.6s var(--ease-out) forwards;
-}
-.ag-tx-ray-1 { animation-delay: 0.35s; }
-.ag-tx-ray-2 { animation-delay: 0.55s; }
-.ag-tx-ray-3 { animation-delay: 0.75s; }
-@keyframes ag-ray-draw {
-  to { stroke-dashoffset: 0; }
-}
-
-/* Pontos de impacto pulsam quando o raio chega */
-.ag-tx-dot {
-  transform-origin: center;
-  transform-box: fill-box;
-  opacity: 0;
-  animation: ag-dot-burst 0.7s var(--ease-out) forwards;
-}
-.ag-tx-dot-1 { animation-delay: 1.55s; }
-.ag-tx-dot-2 { animation-delay: 1.75s; }
-.ag-tx-dot-3 { animation-delay: 1.95s; }
-@keyframes ag-dot-burst {
-  0%   { opacity: 0; transform: scale(0.2); }
-  60%  { opacity: 1; transform: scale(1.8); }
-  100% { opacity: 1; transform: scale(1); }
-}
-
-/* Linha horizontal de luz: "acende" depois que os pontos batem */
-.ag-tx-spread {
-  stroke-dasharray: 720;
-  stroke-dashoffset: 720;
-  animation: ag-spread 1.4s var(--ease-out) forwards;
-  animation-delay: 2.0s;
-}
-@keyframes ag-spread {
-  to { stroke-dashoffset: 0; }
-}
-
-/* O section-stepper começa SEM padding-top porque a transição já fez o fade */
-.section-stepper {
-  padding-top: clamp(2rem, 4vw, 3.5rem) !important;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #B57C0C;
+  box-shadow: 0 0 6px rgba(184, 124, 12, 0.35);
 }
 
 /* ============ STEPPER REFORÇADO (página agendamento) ============ */
@@ -2314,31 +2209,24 @@ body.page-unidades .page-hero-photo-bg::before {
   margin-bottom: var(--sp-7);
 }
 .section-stepper .stepper-num {
-  width: 44px;
-  height: 44px;
-  font-size: 1.05rem;
+  width: 40px;
+  height: 40px;
+  font-size: 1rem;
   border-width: 1.5px;
-  box-shadow: 0 0 0 4px rgba(232, 192, 136, 0.0);
   transition: box-shadow 0.4s var(--ease-out), background 0.3s, transform 0.3s;
 }
 .section-stepper .stepper-step.active .stepper-num {
   box-shadow:
-    0 0 0 4px rgba(232, 192, 136, 0.18),
-    0 0 22px rgba(232, 192, 136, 0.55),
-    0 0 44px rgba(184, 124, 12, 0.30);
-  animation: ag-step-pulse 2.4s var(--ease-in-out) infinite;
-}
-@keyframes ag-step-pulse {
-  0%, 100% { box-shadow: 0 0 0 4px rgba(232, 192, 136, 0.18), 0 0 22px rgba(232, 192, 136, 0.55), 0 0 44px rgba(184, 124, 12, 0.30); }
-  50%      { box-shadow: 0 0 0 7px rgba(232, 192, 136, 0.10), 0 0 30px rgba(232, 192, 136, 0.70), 0 0 56px rgba(184, 124, 12, 0.40); }
+    0 0 0 3px rgba(232, 192, 136, 0.18),
+    0 0 14px rgba(232, 192, 136, 0.35);
 }
 .section-stepper .stepper-line {
-  height: 2px;
-  width: 64px;
+  height: 1.5px;
+  width: 56px;
   background: linear-gradient(90deg,
-    rgba(154, 107, 30, 0.25) 0%,
-    rgba(232, 192, 136, 0.6) 50%,
-    rgba(154, 107, 30, 0.25) 100%);
+    rgba(184, 124, 12, 0.20) 0%,
+    rgba(184, 124, 12, 0.55) 50%,
+    rgba(184, 124, 12, 0.20) 100%);
   border-radius: 1px;
 }
 .section-stepper .stepper-step.done + .stepper-line {
@@ -2346,29 +2234,13 @@ body.page-unidades .page-hero-photo-bg::before {
 }
 .section-stepper .stepper-label {
   font-weight: 500;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
 }
 
-/* Mobile: esconde os 3 cards-preview (pesados) e diminui altura da transição */
+/* Mobile: empilha os trust pills, esconde cards-preview (pesado na vertical) */
 @media (max-width: 720px) {
   .ag-steps-preview { display: none; }
-  .ag-transition { height: 140px; }
-  .ag-trust { flex-direction: column; align-items: center; gap: 0.5rem; }
-  .ag-trust-item { width: max-content; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ag-laser-beam,
-  .ag-step-card,
-  .ag-tx-ray,
-  .ag-tx-dot,
-  .ag-tx-spread,
-  .section-stepper .stepper-step.active .stepper-num {
-    animation: none !important;
-  }
-  .ag-tx-ray { stroke-dashoffset: 0; }
-  .ag-tx-spread { stroke-dashoffset: 0; }
-  .ag-tx-dot { opacity: 1; }
+  .ag-trust { gap: 0.5rem; }
 }
 
 .agendamento-shell {
