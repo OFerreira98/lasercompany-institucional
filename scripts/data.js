@@ -240,6 +240,66 @@ window.LaserData = {
     },
   ],
 
+  /* --------- SAIU NA MÍDIA (rodapé) ----------
+     Pool de matérias reais. O rodapé sorteia 3 aleatórias por
+     pageload (ver scripts/layout.js > renderFooterMedia).
+     Categorias:
+     - 'promo'   : fala da Laser & Co (marca, expansão, sócia)
+     - 'procedimento' : recomendação de procedimento estético em geral
+     Imagens em assets/img/midia/ (fallback: card sem foto se faltar). */
+  naMidia: [
+    // ===== Promo Laser & Co =====
+    {
+      id: 'veja-anitta',
+      veiculo: 'Veja Rio',
+      titulo: 'Rede de tratamentos estéticos que tem Anitta como sócia de olho no Rio',
+      url: 'https://vejario.abril.com.br/coluna/otavio-furtado/rede-de-tratamentos-esteticos-anitta-como-socia/',
+      img: 'assets/img/midia/veja-anitta.jpg',
+      categoria: 'promo',
+    },
+    {
+      id: 'o-globo',
+      veiculo: 'O Globo',
+      titulo: "Na estética, as pessoas agora estão buscando naturalidade, diz CEO da Laser&Co",
+      url: 'https://oglobo.globo.com/economia/negocios/noticia/2025/05/30/na-estetica-as-pessoas-agora-estao-buscando-naturalidade-diz-ceo-da-laserandco-que-tem-anitta-como-socia.ghtml',
+      img: 'assets/img/midia/o-globo.jpg',
+      categoria: 'promo',
+    },
+    {
+      id: 'agenda-carioca',
+      veiculo: 'Agenda Carioca',
+      titulo: 'Laser & Co acelera expansão no Rio e projeto de clínica boutique',
+      url: 'https://agendacarioca.com.br/laser-co-acelera-expansao-no-rio-e-projeto-de-clinica-boutique/',
+      img: 'assets/img/midia/agenda-carioca.jpg',
+      categoria: 'promo',
+    },
+    // ===== Procedimento (Veja Rio) =====
+    {
+      id: 'veja-busca-masculina',
+      veiculo: 'Veja Rio',
+      titulo: 'Busca masculina por procedimentos estéticos cresce em ritmo acelerado',
+      url: 'https://vejario.abril.com.br/cidade/busca-masculina-procedimentos-esteticos-cresce/',
+      img: 'assets/img/midia/veja-busca-masculina.jpg',
+      categoria: 'procedimento',
+    },
+    {
+      id: 'veja-camila-pitanga',
+      veiculo: 'Veja Rio',
+      titulo: 'Camila Pitanga afirma estar curada do melasma com protocolo 100% nacional',
+      url: 'https://vejario.abril.com.br/coluna/bruno-chateaubriand/camila-pitanga-afirma-estar-curada-do-melasma-com-protocolo-100-nacional/',
+      img: 'assets/img/midia/veja-camila-pitanga.jpg',
+      categoria: 'procedimento',
+    },
+    {
+      id: 'veja-calor-melasma',
+      veiculo: 'Veja Rio',
+      titulo: 'Calor agrava melasma? Dermatologista esclarece as verdades sobre a doença',
+      url: 'https://vejario.abril.com.br/cidade/calor-melasma-sol-dermatologista-congresso/',
+      img: 'assets/img/midia/veja-calor-melasma.jpg',
+      categoria: 'procedimento',
+    },
+  ],
+
   /* --------- COMO FUNCIONA, 4 passos ----------
      icone: chave SVG (gerada inline pelo page-index.js a partir do
      dicionário ICONES_PASSOS) pra dar identidade visual a cada passo. */

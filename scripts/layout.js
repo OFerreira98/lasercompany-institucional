@@ -209,10 +209,7 @@
       <span class="footer-media-eyebrow">Saiu na mídia</span>
       <p class="footer-media-sub">A Laser &amp; Co é destaque em veículos especializados em franquia e estética.</p>
       <div class="footer-media-strip" id="footer-media-strip">
-        <a class="footer-media-slot" href="https://vejario.abril.com.br/coluna/otavio-furtado/rede-de-tratamentos-esteticos-anitta-como-socia/" target="_blank" rel="noopener"><span>Veja</span></a>
-        <a class="footer-media-slot" href="https://www.abfexpo.com.br/imprensa/novas-marcas-ampliam-diversidade-e-indicam-tendencias-na-abf-fra/" target="_blank" rel="noopener"><span>ABF</span></a>
-        <a class="footer-media-slot" href="https://acirpriopreto.com.br/servicos-para-saude-e-beleza-viram-os-novos-queridinhos-dos-shoppings/" target="_blank" rel="noopener"><span>Varejo</span></a>
-        <a class="footer-media-slot" href="https://agendacarioca.com.br/laser-co-acelera-expansao-no-rio-e-projeto-de-clinica-boutique/" target="_blank" rel="noopener"><span>Agenda Carioca</span></a>
+        <!-- Mini-cards renderizados via renderFooterMedia() em data.js > naMidia -->
       </div>
     </div>
     <div class="footer-bottom">
@@ -245,8 +242,48 @@
     bindHeaderScroll();
     // popula o mega-menu de procedimentos a partir de window.LaserData
     populateMegaMenu();
+    // renderiza os 3 mini-cards do "Saiu na mídia" (sorteio aleatorio do pool)
+    renderFooterMedia();
     // carrega GSAP + ScrollTrigger + Lenis + motion.js (em ordem)
     injectMotionScripts();
+  }
+
+  /* ---------- SAIU NA MÍDIA (rodapé) ----------
+     Sorteio aleatorio puro: a cada pageload escolhe 3 do pool e
+     renderiza como mini-cards. Pool em window.LaserData.naMidia. */
+  function renderFooterMedia() {
+    const strip = document.getElementById('footer-media-strip');
+    if (!strip || !window.LaserData || !Array.isArray(window.LaserData.naMidia)) return;
+
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    const escapeHtml = (s) => String(s || '')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+    const picks = shuffle(window.LaserData.naMidia).slice(0, 3);
+
+    strip.innerHTML = picks.map(m => {
+      const bg = m.img
+        ? `style="background-image:url('${m.img}')"`
+        : '';
+      return `
+        <a class="footer-media-card" href="${escapeHtml(m.url)}" target="_blank" rel="noopener" data-id="${escapeHtml(m.id)}">
+          <div class="footer-media-card-img" ${bg} aria-hidden="true"></div>
+          <div class="footer-media-card-body">
+            <span class="footer-media-card-source">${escapeHtml(m.veiculo)}</span>
+            <h4 class="footer-media-card-title">${escapeHtml(m.titulo)}</h4>
+          </div>
+        </a>
+      `;
+    }).join('');
   }
 
   /* ---------- MOTION (GSAP + ScrollTrigger + Lenis) ----------

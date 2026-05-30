@@ -1346,35 +1346,78 @@
 }
 .footer-media-strip {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--sp-3);
+  max-width: 720px;
 }
-.footer-media-slot {
-  height: 60px;
-  border: 1px solid rgba(245, 240, 230, 0.14);
-  border-radius: 10px;
+
+/* Mini-card claro do "Saiu na mídia" (formato vertical mais em pé,
+   foto 4:3 no topo, titulo cortado em 2 linhas com ellipsis). */
+.footer-media-card {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(180deg, rgba(245,240,230,0.05), rgba(245,240,230,0.02));
+  flex-direction: column;
+  background: linear-gradient(180deg, #FAF6EE, #F5EFE2);
+  border: 1px solid rgba(154, 107, 30, 0.22);
+  border-radius: 10px;
+  overflow: hidden;
+  text-decoration: none;
+  color: #1F0B0A;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+.footer-media-card:hover,
+.footer-media-card:focus-visible {
+  border-color: #B57C0C;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(154, 107, 30, 0.30);
+  outline: none;
+}
+.footer-media-card:hover .footer-media-card-title {
+  color: #5E211B;
+}
+
+.footer-media-card-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background-size: cover;
+  background-position: center;
+  background-color: #2a0f0d;
+}
+
+.footer-media-card-body {
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+}
+
+.footer-media-card-source {
+  font-family: var(--font-accent);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #9A6B1E;
+  font-weight: 700;
+}
+
+.footer-media-card-title {
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 1rem;
-  color: var(--color-accent-pale);
-  letter-spacing: 0.02em;
-  text-decoration: none;
-  cursor: pointer;
-  text-align: center;
-  padding: 0 var(--sp-3);
-  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+  font-size: 0.84rem;
+  line-height: 1.3;
+  color: #1F0B0A;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.2s ease;
 }
-.footer-media-slot:hover,
-.footer-media-slot:focus-visible {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-  background: linear-gradient(180deg, rgba(200,160,100,0.10), rgba(200,160,100,0.04));
-  transform: translateY(-2px);
-  outline: none;
+
+@media (max-width: 700px) {
+  .footer-media-strip { grid-template-columns: 1fr; max-width: 360px; }
 }
 .footer-media-note {
   font-size: 0.68rem;
