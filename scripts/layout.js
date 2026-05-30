@@ -209,14 +209,11 @@
       <span class="footer-media-eyebrow">Saiu na mídia</span>
       <p class="footer-media-sub">A Laser &amp; Co é destaque em veículos especializados em franquia e estética.</p>
       <div class="footer-media-strip" id="footer-media-strip">
-        <div class="footer-media-slot"><span>Exame</span></div>
-        <div class="footer-media-slot"><span>PEGN</span></div>
-        <div class="footer-media-slot"><span>Estadão</span></div>
-        <div class="footer-media-slot"><span>Folha de S.Paulo</span></div>
-        <div class="footer-media-slot"><span>ABF</span></div>
-        <div class="footer-media-slot"><span>Forbes</span></div>
+        <a class="footer-media-slot" href="https://vejario.abril.com.br/coluna/otavio-furtado/rede-de-tratamentos-esteticos-anitta-como-socia/" target="_blank" rel="noopener"><span>Veja</span></a>
+        <a class="footer-media-slot" href="https://www.abfexpo.com.br/imprensa/novas-marcas-ampliam-diversidade-e-indicam-tendencias-na-abf-fra/" target="_blank" rel="noopener"><span>ABF</span></a>
+        <a class="footer-media-slot" href="https://acirpriopreto.com.br/servicos-para-saude-e-beleza-viram-os-novos-queridinhos-dos-shoppings/" target="_blank" rel="noopener"><span>Varejo</span></a>
+        <a class="footer-media-slot" href="https://agendacarioca.com.br/laser-co-acelera-expansao-no-rio-e-projeto-de-clinica-boutique/" target="_blank" rel="noopener"><span>Agenda Carioca</span></a>
       </div>
-      <p class="footer-media-note">Logos reais e links das matérias entram quando o cliente enviar.</p>
     </div>
     <div class="footer-bottom">
       <div>© 2026 Laser &amp; Co Brasil. Todos os direitos reservados.</div>

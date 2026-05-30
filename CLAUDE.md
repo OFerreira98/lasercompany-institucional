@@ -57,6 +57,12 @@ rede de franquias de estética a laser. Hospedado no GitHub e publicado na Verce
       escuro + acentos dourados
     - **NUNCA** deixar elemento usando default do navegador (option, scrollbar, focus ring).
 
+11. **"Saiu na mídia" mora SÓ no rodapé** (`scripts/layout.js`, `.footer-media-strip`). Texto
+    puro (nome do veículo em itálico, sem logo). NÃO criar seção "Na mídia" / "Imprensa" em
+    nenhuma página. NÃO inventar veículos (Exame, Estadão, Folha, Forbes etc. estavam fake e
+    foram apagados). Os 4 reais: **Veja** (não "Veja Rio"), **ABF**, **Varejo** (= ACIRP),
+    **Agenda Carioca**. Slots são `<a target="_blank" rel="noopener">` clicáveis.
+
 ---
 
 ## Estrutura

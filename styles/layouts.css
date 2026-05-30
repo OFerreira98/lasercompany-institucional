@@ -1368,12 +1368,19 @@
   font-size: 1rem;
   color: var(--color-accent-pale);
   letter-spacing: 0.02em;
-  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  text-decoration: none;
+  cursor: pointer;
+  text-align: center;
+  padding: 0 var(--sp-3);
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease, background 0.2s ease;
 }
-.footer-media-slot:hover {
+.footer-media-slot:hover,
+.footer-media-slot:focus-visible {
   border-color: var(--color-accent);
   color: var(--color-accent);
+  background: linear-gradient(180deg, rgba(200,160,100,0.10), rgba(200,160,100,0.04));
   transform: translateY(-2px);
+  outline: none;
 }
 .footer-media-note {
   font-size: 0.68rem;

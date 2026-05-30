@@ -38,6 +38,31 @@ Feito, testado no preview e commitado (rodada com o Ferreira):
 5. **Volume ~60k/mês:** `painel-seed.js` N=900 leads, nomes primeiro+sobrenome. Tempo real mostra
    "Visitantes no mês 61.380 / hoje 2.040"; mocks de tráfego escalados.
 
+### "Saiu na mídia" (REGRA, salvar pra não repetir, 2026-05-30)
+- **MORA NO RODAPÉ (`scripts/layout.js`), nunca em seção de página.** Já levei bronca por
+  criar uma seção "Na mídia" no meio da `franqueado.html`. NÃO FAZER.
+- **É só texto** (nome do veículo em itálico), sem logo/imagem. O slot é clicável (`<a>` com
+  `target="_blank"`).
+- **São 4 matérias reais** (cliente confirmou "só essas quatro"):
+  - **Veja** (NÃO "Veja Rio"): https://vejario.abril.com.br/coluna/otavio-furtado/rede-de-tratamentos-esteticos-anitta-como-socia/
+  - **ABF**: https://www.abfexpo.com.br/imprensa/novas-marcas-ampliam-diversidade-e-indicam-tendencias-na-abf-fra/
+  - **Varejo** (= ACIRP): https://acirpriopreto.com.br/servicos-para-saude-e-beleza-viram-os-novos-queridinhos-dos-shoppings/
+  - **Agenda Carioca**: https://agendacarioca.com.br/laser-co-acelera-expansao-no-rio-e-projeto-de-clinica-boutique/
+- Antes tinha 6 fake (Exame, PEGN, Estadão, Folha de S.Paulo, ABF, Forbes) que eu inventei.
+  Apagados em 30/mai. Não inventar veículo de mídia, NUNCA.
+
+### FEITO: hero da home com fotos reais (30/mai)
+- 4 banners de IA (`hero.jpg`, `estetica.jpg`, `depilacao.jpg`, `ultrassom.jpg`) trocados por
+  fotos reais de procedimento (`assets/img/procedimentos/`):
+  - `premium` → `black-peel-img.jpg`
+  - `estetica` → `remocao-micropigmentacao-img.jfif`
+  - `depilacao` → `dep-barba-img.jfif`
+  - `ultrassom` → `us-palpebras-img.jpg`
+  - `avaliacao` → `black-peel-img.jpg` (reusada)
+- Adicionado campo `pos` no `data.hero[*]` (`center 30%` etc.) e o render em `page-index.js`
+  usa `background-position` por slide.
+- `reducao-foliculite-img.png` é 294×266 (baixíssima res), NÃO usar em hero. Usei `dep-barba`.
+
 ### FEITO: página "Seja um franqueado" (`franqueado.html`) enriquecida
 - Texto da XP deixado DISCRETO ("atraiu o investimento do fundo de Private Equity da XP"), sem o
   "R$ 100 milhões / 65%" (cliente pediu pra tirar da página pública).
