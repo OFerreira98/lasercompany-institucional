@@ -51,6 +51,41 @@ Feito, testado no preview e commitado (rodada com o Ferreira):
 - Antes tinha 6 fake (Exame, PEGN, Estadão, Folha de S.Paulo, ABF, Forbes) que eu inventei.
   Apagados em 30/mai. Não inventar veículo de mídia, NUNCA.
 
+### Performance, otimização de imagens (30/mai)
+- Imagens >600KB redimensionadas pra max 1600px + JPEG q82 via **System.Drawing**
+  (PowerShell, nativo Windows, NÃO precisa instalar nada). Função no histórico do chat.
+  Ganho: imagens usadas ~101MB → ~13MB. Ex: dep-costas 3.8MB→107KB.
+- PNGs de FOTO (sem transparência) convertidos pra JPEG real (.jpg) + refs atualizadas:
+  equipe/recepcao, franqueado-recepcao, rafael-estevez, rafael-casal, unidades-hero,
+  e 4 fachadas em unidades/. As .png viraram .jpg em vagas.html, unidades.html,
+  franqueado.html, pages.css, data.js.
+- Apagados não-usados: `hero 1.png` (12MB), `Ultrassom.png`. Imagens soltas na raiz de
+  assets/img são ORIGINAIS do cliente (duplicatas das de procedimentos/ e 3 frentes/),
+  não-usadas mas versionadas leves.
+- **Vídeos .mp4 (PENDENTE):** 34 em procedimentos/ (~270MB, 7-23MB cada) vão pro deploy e
+  tocam autoplay nos cards. Já com `preload="metadata"` + autoplay só quando visível (não
+  pesam no load inicial). Recompressão precisa de **ffmpeg** (não instalado). Os 33 vídeos
+  na RAIZ de assets/img são backup e estão no .gitignore + .vercelignore (não sobem).
+- **rembg/ffmpeg/pip bloqueados** pelo classificador de auto-mode. Pra remover fundo de
+  imagem, cliente usa remove.bg. System.Drawing resolve resize/recompress sem instalar.
+- `.gitignore` alinhado ao `.vercelignore`: ignora `_*` (dev tools/mockups), `assets/img/*.mp4`,
+  pastas de referência, RELATORIO-CLIENTE.pdf, test_*, download.js, generate_images*.
+
+### Máquinas premium (procedimentos > Tecnologia, 30/mai)
+- 3 máquinas em `assets/img/maquinas/` PNG sem fundo: `vydence-alex-one.png`,
+  `quanta-q-plus.png`, `ultracel-q-plus.png` (cliente removeu fundo no remove.bg).
+- `data.js lasers`: `{ nome, tipo, img, beneficios:[] }`. renderTech mostra NOME grande
+  (serif dourado) + tipo pequeno + lista de benefícios com check dourado. CSS `.tech-nome`
+  (grande), `.tech-tipo`, `.tech-benefits` em pages.css.
+
+### Agendamento 50/50 (30/mai)
+- Reestruturado pra split: foto `hero.jpg` (duas mulheres) à ESQUERDA com mask radial
+  (funde no creme, sem caixa), formulário 3 passos à DIREITA. Fundo creme único `#F5EFE2`,
+  sem faixa branca. `.agendamento-split-section` tem margin-top -144px + padding-top 144px
+  pra section creme subir atrás do header (página não é dark-hero). TODOS os IDs do form
+  preservados (page-agendamento.js intacto). CSS `.agendamento-split/-photo/-main/-head`.
+- Variante A (mask) escolhida pelo cliente. Variante B (PNG sem fundo) descartada.
+
 ### Chats flutuantes (30/mai)
 - **Ambos no canto inferior direito, lado a lado.** WhatsApp em `right: 1.5rem`,
   chat do agente em `right: calc(1.5rem + 56 + 12)` (à esquerda do WhatsApp). Janela do
