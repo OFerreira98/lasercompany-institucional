@@ -3167,15 +3167,9 @@ body.page-unidades .page-hero-photo-bg::before {
   align-items: center;
   position: relative;
 }
-.numero-card-head::after {
-  /* leve sombra interna na parte de baixo da faixa, dá profundidade */
-  content: "";
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 6px;
-  background: linear-gradient(180deg, transparent, rgba(0,0,0,0.18));
-  pointer-events: none;
-}
+/* 30/mai: removido o ::after que criava ilusão de "linha branca" entre a
+   faixa dourada e o corpo branco do card. A sombra escura na base contra
+   o branco do body parecia um vinco mal terminado. */
 .numero-card-ico {
   width: 56px;
   height: 56px;
@@ -3417,6 +3411,126 @@ body.page-unidades .page-hero-photo-bg::before {
 }
 
 @media (max-width: 700px) { .portfolio-grid { grid-template-columns: 1fr; } }
+
+/* ============================================================
+   30/mai (cliente): portfolio TEMATICO sem fotos de IA. 4 cards
+   vinho escuro com numero dourado + tag dourada + texto creme.
+   Visual de catalogo de servicos, fica em qualquer fundo claro/escuro.
+   ============================================================ */
+.portfolio-grid-themed {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+@media (max-width: 700px) { .portfolio-grid-themed { grid-template-columns: 1fr; } }
+
+.portfolio-card-themed {
+  position: relative;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border-radius: 16px;
+  background:
+    radial-gradient(ellipse 70% 100% at 100% 0%, rgba(216, 143, 63, 0.14) 0%, transparent 60%),
+    linear-gradient(155deg, #2A0F0D 0%, #1F0B0A 60%, #1A0404 100%);
+  border: 1px solid rgba(216, 143, 63, 0.22);
+  box-shadow: 0 4px 18px rgba(70, 25, 20, 0.10);
+  overflow: hidden;
+  transition: transform 0.35s var(--ease-out), border-color 0.3s, box-shadow 0.3s;
+  isolation: isolate;
+}
+.portfolio-card-themed::before {
+  /* faixa dourada vertical sutil no canto esquerdo */
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: 3px;
+  background: linear-gradient(180deg, rgba(216, 143, 63, 0) 0%, #D88F3F 30%, #B57C0C 70%, rgba(216, 143, 63, 0) 100%);
+  opacity: 0.85;
+}
+.portfolio-card-themed:hover {
+  transform: translateY(-4px);
+  border-color: rgba(216, 143, 63, 0.55);
+  box-shadow: 0 14px 36px rgba(70, 25, 20, 0.20);
+}
+.portfolio-card-num {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-weight: var(--fw-light);
+  background: linear-gradient(135deg, #E8C088 0%, #B57C0C 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.6rem;
+}
+.portfolio-card-tag {
+  display: inline-block;
+  font-family: var(--font-accent);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #E8C088;
+  padding: 4px 12px;
+  border: 1px solid rgba(232, 192, 136, 0.32);
+  border-radius: 999px;
+  margin-bottom: 1rem;
+}
+.portfolio-card-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  font-weight: var(--fw-light);
+  color: #FAF6EE;
+  letter-spacing: -0.005em;
+  line-height: 1.2;
+  margin-bottom: 0.65rem;
+}
+.portfolio-card-desc {
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: var(--fs-sm);
+  color: rgba(245, 239, 226, 0.78);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ============================================================
+   30/mai (cliente): texto washed out nas secoes que adicionei .section-light.
+   Os 2 cards de fundo escuro (por-que-card, posicionamento-card) precisam
+   manter o fundo vinho mesmo dentro de section-light (usavam tokens que
+   viram branco no contexto claro). Forco aqui o vinho absoluto.
+   ============================================================ */
+.section-light .por-que-card {
+  background: linear-gradient(135deg, #2A0F0D 0%, #1F0B0A 100%);
+  border-color: rgba(216, 143, 63, 0.18);
+  box-shadow: 0 4px 18px rgba(70, 25, 20, 0.08);
+}
+.section-light .por-que-title { color: #FAF6EE; }
+.section-light .por-que-desc { color: rgba(245, 239, 226, 0.78); }
+
+.section-light .posicionamento-card {
+  background: linear-gradient(155deg, #2A0F0D 0%, #1F0B0A 100%);
+  border-color: rgba(216, 143, 63, 0.18);
+  box-shadow: 0 4px 18px rgba(70, 25, 20, 0.08);
+}
+.section-light .posicionamento-card:hover {
+  background: linear-gradient(155deg, #3A1714 0%, #2A0F0D 100%);
+  border-color: rgba(216, 143, 63, 0.45);
+}
+.section-light .posicionamento-title { color: #FAF6EE; }
+.section-light .posicionamento-desc { color: rgba(245, 239, 226, 0.78); }
+.section-light .posicionamento-icon {
+  background: rgba(216, 143, 63, 0.15);
+  border-color: rgba(216, 143, 63, 0.45);
+  color: #E8C088;
+}
+
+/* Cred-band (Lideranca): chips ficam com vinho legivel sobre fundo claro */
+.section-light .cred-chip {
+  background: #FFFFFF;
+  border-color: rgba(154, 107, 30, 0.35);
+  color: #481712;
+}
+.section-light .fundador-text { color: #3A140F; }
 
 .portfolio-card {
   position: relative;
