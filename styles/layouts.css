@@ -1635,12 +1635,35 @@
   width: 100%;
   max-width: none;
   transform: translateY(0);
-  background: #FFFFFF;
-  border-bottom: 1px solid rgba(70, 25, 20, 0.08);
+  /* fundo creme translúcido com blur (mais elegante que branco puro,
+     fica dentro da paleta vinho/dourado/creme da marca). */
+  background: rgba(250, 246, 238, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(154, 107, 30, 0.14);
   box-shadow: 0 6px 24px rgba(70, 25, 20, 0.06);
   padding: 0.6rem 1.25rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease;
   will-change: transform;
+}
+
+/* Quando o usuario rolou pra fora do dark-hero, header fica em vinho
+   translucido com blur (em vez de branco). Combina com a marca, nao
+   "estoura" visualmente e mantem legibilidade do menu. */
+body.page-has-dark-hero .site-header-clean.scrolled {
+  background: rgba(10, 6, 6, 0.78);
+  border-bottom-color: rgba(232, 192, 136, 0.22);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+body.page-has-dark-hero .site-header-clean.scrolled .nav-link {
+  color: #F5EFE2;
+}
+body.page-has-dark-hero .site-header-clean.scrolled .nav-link:hover,
+body.page-has-dark-hero .site-header-clean.scrolled .nav-link.active {
+  color: var(--color-accent, #E8C088);
+}
+body.page-has-dark-hero .site-header-clean.scrolled .header-brand img {
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
 }
 
 /* ============================================================
