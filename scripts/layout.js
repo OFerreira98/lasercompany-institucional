@@ -270,20 +270,15 @@
 
     const picks = shuffle(window.LaserData.naMidia).slice(0, 3);
 
-    strip.innerHTML = picks.map(m => {
-      const bg = m.img
-        ? `style="background-image:url('${m.img}')"`
-        : '';
-      return `
-        <a class="footer-media-card" href="${escapeHtml(m.url)}" target="_blank" rel="noopener" data-id="${escapeHtml(m.id)}">
-          <div class="footer-media-card-img" ${bg} aria-hidden="true"></div>
-          <div class="footer-media-card-body">
-            <span class="footer-media-card-source">${escapeHtml(m.veiculo)}</span>
-            <h4 class="footer-media-card-title">${escapeHtml(m.titulo)}</h4>
-          </div>
-        </a>
-      `;
-    }).join('');
+    // So a imagem da materia (o print ja contem titulo + veiculo).
+    // Sem texto embaixo, pra nao duplicar o que ja esta na imagem.
+    strip.innerHTML = picks.map(m => `
+      <a class="footer-media-card" href="${escapeHtml(m.url)}" target="_blank" rel="noopener"
+         data-id="${escapeHtml(m.id)}" title="${escapeHtml(m.veiculo)}: ${escapeHtml(m.titulo)}"
+         aria-label="${escapeHtml(m.veiculo)}: ${escapeHtml(m.titulo)}">
+        <img class="footer-media-card-img" src="${escapeHtml(m.img)}" alt="${escapeHtml(m.veiculo)}: ${escapeHtml(m.titulo)}" loading="lazy">
+      </a>
+    `).join('');
   }
 
   /* ---------- MOTION (GSAP + ScrollTrigger + Lenis) ----------
