@@ -24,7 +24,7 @@
   <div class="chatbot-header">
     <div class="chatbot-avatar" aria-hidden="true">L&amp;C</div>
     <div class="chatbot-info">
-      <div class="chatbot-info-name" id="chatbot-name">Atendimento Laser &amp; Co</div>
+      <div class="chatbot-info-name" id="chatbot-name">Agente de Atendimento</div>
       <div class="chatbot-info-status">Online agora</div>
     </div>
     <button class="chatbot-close" id="chatbot-close" aria-label="Fechar chat">&times;</button>
@@ -98,7 +98,7 @@
   /* ---------- Início ---------- */
   async function greeting() {
     state.step = 'awaiting_name';
-    await botSay('Oi! Sou o atendimento da Laser &amp; Co. <br>Como posso te chamar?');
+    await botSay('Olá! Sou o <strong>Agente de Atendimento</strong> da Laser &amp; Co. <br>Como posso te chamar?');
   }
 
   /* ---------- Após receber o nome ---------- */
@@ -107,7 +107,12 @@
     await botSay(`Prazer, <strong>${state.nome}</strong>! Para te conectar com a unidade certa, me passa seu <strong>CEP</strong>?`);
   }
 
-  /* ---------- Após receber o CEP ---------- */
+  /* ---------- Após receber o CEP ----------
+     Quando a unidade encontrada esta em outra cidade (ex.: CEP de
+     Cascavel/PR vs unidade em Maringa/PR), state.unidade._isDistant = true.
+     Nesse caso, NAO afirma que "sua unidade e X": apresenta como
+     "ainda nao temos unidade em <cidade>, a mais proxima e <X>", e
+     ainda oferece o WhatsApp dessa unidade como opcao informativa. */
   async function afterCEP() {
     if (!state.unidade) {
       await botSay(`Hmm, ainda não temos uma unidade próxima ao CEP ${state.cep}. Mas registramos seu interesse e avisamos quando uma unidade abrir na sua região!`);
@@ -121,29 +126,40 @@
     }
 
     const u = state.unidade;
+    const userCity = (state.cepData && state.cepData.cidade) || '';
+    const unidadeCidade = window.LaserCEP.unidadeCity(u) || u.nome;
+    const isDistant = !!u._isDistant;
+
     const msg = `Olá ${u.nome}! Sou ${state.nome}, vim pelo chat do site (CEP ${state.cep}) e gostaria de mais informações.`;
     const waUrl = window.LaserCEP.whatsappUrl(u, msg);
 
-    await botSay(`Encontrei! A unidade <strong>${u.nome}</strong> atende sua região.`);
+    if (isDistant) {
+      await botSay(`Ainda não temos uma unidade Laser &amp; Co em <strong>${userCity}</strong>, ${state.nome}. A mais próxima da sua região é a unidade <strong>${u.nome}</strong>, em ${unidadeCidade}/${u.uf}.`);
+      await botSay(`Se ainda assim quiser falar com essa unidade, é só clicar abaixo. Já registramos seu interesse pra avisar quando abrirmos uma unidade em ${userCity}.`);
+    } else {
+      await botSay(`Encontrei! A unidade <strong>${u.nome}</strong> atende sua região.`);
+    }
+
     await botSay(`
       <div class="chatbot-unit">
-        <div class="chatbot-unit-name">${u.nome}</div>
+        <div class="chatbot-unit-name">${u.nome}${isDistant ? ` <span style="opacity:0.7;font-weight:normal;">(${unidadeCidade}/${u.uf})</span>` : ''}</div>
         <div class="chatbot-unit-line">${u.endereco}</div>
         <div class="chatbot-unit-line">${u.horario}</div>
         <a href="${waUrl}" target="_blank" rel="noopener" class="chatbot-unit-wa">
-          Falar no WhatsApp da unidade
+          ${isDistant ? `Falar com a unidade ${u.nome}` : 'Falar no WhatsApp da unidade'}
         </a>
       </div>
     `);
 
-    // Registra lead
-    window.LaserAnalytics.trackLead('chatbot', {
+    // Registra lead: se for distante, marca como interesse de expansao
+    window.LaserAnalytics.trackLead(isDistant ? 'chatbot_expansao' : 'chatbot', {
       nome: state.nome,
       cep: state.cep,
       cidade: state.cepData.cidade,
       uf: state.cepData.uf,
       unidadeId: u.id,
       unidadeNome: u.nome,
+      distante: isDistant,
     });
 
     state.step = 'menu';

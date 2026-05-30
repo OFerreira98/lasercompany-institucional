@@ -52,23 +52,46 @@ window.LaserCEP = (function() {
     }
   }
 
+  /* Extrai o nome da cidade a partir do endereco da unidade.
+     Padrao dos enderecos: "...Rua X, 123, Bairro, Cidade/UF, 12345-678".
+     Retorna a string entre o ultimo separador e "/UF". */
+  function unidadeCity(u) {
+    if (!u) return '';
+    const m = (u.endereco || '').match(/([^,\-]+?)\s*\/\s*([A-Z]{2})/);
+    if (m) return m[1].trim();
+    return u.cidade || '';
+  }
+
   /* Identifica a unidade pelo prefixo do CEP.
-     Estratégia: pega os 3 primeiros dígitos do CEP e procura
-     uma unidade cuja lista de prefixos contenha esse valor.
-     Se não encontrar, faz um fallback por UF.
-  */
+     Estrategia em 3 niveis:
+     1) Prefixo exato (3 digitos): unidade da regiao do CEP. Confiavel.
+     2) Mesma cidade (UF + nome de cidade igual): cobre casos como
+        Sao Paulo bairro X -> unidade Sao Paulo bairro Y. Confiavel.
+     3) Mesma UF, cidade diferente: marca como _isDistant para o
+        consumidor (chat/modal) NAO afirmar "sua unidade e esta", e sim
+        "ainda nao temos unidade em <cidade>, a mais proxima e <X>".
+        Ex.: CEP de Cascavel (PR) nao deve abrir WhatsApp de Maringa
+        como se fosse a unidade do cliente. */
   function findUnidade(cepData) {
     if (!cepData) return null;
     const unidades = window.LaserData.unidades;
     const prefix3 = cepData.cep.slice(0, 3);
+    const userCity = (cepData.cidade || '').toLowerCase();
 
-    // 1ª busca: prefixo exato
+    // 1) Prefixo exato
     let unidade = unidades.find(u => u.cepPrefixos.includes(prefix3));
     if (unidade) return unidade;
 
-    // 2ª busca: por UF (qualquer unidade no estado)
+    // 2) Mesma UF + mesma cidade
+    unidade = unidades.find(u =>
+      u.uf === cepData.uf &&
+      unidadeCity(u).toLowerCase() === userCity
+    );
+    if (unidade) return unidade;
+
+    // 3) Mesma UF, cidade diferente -> recomendacao "distante"
     unidade = unidades.find(u => u.uf === cepData.uf);
-    if (unidade) return { ...unidade, _fallback: 'uf' };
+    if (unidade) return { ...unidade, _isDistant: true };
 
     return null;
   }
@@ -100,7 +123,11 @@ window.LaserCEP = (function() {
     try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
   }
 
-  /* Função-chefe: recebe um CEP, busca, encontra unidade, salva e retorna tudo. */
+  /* Função-chefe: recebe um CEP, busca, encontra unidade, salva e retorna tudo.
+     - Quando a unidade for "distante" (mesma UF, outra cidade), NAO salva
+       a unidade no localStorage: assim o WhatsApp flutuante nao abre a
+       conversa direto com uma unidade que nao atende a regiao do cliente.
+       Salvamos so o CEP/cidade, e o botao volta a abrir o modal. */
   async function resolve(cep) {
     const cepData = await lookup(cep);
     if (!cepData) {
@@ -108,7 +135,11 @@ window.LaserCEP = (function() {
     }
 
     const unidade = findUnidade(cepData);
-    save(cepData, unidade);
+    const distant = !!(unidade && unidade._isDistant);
+
+    // Persistir: salva sempre o CEP, mas a unidade so quando ela e da
+    // regiao do cliente (nao salva quando distante).
+    save(cepData, distant ? null : unidade);
 
     if (!unidade) {
       return {
@@ -124,7 +155,8 @@ window.LaserCEP = (function() {
       hasUnidade: true,
       cep: cepData,
       unidade,
-      isFallback: !!unidade._fallback,
+      isDistant: distant,
+      unidadeCity: unidadeCity(unidade),
     };
   }
 
@@ -149,7 +181,7 @@ window.LaserCEP = (function() {
   }
 
   return {
-    normalize, format, isValid, lookup, findUnidade,
+    normalize, format, isValid, lookup, findUnidade, unidadeCity,
     save, getSaved, clearSaved, resolve, whatsappUrl, applyMask,
   };
 })();

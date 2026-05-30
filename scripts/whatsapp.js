@@ -14,7 +14,6 @@
   <span class="icon" aria-hidden="true">
     <svg width="28" height="28" viewBox="0 0 32 32" fill="currentColor"><path d="M16.1 5.3c-6 0-10.9 4.9-10.9 10.9 0 1.9.5 3.7 1.4 5.3l-1.5 5.5 5.6-1.5c1.5.8 3.2 1.3 5 1.3 6 0 10.9-4.9 10.9-10.9 0-2.9-1.1-5.6-3.2-7.7-2-2-4.7-3.1-7.6-3.1zm0 19.8c-1.6 0-3.1-.4-4.5-1.2l-.3-.2-3.3.9.9-3.2-.2-.3c-.9-1.4-1.3-3-1.3-4.7 0-5 4.1-9 9-9 2.4 0 4.7.9 6.4 2.6 1.7 1.7 2.6 4 2.6 6.4 0 5-4.1 9-9.1 9zm5-6.8c-.3-.1-1.6-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5 0-.1-.7-1.7-.9-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1.1 1.1-1.1 2.6 0 1.5 1.1 3 1.2 3.2.2.2 2.2 3.4 5.3 4.7 2.5 1.1 3.1 1 3.7.9.5-.1 1.6-.7 1.9-1.3.2-.6.2-1.1.2-1.3-.1-.2-.3-.2-.6-.4z"/></svg>
   </span>
-  <span class="label-text">Falar com a Laser & Co</span>
 </a>`;
   }
 
@@ -117,12 +116,35 @@
         cep,
         hasUnidade: result.hasUnidade,
         unidadeId: result.unidade ? result.unidade.id : null,
+        isDistant: !!result.isDistant,
       });
 
-      if (result.hasUnidade && result.unidade) {
+      if (result.hasUnidade && result.unidade && !result.isDistant) {
+        // Unidade da regiao do cliente -> abre WhatsApp direto
         const msg = `Olá ${result.unidade.nome}! Vim pelo site da Laser & Co (CEP ${cep}) e gostaria de mais informações.`;
         window.open(window.LaserCEP.whatsappUrl(result.unidade, msg), '_blank');
         closeModal();
+      } else if (result.hasUnidade && result.unidade && result.isDistant) {
+        // Unidade mais proxima esta em outra cidade -> avisa transparente
+        // e oferece a opcao de falar com ela mesmo assim.
+        const u = result.unidade;
+        const userCity = (result.cep && result.cep.cidade) || 'sua cidade';
+        const uCity = result.unidadeCity || u.nome;
+        const fld = modalInput.closest('.field');
+        const errEl = fld.querySelector('.field-error');
+        errEl.innerHTML = `Ainda não temos unidade em <strong>${userCity}</strong>. A mais próxima é a <strong>${u.nome}</strong>, em ${uCity}/${u.uf}.`;
+        fld.classList.add('has-error');
+        // Reaproveita o botao do form pra abrir a unidade distante
+        modalSubmit.querySelector('span').textContent = `Falar com a unidade ${u.nome} mesmo assim`;
+        modalSubmit.disabled = false;
+        modalSubmit.onclick = (ev) => {
+          ev.preventDefault();
+          const msg = `Olá ${u.nome}! Vim pelo site da Laser & Co (CEP ${cep}, ${userCity}/${u.uf}) e gostaria de mais informações.`;
+          window.open(window.LaserCEP.whatsappUrl(u, msg), '_blank');
+          closeModal();
+        };
+        window.LaserAnalytics.trackLead('expansao_cep', { cep, cidade: userCity, uf: u.uf, distante: true, sugerida: u.id });
+        return;
       } else {
         const fld = modalInput.closest('.field');
         const errEl = fld.querySelector('.field-error');
