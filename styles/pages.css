@@ -757,8 +757,13 @@
 }
 
 @media (max-width: 900px) {
+  /* 2 colunas no tablet, 1 no celular (cards menores que os 360px antigos) */
+  .segments-photo { grid-template-columns: repeat(2, 1fr); gap: var(--sp-3); }
+  .segment-photo-card { height: 300px; }
+}
+@media (max-width: 620px) {
   .segments-photo { grid-template-columns: 1fr; }
-  .segment-photo-card { height: 360px; }
+  .segment-photo-card { height: 240px; }
 }
 
 /* ---------- MARQUEE / CARROSSEL INFINITO ---------- */
@@ -871,7 +876,10 @@
 }
 
 @media (max-width: 600px) {
-  .marquee-card { flex-basis: 260px; }
+  /* cards "queridinhos" menores no mobile (cliente gostou do carrossel,
+     so pediu pra diminuir um pouco os cards) */
+  .marquee-card { flex-basis: 210px; }
+  .marquee-card-title { font-size: var(--fs-sm); }
 }
 
 /* ---------- FORMAS DE PAGAMENTO ---------- */
@@ -1382,12 +1390,29 @@
   filter: drop-shadow(0 0 6px rgba(200, 160, 100, 0.30));
 }
 
+/* botao CTA abaixo dos passos: visivel SO no mobile (no desktop o botao
+   fica dentro do passo 4, como ja era). Renderizado por page-index.js. */
+.steps-cta-row { display: none; }
+
 @media (max-width: 900px) {
-  .steps-grid { grid-template-columns: repeat(2, 1fr); }
+  /* mobile: 2x2 (dois em cima, dois embaixo) - cliente pediu pra nao
+     empilhar em coluna unica, que ficava longo demais de rolar. */
+  .steps-grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-3); }
   .steps-line { display: none; }
+  .step-item { padding: var(--sp-3) var(--sp-2) var(--sp-4); }
+  /* no mobile, esconde o botao de dentro do passo 4 e mostra o CTA
+     centralizado numa faixa propria, logo abaixo dos 4 passos. */
+  .step-item-cta .step-cta { display: none; }
+  .steps-cta-row {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--sp-5);
+  }
+  .steps-cta-row .step-cta { display: inline-flex; width: 100%; max-width: 340px; }
 }
-@media (max-width: 600px) {
-  .steps-grid { grid-template-columns: 1fr; }
+@media (max-width: 400px) {
+  /* telas bem estreitas: passos mais compactos, mas mantem 2x2 */
+  .steps-grid { gap: var(--sp-2); }
 }
 
 .step-item {
@@ -3762,4 +3787,34 @@ body.page-unidades .page-hero-photo-bg::before {
   font-size: var(--fs-sm);
   color: var(--color-text-soft);
   line-height: 1.6;
+}
+
+/* ============================================================
+   HOME MOBILE, compactação (jun/2026)
+   Cliente: seções muito grandes/longas no celular, cansativo de rolar.
+   Reduz depoimentos, blog (2 colunas em vez de 1) e a ficha de
+   agendamento. Desktop intacto.
+   ============================================================ */
+@media (max-width: 600px) {
+  /* Depoimentos menores */
+  .depoimento-card { padding: var(--sp-4); gap: var(--sp-3); }
+  .depoimento-card::before { font-size: 3.4rem; left: 1rem; }
+  .depoimento-texto { font-size: var(--fs-sm); line-height: 1.5; }
+  .depoimento-avatar, .depoimento-avatar-photo { width: 44px; height: 44px; }
+
+  /* Blog: 2 colunas no mobile (cards bem menores, metade do scroll).
+     Preview some pra compactar; fica capa + titulo clicavel. */
+  .blog-grid, .blog-grid-4 { grid-template-columns: repeat(2, 1fr) !important; gap: var(--sp-3); }
+  .blog-card-preview { display: none; }
+  .blog-card-body { padding: var(--sp-3); }
+  .blog-card-title { font-size: 0.92rem; line-height: 1.3; }
+  .blog-card-cta { font-size: 0.72rem; }
+
+  /* Ficha "agendamento estético gratuito": menor (estava grande demais) */
+  .agendamento-curto-card { padding: var(--sp-4) var(--sp-3); }
+  .agendamento-curto-head { margin-bottom: var(--sp-4); }
+}
+@media (max-width: 380px) {
+  /* telas minusculas: blog volta a 1 coluna pra nao espremer */
+  .blog-grid, .blog-grid-4 { grid-template-columns: 1fr !important; }
 }

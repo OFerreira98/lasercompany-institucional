@@ -72,6 +72,15 @@
       `).join('')}
     `;
 
+    // CTA abaixo do grid: aparece SO no mobile (CSS controla via .steps-cta-row).
+    // No desktop o botao continua dentro do passo 4 (intacto).
+    const passoCta = passos.find(p => p.cta);
+    if (passoCta) {
+      grid.insertAdjacentHTML('afterend',
+        `<div class="steps-cta-row"><a class="btn btn-primary btn-arrow step-cta" href="${passoCta.cta.href}">${passoCta.cta.label}</a></div>`
+      );
+    }
+
     // re-registra novos elementos com classes/data-attrs no motion
     if (window.LaserMotion) {
       window.LaserMotion.setupStagger(grid);

@@ -269,6 +269,59 @@
   .header-brand img { height: 46px; }
 }
 
+/* ============================================================
+   MENU MOBILE, correções de cor/consistência (jun/2026)
+   Bug: dependendo do scroll, os nav-links herdavam cor escura
+   (#1F0B0A) e sumiam no fundo escuro do menu, OU ficavam creme;
+   o .active ora dourado ora vinho. Resultado: "Início e
+   Procedimentos dourados, resto branco/invisível".
+   Fix: dentro do menu mobile ABERTO, cor uniforme creme pra todos,
+   ativo dourado sutil, e "Seja um franqueado" como botão dourado.
+   ============================================================ */
+@media (max-width: 980px) {
+  /* fundo vinho da marca (em vez de preto puro). !important pra vencer
+     a regra dark-hero:not(.scrolled) que pinta o menu de rgba(10,6,6,0.85) */
+  body .site-header-clean .header-nav.header-capsule {
+    background: rgba(31, 11, 10, 0.98) !important;
+  }
+  /* TODOS os links de nav creme uniforme e legíveis sobre o fundo escuro,
+     independente de .scrolled / page-has-dark-hero. Sem destaque dourado
+     em link de nav (resolve "Início/Procedimentos dourados destoando"). */
+  body .site-header-clean .header-nav.header-capsule .nav-item > .nav-link {
+    color: #F5EFE2 !important;
+    font-weight: 500 !important;
+    text-shadow: none !important;
+  }
+  /* submenu de procedimentos: FECHADO por padrão no mobile (a regra
+     desktop .site-header-clean .nav-mega{display:grid} vencia o
+     .nav-submenu{display:none} e abria automático). Só abre com .open. */
+  body .site-header-clean .nav-item .nav-submenu { display: none; }
+  body .site-header-clean .nav-item.open .nav-submenu { display: block; }
+  body .site-header-clean .nav-item.open .nav-mega {
+    min-width: 0;
+    max-width: none;
+    grid-template-columns: 1fr;
+    padding: var(--sp-3);
+  }
+  .header-nav.header-capsule .nav-submenu { background: rgba(245,240,230,0.06); }
+  .header-nav.header-capsule .nav-submenu-link,
+  .header-nav.header-capsule .nav-mega-list a { color: #F5EFE2 !important; }
+  .header-nav.header-capsule .nav-mega-title { color: var(--color-accent, #E8C088) !important; }
+
+  /* "Seja um franqueado": ÚNICO destaque, vira BOTÃO dourado no menu mobile.
+     Seletor forte o suficiente pra vencer a cor creme geral acima. */
+  .nav-item-franqueado-mobile { margin-top: var(--sp-2); }
+  body .site-header-clean .header-nav.header-capsule .nav-item-franqueado-mobile > .nav-link {
+    background: linear-gradient(135deg, #B57C0C, #E8C088);
+    color: #1F0B0A !important;
+    font-weight: 700 !important;
+    border-radius: var(--radius-pill);
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(154, 107, 30, 0.35);
+  }
+}
+
 /* Antiga regra "main { padding-top: 100px }" removida.
    O espaço pro header fixo agora vem do body padding-top (regra
    `body:not(.painel-body):not(.page-has-dark-hero)`) na seção HEADER CLEAN
@@ -525,10 +578,11 @@
 }
 .hero-arrow-prev { left: 1rem; }
 .hero-arrow-next { right: 1rem; }
-@media (max-width: 700px) {
-  .hero-arrow { width: 40px; height: 40px; }
-  .hero-arrow-prev { left: 0.5rem; }
-  .hero-arrow-next { right: 0.5rem; }
+/* No mobile, esconder as setas de navegação manual (cliente pediu:
+   deixar o carrossel passando sozinho/autoplay). Os dots ficam como
+   indicador de progresso (e ainda permitem tocar pra trocar). */
+@media (max-width: 768px) {
+  .hero-arrow { display: none; }
 }
 
 /* Dots */
@@ -688,6 +742,15 @@
   transition: transform var(--duration-base) var(--ease-out);
   max-height: 92vh;
   overflow-y: auto;
+}
+
+/* Mobile: popup mais compacto (cliente achou grande demais no celular) */
+@media (max-width: 600px) {
+  .popup, .popup-brinde { max-width: 340px; padding: 1.25rem 1.1rem; max-height: 88vh; }
+  .popup-title { font-size: 1.35rem; line-height: 1.2; }
+  .popup-sub { font-size: var(--fs-sm); }
+  .popup-gift-badge { font-size: 0.7rem; padding: 4px 10px; }
+  .popup-disclaimer { font-size: 0.66rem; }
 }
 
 /* Popup variante "Ganhe um brinde" — versão compacta */
@@ -1159,14 +1222,17 @@
   background: var(--color-bg-alt);
 }
 
+/* 2 colunas: contato/marca + mapa do site. O card "Seja um franqueado"
+   foi removido (já existe botão no header, item no menu mobile e link no
+   mapa do site - era redundante e pesava o rodapé, sobretudo no mobile). */
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.2fr 1fr 1.4fr;
+  grid-template-columns: 1.6fr 1fr;
   gap: var(--sp-7);
   margin-bottom: var(--sp-7);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 700px) {
   .footer-grid { grid-template-columns: 1fr; gap: var(--sp-6); }
 }
 
