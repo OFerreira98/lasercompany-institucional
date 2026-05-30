@@ -24,6 +24,9 @@ node_modules/
 Referencias 1/
 referencia/
 Base visual/
+Referencias Wix Analytics/
+Référence a site Rafael para SEJA FRANQUEADO/
+Referência a site Rafael para SEJA FRANQUEADO/
 
 # Claude Code local
 .claude/
@@ -31,5 +34,19 @@ Base visual/
 # Documentos internos do roteiro
 Roteiro-Site-LaserCo.docx
 Roteiro-Site-LaserCo.txt
+RELATORIO-CLIENTE.pdf
+
+# Ferramentas de dev (geradores, servidor de teste, mockups, extracao)
+# Tudo com prefixo _ é dev-only (espelha o .vercelignore)
+_*
+download.js
+generate_images*
+test_*.jpg
+test_*.png
+
+# Videos originais soltos na raiz de assets/img (backup local do cliente,
+# nao-wirados; quando usar, mover pra subpasta). Os de procedimentos/ vão.
+assets/img/*.mp4
+assets/img/*.mov
 
 .vercel

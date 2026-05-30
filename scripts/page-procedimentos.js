@@ -259,9 +259,9 @@
     grid.innerHTML = window.LaserData.lasers.map(l => `
       <div class="tech-card reveal">
         ${l.img ? `<div class="tech-card-media tech-card-media--product" style="--product:url('/${l.img}')" aria-hidden="true"></div>` : `<div class="tech-card-media" style="position:relative" aria-hidden="true">${PH_HTML}</div>`}
-        <div class="tech-sigla">${l.sigla}</div>
         <div class="tech-nome">${l.nome}</div>
-        <p class="tech-desc">${l.desc}</p>
+        ${l.tipo ? `<div class="tech-tipo">${l.tipo}</div>` : ''}
+        ${Array.isArray(l.beneficios) ? `<ul class="tech-benefits">${l.beneficios.map(b => `<li>${b}</li>`).join('')}</ul>` : (l.desc ? `<p class="tech-desc">${l.desc}</p>` : '')}
       </div>
     `).join('');
   }

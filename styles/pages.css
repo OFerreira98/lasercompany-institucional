@@ -2030,22 +2030,54 @@ body.page-unidades .page-hero-photo-bg::before {
   transform: translateY(-3px);
 }
 
-.tech-sigla {
+/* Nome da máquina GRANDE (hierarquia principal) */
+.tech-nome {
   font-family: var(--font-serif);
   font-size: var(--fs-2xl);
   font-weight: var(--fw-light);
   color: var(--color-accent);
   letter-spacing: var(--ls-tight);
-  margin-bottom: var(--sp-2);
+  margin-bottom: var(--sp-1);
+  line-height: 1.1;
 }
 
-.tech-nome {
+/* Tipo/tecnologia, subtítulo pequeno */
+.tech-tipo {
   font-family: var(--font-accent);
   font-size: var(--fs-xs);
   text-transform: uppercase;
   letter-spacing: var(--ls-widest);
   color: var(--color-text-muted);
-  margin-bottom: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+
+/* Benefícios curtos, lista com check dourado (menos é mais) */
+.tech-benefits {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  text-align: left;
+}
+.tech-benefits li {
+  position: relative;
+  padding-left: 24px;
+  font-size: var(--fs-sm);
+  color: var(--color-text-soft);
+  line-height: 1.4;
+}
+.tech-benefits li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C8A064' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 .tech-desc {
@@ -2058,7 +2090,117 @@ body.page-unidades .page-hero-photo-bg::before {
    AGENDAMENTO — Página
    ============================================================ */
 
-/* HERO LEVE: fundo creme com arcos dourados sutis (sem laser pesado) */
+/* ============================================================
+   AGENDAMENTO 50/50 (jun/2026): foto das duas mulheres à esquerda
+   (mask funde no creme), formulário em 3 passos à direita. Fundo
+   creme único, sem faixa branca dividindo.
+   ============================================================ */
+.agendamento-split-section {
+  background: #F5EFE2;
+  /* compensa o header fixo (a pagina nao e dark-hero) */
+  margin-top: -144px;
+  padding-top: 144px;
+}
+@media (max-width: 980px) {
+  .agendamento-split-section { margin-top: -96px; padding-top: 96px; }
+}
+
+.agendamento-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  max-width: 1440px;
+  margin-inline: auto;
+  min-height: clamp(620px, 82vh, 900px);
+}
+
+/* Lado esquerdo: foto */
+.agendamento-photo {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+}
+.agendamento-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  /* funde a foto no fundo creme (sem caixa retangular) */
+  -webkit-mask-image: radial-gradient(ellipse 78% 92% at 52% 56%, #000 52%, transparent 92%);
+          mask-image: radial-gradient(ellipse 78% 92% at 52% 56%, #000 52%, transparent 92%);
+}
+
+/* Lado direito: cabeçalho + form */
+.agendamento-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(2rem, 4vw, 3.5rem) clamp(1.25rem, 4vw, 3.5rem);
+}
+.agendamento-head {
+  margin-bottom: var(--sp-5);
+}
+.agendamento-head .eyebrow {
+  display: inline-block;
+  font-family: var(--font-accent);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wide);
+  color: #9A6B1E;
+  margin-bottom: var(--sp-2);
+}
+.agendamento-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 3.4vw, 2.9rem);
+  font-weight: var(--fw-light);
+  line-height: 1.04;
+  color: #1F0B0A;
+  margin: 0 0 var(--sp-2);
+}
+.agendamento-title .italic {
+  font-style: italic;
+  background: linear-gradient(135deg, #B57C0C, #E8C088);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.agendamento-sub {
+  font-size: var(--fs-base);
+  color: #4E1A15;
+  line-height: 1.55;
+  margin: 0 0 var(--sp-4);
+  max-width: 46ch;
+}
+.agendamento-split .ag-trust { justify-content: flex-start; margin-top: 0; }
+
+/* No split, o shell perde o card flutuante (vira parte da coluna) */
+.agendamento-split .agendamento-shell {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  max-width: none;
+  margin: 0;
+}
+
+/* Alinha à esquerda os títulos/sub dos steps (vinham centralizados do
+   layout antigo via inline-style; no form lateral fica melhor à esquerda) */
+.agendamento-split .agendamento-step .section-title,
+.agendamento-split .agendamento-step .section-sub {
+  text-align: left !important;
+  font-size: var(--fs-xl) !important;
+}
+.agendamento-split .proc-segment-tabs { justify-content: flex-start; }
+
+@media (max-width: 900px) {
+  .agendamento-split { grid-template-columns: 1fr; min-height: 0; }
+  .agendamento-photo { min-height: 320px; max-height: 420px; order: -1; }
+  .agendamento-photo-img { object-position: center 20%; }
+}
+
+/* HERO LEVE (legado, mantido p/ compat): fundo creme com arcos dourados */
 .page-hero-ag {
   padding-block: clamp(5rem, 10vw, 8rem) clamp(2.5rem, 5vw, 4rem);
   position: relative;
@@ -2966,7 +3108,7 @@ body.page-unidades .page-hero-photo-bg::before {
    leitura do título "Invista no setor..." sobre a foto.
    29/mai: troca pra Franquias-hero.png (HD 1672x941).
    30/mai: cliente pediu pra usar foto da recepção (mármore + &CO. parede verde +
-   cadeiras vinho). Arquivo: assets/img/franqueado-recepcao.png. Overlay vinho
+   cadeiras vinho). Arquivo: assets/img/franqueado-recepcao.jpg. Overlay vinho
    mais suave do lado direito pra deixar o ambiente da recepção respirar. */
 .franqueado-hero-bg {
   position: absolute;
@@ -2977,7 +3119,7 @@ body.page-unidades .page-hero-photo-bg::before {
     /* base vinho top-bottom suave, deixa a recepção respirar à direita */
     linear-gradient(180deg, rgba(10,6,6,0.42) 0%, rgba(10,6,6,0.58) 100%),
     /* foto da recepção (LASER & COMPANY, balcão de mármore, &CO. na parede verde) */
-    url('../assets/img/franqueado-recepcao.png');
+    url('../assets/img/franqueado-recepcao.jpg');
   background-size: cover, cover, cover;
   background-position: center, center, center center;
   background-repeat: no-repeat, no-repeat, no-repeat;
