@@ -2966,7 +2966,7 @@ body.page-unidades .page-hero-photo-bg::before {
    leitura do título "Invista no setor..." sobre a foto.
    29/mai: troca pra Franquias-hero.png (HD 1672x941).
    30/mai: cliente pediu pra usar foto da recepção (mármore + &CO. parede verde +
-   cadeiras vinho). Arquivo: assets/img/franqueado-recepcao.jpg. Overlay vinho
+   cadeiras vinho). Arquivo: assets/img/franqueado-recepcao.png. Overlay vinho
    mais suave do lado direito pra deixar o ambiente da recepção respirar. */
 .franqueado-hero-bg {
   position: absolute;
@@ -2977,7 +2977,7 @@ body.page-unidades .page-hero-photo-bg::before {
     /* base vinho top-bottom suave, deixa a recepção respirar à direita */
     linear-gradient(180deg, rgba(10,6,6,0.42) 0%, rgba(10,6,6,0.58) 100%),
     /* foto da recepção (LASER & COMPANY, balcão de mármore, &CO. na parede verde) */
-    url('../assets/img/franqueado-recepcao.jpg');
+    url('../assets/img/franqueado-recepcao.png');
   background-size: cover, cover, cover;
   background-position: center, center, center center;
   background-repeat: no-repeat, no-repeat, no-repeat;
