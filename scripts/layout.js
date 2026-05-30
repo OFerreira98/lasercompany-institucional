@@ -270,13 +270,16 @@
 
     const picks = shuffle(window.LaserData.naMidia).slice(0, 3);
 
-    // So a imagem da materia (o print ja contem titulo + veiculo).
-    // Sem texto embaixo, pra nao duplicar o que ja esta na imagem.
-    strip.innerHTML = picks.map(m => `
+    // Imagem da materia (o print ja contem o titulo) + so o nome do
+    // veiculo embaixo, pequeno e sem fundo. Cada card com delay de
+    // animacao diferente pra pulsarem alternados (convida o clique).
+    strip.innerHTML = picks.map((m, i) => `
       <a class="footer-media-card" href="${escapeHtml(m.url)}" target="_blank" rel="noopener"
          data-id="${escapeHtml(m.id)}" title="${escapeHtml(m.veiculo)}: ${escapeHtml(m.titulo)}"
-         aria-label="${escapeHtml(m.veiculo)}: ${escapeHtml(m.titulo)}">
+         aria-label="${escapeHtml(m.veiculo)}: ${escapeHtml(m.titulo)}"
+         style="animation-delay: ${(i * 0.55).toFixed(2)}s">
         <img class="footer-media-card-img" src="${escapeHtml(m.img)}" alt="${escapeHtml(m.veiculo)}: ${escapeHtml(m.titulo)}" loading="lazy">
+        <span class="footer-media-card-source">${escapeHtml(m.veiculo)}</span>
       </a>
     `).join('');
   }

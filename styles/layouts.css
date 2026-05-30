@@ -1324,13 +1324,15 @@
 
 .footer-legal { display: flex; gap: var(--sp-4); flex-wrap: wrap; }
 
-/* "Saiu na mídia" no rodapé (mai. 2026) */
+/* "Saiu na mídia" no rodapé (mai. 2026) - bloco CENTRALIZADO */
 .footer-media {
   margin-top: var(--sp-6);
   padding-top: var(--sp-5);
   border-top: 1px dashed var(--color-border);
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: var(--sp-3);
 }
 .footer-media-eyebrow {
@@ -1339,7 +1341,6 @@
   text-transform: uppercase;
   letter-spacing: 0.2em;
   color: var(--color-accent-pale);
-  align-self: flex-start;
 }
 .footer-media-sub {
   font-size: 0.82rem;
@@ -1351,28 +1352,44 @@
 .footer-media-strip {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--sp-3);
+  gap: var(--sp-4);
   max-width: 520px;
+  margin-inline: auto; /* centraliza o bloco de cards */
+  width: 100%;
 }
 
-/* "Saiu na mídia": so a imagem da materia (o print ja tem titulo +
-   veiculo). Thumbnail clicavel pequeno, sem texto duplicado embaixo. */
+/* "Saiu na mídia": imagem da materia (o print ja tem titulo) + nome do
+   veiculo pequeno embaixo, sem fundo. Card pulsa pra convidar o clique. */
 .footer-media-card {
-  display: block;
-  border: 1px solid rgba(245, 240, 230, 0.10);
-  border-radius: 8px;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
   text-decoration: none;
-  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
-  line-height: 0;
+  /* pulso suave continuo (chama atencao). Cada card com delay diferente
+     (definido inline no JS) pra pulsarem alternados, nao em bloco. */
+  animation: footerMediaPulse 2.8s ease-in-out infinite;
+  transition: transform 0.2s ease;
 }
 .footer-media-card:hover,
 .footer-media-card:focus-visible {
-  border-color: rgba(200, 160, 100, 0.6);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.30);
+  animation-play-state: paused; /* para de pulsar no hover */
+  transform: translateY(-3px) scale(1.03);
   outline: none;
+}
+.footer-media-card:hover .footer-media-card-img,
+.footer-media-card:focus-visible .footer-media-card-img {
+  border-color: rgba(200, 160, 100, 0.75);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.4);
+}
+.footer-media-card:hover .footer-media-card-source {
+  color: var(--color-accent, #E8C088);
+}
+
+@keyframes footerMediaPulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.045); }
 }
 
 .footer-media-card-img {
@@ -1382,10 +1399,28 @@
   object-fit: cover;
   object-position: center top; /* prioriza o topo da materia (titulo) */
   background-color: #2a0f0d;
+  border: 1px solid rgba(245, 240, 230, 0.10);
+  border-radius: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* So o nome do veiculo (Veja, O Globo...), pequeno, sem fundo */
+.footer-media-card-source {
+  font-family: var(--font-accent);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-text-muted);
+  transition: color 0.2s ease;
+}
+
+/* respeita usuarios que pedem menos animacao */
+@media (prefers-reduced-motion: reduce) {
+  .footer-media-card { animation: none; }
 }
 
 @media (max-width: 700px) {
-  .footer-media-strip { grid-template-columns: repeat(3, 1fr); max-width: 100%; gap: 8px; }
+  .footer-media-strip { grid-template-columns: repeat(3, 1fr); max-width: 100%; gap: 10px; }
 }
 .footer-media-note {
   font-size: 0.68rem;
