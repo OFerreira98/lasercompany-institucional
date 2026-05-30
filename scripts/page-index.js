@@ -123,7 +123,7 @@
 
     slidesEl.innerHTML = slides.map((s, i) => `
       <article class="hero-slide${i === 0 ? ' is-active' : ''}" data-slide="${s.id}" aria-roledescription="slide" aria-hidden="${i === 0 ? 'false' : 'true'}">
-        <div class="hero-slide-bg" style="background-image:url('${s.img}')"></div>
+        <div class="hero-slide-bg" style="background-image:url('${s.img}');${s.pos ? `background-position:${s.pos};` : ''}"></div>
         <div class="hero-slide-overlay" aria-hidden="true"></div>
         <div class="container hero-slide-content">
           <div class="hero-grid">

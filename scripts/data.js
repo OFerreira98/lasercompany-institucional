@@ -185,7 +185,8 @@ window.LaserData = {
   hero: [
     {
       id: 'premium',
-      img: 'assets/img/hero.jpg',
+      img: 'assets/img/procedimentos/black-peel-img.jpg',
+      pos: 'center 35%',
       eyebrow: 'Estética & Depilação a Laser e Ultrassom',
       title: 'Estética premium,',
       titleItalic: 'acessível a todos.',
@@ -195,7 +196,8 @@ window.LaserData = {
     },
     {
       id: 'estetica',
-      img: 'assets/img/estetica.jpg',
+      img: 'assets/img/procedimentos/remocao-micropigmentacao-img.jfif',
+      pos: 'center 30%',
       eyebrow: 'Estética a Laser',
       title: '21 protocolos',
       titleItalic: 'para a sua pele.',
@@ -205,7 +207,8 @@ window.LaserData = {
     },
     {
       id: 'depilacao',
-      img: 'assets/img/depilacao.jpg',
+      img: 'assets/img/procedimentos/dep-barba-img.jfif',
+      pos: 'center 30%',
       eyebrow: 'Depilação a Laser',
       title: 'Pele lisa,',
       titleItalic: 'sem dor e segura.',
@@ -215,7 +218,8 @@ window.LaserData = {
     },
     {
       id: 'ultrassom',
-      img: 'assets/img/ultrassom.jpg',
+      img: 'assets/img/procedimentos/us-palpebras-img.jpg',
+      pos: 'center 35%',
       eyebrow: 'Ultrassom',
       title: 'Lifting',
       titleItalic: 'sem cortes.',
@@ -225,7 +229,8 @@ window.LaserData = {
     },
     {
       id: 'avaliacao',
-      img: 'assets/img/hero.jpg',
+      img: 'assets/img/procedimentos/black-peel-img.jpg',
+      pos: 'center 35%',
       eyebrow: 'Sem compromisso',
       title: 'Avaliação gratuita',
       titleItalic: 'na unidade mais perto de você.',
