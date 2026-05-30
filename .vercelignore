@@ -1,0 +1,43 @@
+# Dev tools (geradores, servidor estatico de teste, scripts de extracao)
+_*.cjs
+_*.js
+_*.html
+_*.py
+_*.json
+generate_images*.py
+generate_images.ps1
+download.js
+test_*.jpg
+test_*.png
+
+# Relatorios e referencias locais (nao precisam ir pra producao)
+RELATORIO-CLIENTE.pdf
+Referencias 1/
+referencia/
+Referencias Wix Analytics/
+Referência a site Rafael para SEJA FRANQUEADO/
+Roteiro-Site-LaserCo.docx
+Roteiro-Site-LaserCo.txt
+Base visual/
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Claude Code local
+.claude/
+
+# Node
+node_modules/
+
+# Videos/imagens de rascunho na raiz de assets/img que ainda nao foram wirados
+# (quando o cliente decidir usar, movemos pra subpasta e tiramos daqui)
+assets/img/*.mp4
+assets/img/*.mov
