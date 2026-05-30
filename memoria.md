@@ -51,6 +51,34 @@ Feito, testado no preview e commitado (rodada com o Ferreira):
 - Antes tinha 6 fake (Exame, PEGN, Estadão, Folha de S.Paulo, ABF, Forbes) que eu inventei.
   Apagados em 30/mai. Não inventar veículo de mídia, NUNCA.
 
+### Chats flutuantes (30/mai)
+- **Ambos no canto inferior direito, lado a lado.** WhatsApp em `right: 1.5rem`,
+  chat do agente em `right: calc(1.5rem + 56 + 12)` (à esquerda do WhatsApp). Janela do
+  chat ancora no `right: 1.5rem; bottom: 5.5rem`.
+- **WhatsApp = bolinha redonda 56x56 verde** (#25D366), só ícone, SEM texto "Falar com
+  Laser & Co". A label-text fica `display: none`. Visual igual ao do agente (mesmo
+  formato, só muda a cor).
+- **Agente se apresenta como bot:** "Olá! Sou o Agente de Atendimento da Laser & Co.
+  Como posso te chamar?". Header do chat: "Agente de Atendimento". NÃO finge ser
+  representante humano da marca.
+
+### CEP / unidade mais próxima, regra de honestidade (30/mai)
+- Antes: qualquer fallback por UF afirmava "sua unidade é X". Resultado: CEP de
+  Cascavel (PR) abria WhatsApp da unidade de Maringá como se fosse "a sua". O cliente
+  reportou que isso é desonesto, são 280km, ninguém vai de Cascavel a Maringá.
+- Agora 3 níveis em `cep.js findUnidade`:
+  1. Prefixo exato dos 3 dígitos do CEP → confiável.
+  2. Mesma cidade (UF + nome de cidade igual via `unidadeCity(u)` que parseia
+     `endereco` no padrão `cidade/UF`) → confiável, ex.: Saúde SP → Butantã SP.
+  3. Mesma UF, cidade diferente → marca `_isDistant: true`, NÃO salva a unidade
+     no localStorage (só o CEP), pra o botão flutuante não abrir a unidade errada.
+- Consumidores:
+  - `chatbot.afterCEP`: se `_isDistant`, fala "Ainda não temos unidade em <cidade>,
+    a mais próxima é <X> em <cidade2>" e ainda oferece o WhatsApp dessa unidade.
+    Lead vai como `chatbot_expansao`.
+  - `whatsapp.js` modal: se `isDistant`, mostra inline a mesma mensagem honesta e
+    troca o submit pra "Falar com a unidade <X> mesmo assim" (não abre automático).
+
 ### FEITO: hero da home com fotos reais (30/mai)
 - 4 banners de IA (`hero.jpg`, `estetica.jpg`, `depilacao.jpg`, `ultrassom.jpg`) trocados por
   fotos reais de procedimento (`assets/img/procedimentos/`):

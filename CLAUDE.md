@@ -63,6 +63,18 @@ rede de franquias de estética a laser. Hospedado no GitHub e publicado na Verce
     foram apagados). Os 4 reais: **Veja** (não "Veja Rio"), **ABF**, **Varejo** (= ACIRP),
     **Agenda Carioca**. Slots são `<a target="_blank" rel="noopener">` clicáveis.
 
+12. **CEP nunca afirma "sua unidade é X" quando é em outra cidade longe.** Lógica em
+    `scripts/cep.js findUnidade`: prefixo exato → mesma cidade → mesma UF marcado
+    `_isDistant`. Caso de erro famoso: Cascavel (PR) recomendado pra Maringá (PR), 280km.
+    Quando `result.isDistant`, chat/modal dizem "Ainda não temos unidade em <cidade>, a
+    mais próxima é <X>". Não salva unidade distante no localStorage.
+
+13. **Chatbot é AGENTE, não a marca.** Apresenta-se como "Agente de Atendimento da Laser
+    & Co" (não como "atendimento da Laser & Co"). Header do chat também "Agente de
+    Atendimento". Mensagem inicial: "Olá! Sou o Agente de Atendimento da Laser & Co.
+    Como posso te chamar?". Os dois flutuantes (WhatsApp + agente) ficam no canto inferior
+    direito lado a lado, ambos bolinhas redondas 56x56 (WhatsApp verde, agente vinho).
+
 ---
 
 ## Estrutura
