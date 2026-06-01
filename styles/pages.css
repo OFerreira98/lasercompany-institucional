@@ -3516,6 +3516,132 @@ body.page-unidades .page-hero-photo-bg::before {
   .cred-band-reverse .cred-photo { order: -1; aspect-ratio: 4 / 3; }
 }
 
+/* ============================================================
+   SEJA UM FRANQUEADO v3 (01/06/2026) — LP fiel ao modelo de
+   franquia (ref. Espacolaser), com as cores da marca. Header e
+   footer minimalistas proprios da LP (nao usam o include do site).
+   Fundo bege da pagina; secoes alternam claro/vinho.
+   ============================================================ */
+.page-franqueado-lp { background: #F5EFE2; }
+
+/* ---- Header minimalista ---- */
+.frlp-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: transparent;
+  transition: background var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
+}
+.frlp-header.scrolled { background: #FFFFFF; box-shadow: 0 6px 24px rgba(70,25,20,0.10); }
+.frlp-header-inner { display: flex; align-items: center; gap: var(--sp-4); padding-block: 0.7rem; }
+.frlp-logo img { height: 46px; width: auto; display: block; }
+.frlp-header:not(.scrolled) .frlp-logo img { filter: drop-shadow(0 1px 8px rgba(0,0,0,0.55)); }
+.frlp-nav { display: flex; gap: var(--sp-5); margin-left: auto; }
+.frlp-nav a {
+  font-family: var(--font-accent); font-size: var(--fs-sm); font-weight: 500;
+  color: #F5EFE2; text-decoration: none; transition: color 0.2s; text-shadow: 0 1px 4px rgba(0,0,0,0.45);
+}
+.frlp-header.scrolled .frlp-nav a { color: #481712; text-shadow: none; }
+.frlp-nav a:hover { color: #C8A064; }
+.frlp-header:not(.scrolled) .frlp-header-cta { box-shadow: 0 6px 20px rgba(0,0,0,0.28); }
+@media (max-width: 760px) {
+  .frlp-nav { display: none; }
+  .frlp-header-inner { gap: var(--sp-2); }
+  .frlp-header-cta { margin-left: auto; font-size: var(--fs-xs); padding: 0.6rem 0.9rem; }
+  .frlp-logo img { height: 38px; }
+}
+
+/* ---- Hero ---- */
+.frlp-hero { position: relative; padding-top: clamp(7rem, 12vh, 9rem); padding-bottom: clamp(2.5rem, 5vw, 4rem); overflow: hidden; }
+.frlp-hero-media { position: absolute; inset: 0; background-size: cover; background-position: center 30%; }
+.frlp-hero-media::after {
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(90deg, rgba(26,4,4,0.93) 0%, rgba(31,11,10,0.80) 38%, rgba(31,11,10,0.28) 62%, rgba(31,11,10,0.12) 100%);
+}
+.frlp-hero-inner { position: relative; z-index: 2; }
+.frlp-hero-panel { max-width: 600px; padding: clamp(1rem, 2vw, 2rem) 0; }
+.frlp-hero-badge {
+  display: inline-block; font-family: var(--font-accent); font-size: var(--fs-xs);
+  text-transform: uppercase; letter-spacing: var(--ls-wider); color: #E8C088;
+  border: 1px solid rgba(200,160,100,0.45); border-radius: var(--radius-pill);
+  padding: 0.4rem 0.9rem; margin-bottom: var(--sp-4);
+}
+.frlp-hero-title { font-family: var(--font-serif); font-weight: var(--fw-light); font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1.04; letter-spacing: var(--ls-tight); color: #F7F1E6; margin: 0 0 var(--sp-3); }
+.frlp-hero-title .italic { font-style: italic; background: linear-gradient(120deg, #E8C088, #C8A064); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.frlp-hero-sub { font-size: var(--fs-lg); color: rgba(245,239,226,0.85); line-height: 1.5; margin: 0 0 var(--sp-5); max-width: 44ch; }
+.frlp-hero-btn {
+  background: #FFFFFF; color: #481712; display: inline-flex; align-items: center; gap: 0.6rem;
+  font-family: var(--font-accent); font-weight: 600; font-size: var(--fs-base);
+  padding: 0.9rem 1.6rem; border-radius: var(--radius-pill); box-shadow: 0 10px 30px rgba(0,0,0,0.28);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.frlp-hero-btn span { color: #B57C0C; transition: transform 0.2s; }
+.frlp-hero-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(0,0,0,0.34); }
+.frlp-hero-btn:hover span { transform: translateX(4px); }
+
+/* 4 caixas de numeros */
+.frlp-stats { position: relative; z-index: 3; list-style: none; margin: clamp(2rem,4vw,3.5rem) 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-3); }
+.frlp-stat { background: linear-gradient(160deg, #2A0F0D, #1F0B0A); border: 1px solid rgba(200,160,100,0.28); border-radius: var(--radius-lg); padding: clamp(1.1rem,2vw,1.6rem); box-shadow: 0 16px 40px rgba(26,4,4,0.30); display: flex; flex-direction: column; gap: 0.2rem; }
+.frlp-stat-ico { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(200,160,100,0.14); color: #E8C088; margin-bottom: 0.4rem; }
+.frlp-stat-ico svg { width: 20px; height: 20px; }
+.frlp-stat strong { font-family: var(--font-serif); font-size: clamp(1.3rem,2.4vw,1.7rem); color: #F7F1E6; line-height: 1.1; }
+.frlp-stat-label { font-size: var(--fs-sm); color: rgba(232,192,136,0.85); }
+@media (max-width: 860px) { .frlp-stats { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 460px) { .frlp-stats { grid-template-columns: 1fr; } }
+
+/* ---- Formulario horizontal ---- */
+.frlp-form-section { padding-block: clamp(2.5rem, 5vw, 4rem); }
+.frlp-form-card { background: #FFFFFF; border: 1px solid rgba(154,107,30,0.22); border-radius: var(--radius-lg); box-shadow: 0 18px 50px rgba(70,25,20,0.12); padding: clamp(1.5rem, 3vw, 2.5rem); }
+.frlp-form-head { text-align: center; margin-bottom: var(--sp-5); }
+.frlp-form-title { font-family: var(--font-serif); font-weight: var(--fw-light); font-size: clamp(1.6rem,3vw,2.2rem); color: #1F0B0A; margin: 0; }
+.frlp-form-title .italic { font-style: italic; color: #B57C0C; }
+.frlp-form-invest { font-family: var(--font-accent); font-size: var(--fs-base); color: #6E4A3A; margin: var(--sp-2) 0 0; }
+.frlp-form-invest strong { color: #9A6B1E; }
+.frlp-form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-3) var(--sp-4); }
+.frlp-form-grid .field { margin: 0; }
+.frlp-form-grid .field-label { color: #6E4A3A; }
+.frlp-form-grid .input, .frlp-form-grid .select { background: #FFFFFF; border-color: rgba(120,24,18,0.20); color: #1F0B0A; }
+.frlp-form-grid .input::placeholder { color: #A98E7A; }
+.frlp-form-grid .input:focus, .frlp-form-grid .select:focus { border-color: #9A6B1E; box-shadow: 0 0 0 4px rgba(154,107,30,0.16); }
+.frlp-field-wide { grid-column: span 2; }
+.frlp-field-submit { grid-column: span 1; display: flex; align-items: flex-end; }
+.frlp-form-consent { font-size: var(--fs-xs); color: #8A6850; text-align: center; margin: var(--sp-4) 0 0; }
+@media (max-width: 820px) { .frlp-form-grid { grid-template-columns: repeat(2,1fr); } .frlp-field-wide, .frlp-field-submit { grid-column: span 2; } }
+@media (max-width: 520px) { .frlp-form-grid { grid-template-columns: 1fr; } .frlp-field-wide, .frlp-field-submit { grid-column: span 1; } }
+
+/* ---- Big numbers ---- */
+.frlp-bignum-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: var(--sp-4); margin-top: var(--sp-6); }
+.frlp-bignum { text-align: center; padding: var(--sp-5) var(--sp-4); background: #FFFFFF; border: 1px solid rgba(154,107,30,0.18); border-radius: var(--radius-lg); box-shadow: 0 8px 24px rgba(70,25,20,0.06); }
+.frlp-bignum-value { font-family: var(--font-serif); font-size: clamp(2rem,4vw,2.8rem); font-weight: var(--fw-light); color: #9A6B1E; line-height: 1; margin-bottom: var(--sp-2); }
+.frlp-bignum-label { font-size: var(--fs-sm); color: #4E1A15; line-height: 1.4; }
+@media (max-width: 820px) { .frlp-bignum-grid { grid-template-columns: repeat(2,1fr); } }
+
+/* ---- Diferenciais (carrossel auto) ---- */
+.frlp-difs-viewport { overflow: hidden; margin-top: var(--sp-6); -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.frlp-difs-track { display: flex; gap: var(--sp-4); width: max-content; animation: frlpScroll 38s linear infinite; padding-inline: var(--sp-4); }
+.frlp-difs-viewport:hover .frlp-difs-track { animation-play-state: paused; }
+@keyframes frlpScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.frlp-dif-card { position: relative; flex: 0 0 auto; width: clamp(220px, 24vw, 300px); aspect-ratio: 3 / 4.2; border-radius: 16px; overflow: hidden; background-size: cover; background-position: center; border: 1px solid rgba(200,160,100,0.25); }
+.frlp-dif-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(31,11,10,0.10) 0%, rgba(26,4,4,0.85) 100%); }
+.frlp-dif-cap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: var(--sp-4); color: #F7F1E6; font-family: var(--font-accent); font-weight: 600; font-size: var(--fs-base); line-height: 1.3; }
+@media (prefers-reduced-motion: reduce) { .frlp-difs-track { animation: none; } }
+
+/* ---- Depoimentos (placeholder) ---- */
+.frlp-depo-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--sp-4); margin-top: var(--sp-6); }
+.frlp-depo-card { position: relative; background: #FFFFFF; border-radius: var(--radius-lg); padding: var(--sp-6) var(--sp-5) var(--sp-5); box-shadow: 0 14px 40px rgba(0,0,0,0.22); }
+.frlp-depo-quote { font-family: var(--font-serif); font-size: 3.5rem; line-height: 0.8; color: #C8A064; position: absolute; top: 1.6rem; left: 1.4rem; }
+.frlp-depo-text { font-size: var(--fs-base); color: #2A0F0D; line-height: 1.6; margin: var(--sp-5) 0 var(--sp-4); font-style: italic; }
+.frlp-depo-autor { display: flex; flex-direction: column; border-top: 1px solid rgba(70,25,20,0.10); padding-top: var(--sp-3); }
+.frlp-depo-nome { font-family: var(--font-accent); font-weight: 700; color: #481712; }
+.frlp-depo-unid { font-size: var(--fs-sm); color: #8A6850; }
+@media (max-width: 860px) { .frlp-depo-grid { grid-template-columns: 1fr; } }
+
+/* ---- Footer minimalista ---- */
+.frlp-footer { background: #1A0404; padding-block: clamp(2rem,4vw,3rem); }
+.frlp-footer-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); flex-wrap: wrap; }
+.frlp-footer-logo { height: 40px; width: auto; }
+.frlp-footer-legal { display: flex; flex-direction: column; gap: 0.2rem; text-align: right; }
+.frlp-footer-legal span { font-size: var(--fs-sm); color: rgba(245,239,226,0.7); }
+@media (max-width: 600px) { .frlp-footer-inner { flex-direction: column; text-align: center; } .frlp-footer-legal { text-align: center; } }
+
 .fundador-card-info {
   position: relative;
   padding: var(--sp-4) var(--sp-5) var(--sp-5);

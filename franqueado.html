@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#481712">
-  <meta name="description" content="Seja um franqueado Laser & Co. A primeira rede do Brasil a unir laser e ultrassom, mais de 70 unidades em 15 estados, com Anitta como sócia.">
+  <meta name="description" content="Seja um franqueado Laser & Co. A primeira rede do Brasil a unir laser e ultrassom, mais de 70 unidades em 15 estados, com Anitta como sócia. Investimento a partir de R$ 300 mil.">
   <title>Seja um Franqueado | Laser & Co</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="alternate icon" type="image/png" href="assets/logos/avatar-andco-redondo.png">
@@ -19,223 +19,192 @@
   <link rel="stylesheet" href="styles/pages.css">
   <script>try{var bs=['default','roteiro-dark','roteiro-light'];var b=localStorage.getItem('laserco_base')||localStorage.getItem('laserco_theme')||'default';var a=localStorage.getItem('laserco_accent')||'';if(bs.indexOf(b)<0){a=a||b;b='default';}var r=document.documentElement;r.setAttribute('data-theme',b);if(a)r.setAttribute('data-accent',a);}catch(e){}</script>
 </head>
-<body class="page-franqueado page-has-dark-hero">
+<body class="page-franqueado-lp">
 
-<script src="scripts/layout.js"></script>
-<div data-include="header"></div>
+<!-- ============ HEADER MINIMALISTA (LP) ============ -->
+<header class="frlp-header" id="frlp-header">
+  <div class="container frlp-header-inner">
+    <a href="index.html" class="frlp-logo" aria-label="Laser & Co, início">
+      <img src="assets/logos/logo-bold-dourado.png" alt="Laser & Co">
+    </a>
+    <nav class="frlp-nav" aria-label="Seções da página">
+      <a href="#frlp-numeros">A franquia</a>
+      <a href="#frlp-investimento">Investimento</a>
+      <a href="#frlp-depoimentos">Depoimentos</a>
+    </nav>
+    <a href="#frlp-form" class="btn btn-primary frlp-header-cta">Receba o plano de negócio</a>
+  </div>
+</header>
 
 <main>
 
-  <!-- ============ SEÇÃO 1, HERO 50/50 (conteúdo + formulário) ============ -->
-  <section class="fr-hero">
-    <div class="laser-beam laser-beam-animated" style="top: 22%; left: 0; right: 0;" aria-hidden="true"></div>
+  <!-- ============ HERO (foto de fundo + painel + 4 números) ============ -->
+  <section class="frlp-hero">
+    <div class="frlp-hero-media" style="background-image: url('assets/img/franqueado-recepcao.jpg');" aria-hidden="true"></div>
+    <div class="container frlp-hero-inner">
+      <div class="frlp-hero-panel reveal">
+        <span class="frlp-hero-badge">Franquia premiada, mercado em expansão</span>
+        <h1 class="frlp-hero-title">Confiança que se sente na pele, <span class="italic">e nos negócios.</span></h1>
+        <p class="frlp-hero-sub">A primeira rede do Brasil a unir laser e ultrassom, democratizando a estética premium.</p>
+        <a href="#frlp-form" class="btn frlp-hero-btn">Seja um franqueado <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+
     <div class="container">
-      <div class="fr-hero-grid">
+      <ul class="frlp-stats" aria-label="Números da rede">
+        <li class="frlp-stat">
+          <span class="frlp-stat-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+          <strong>Fature até R$ 1,8 MM</strong>
+          <span class="frlp-stat-label">por ano</span>
+        </li>
+        <li class="frlp-stat">
+          <span class="frlp-stat-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg></span>
+          <strong>+70 unidades</strong>
+          <span class="frlp-stat-label">em 15 estados</span>
+        </li>
+        <li class="frlp-stat">
+          <span class="frlp-stat-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+          <strong>+1 milhão</strong>
+          <span class="frlp-stat-label">de pessoas atendidas</span>
+        </li>
+        <li class="frlp-stat">
+          <span class="frlp-stat-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 9 22 9.3 16.5 13.8 18.5 21 12 16.8 5.5 21 7.5 13.8 2 9.3 9 9"/></svg></span>
+          <strong>Anitta</strong>
+          <span class="frlp-stat-label">como sócia</span>
+        </li>
+      </ul>
+    </div>
+  </section>
 
-        <!-- Esquerda: conteúdo + números -->
-        <div class="fr-hero-content">
-          <div class="glass-pill reveal" style="margin-bottom: var(--sp-5);">
-            <span class="dot"></span>
-            Seja um franqueado Laser &amp; Co
-          </div>
-          <h1 class="fr-hero-title reveal reveal-delay-1">
-            Confiança que se sente na pele, <span class="italic">e nos negócios.</span>
-          </h1>
-          <p class="fr-hero-sub reveal reveal-delay-2">
-            Somos a primeira rede do Brasil a unir <strong>laser e ultrassom</strong>, democratizando a estética premium. Em pouco mais de 2 anos, viramos referência, e a expansão está só começando.
-          </p>
-
-          <ul class="fr-hero-stats reveal reveal-delay-3" aria-label="Números da rede">
-            <li class="fr-stat">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg>
-              <span><strong>+70</strong> unidades</span>
-            </li>
-            <li class="fr-stat">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              <span><strong>15</strong> estados</span>
-            </li>
-            <li class="fr-stat">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15 9 22 9.3 16.5 13.8 18.5 21 12 16.8 5.5 21 7.5 13.8 2 9.3 9 9"/></svg>
-              <span><strong>Anitta</strong> como sócia</span>
-            </li>
-            <li class="fr-stat">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-              <span>Pioneira em <strong>laser + ultrassom</strong></span>
-            </li>
-          </ul>
+  <!-- ============ FORMULÁRIO HORIZONTAL ============ -->
+  <section class="frlp-form-section" id="frlp-form">
+    <div class="container">
+      <div class="frlp-form-card" id="frlp-form-card">
+        <div class="frlp-form-head">
+          <h2 class="frlp-form-title">Quero ser um <span class="italic">franqueado.</span></h2>
+          <p class="frlp-form-invest">Investimento médio a partir de <strong>R$ 350 mil</strong></p>
         </div>
-
-        <!-- Direita: formulário de captação -->
-        <div class="fr-form-card reveal reveal-delay-2" id="form-franquia">
-          <div id="fr-form-card">
-            <span class="fr-form-eyebrow">Próximo passo</span>
-            <h2 class="fr-form-title">Receba a <span class="italic">apresentação de negócio.</span></h2>
-            <p class="fr-form-sub">Preencha e nossa equipe de expansão envia o material completo: investimento, retorno e como abrir a sua unidade.</p>
-
-            <form id="franquia-form" novalidate>
-              <div class="field">
-                <label class="field-label" for="fr-nome">Nome <span class="required">*</span></label>
-                <input type="text" id="fr-nome" name="nome" class="input" placeholder="Seu nome completo" required>
-                <div class="field-error">Informe seu nome.</div>
-              </div>
-              <div class="field">
-                <label class="field-label" for="fr-tel">WhatsApp <span class="required">*</span></label>
-                <input type="tel" id="fr-tel" name="telefone" class="input" data-mask="phone" placeholder="(11) 99999-9999" inputmode="tel" required>
-                <div class="field-error">Informe um WhatsApp válido.</div>
-              </div>
-              <div class="field">
-                <label class="field-label" for="fr-email">E-mail <span class="required">*</span></label>
-                <input type="email" id="fr-email" name="email" class="input" placeholder="seu@email.com" required>
-                <div class="field-error">Informe um e-mail válido.</div>
-              </div>
-              <div class="field">
-                <label class="field-label" for="fr-capital">Capital disponível para investir <span class="required">*</span></label>
-                <select id="fr-capital" name="capital" class="select" required>
-                  <option value="">Selecione uma faixa</option>
-                  <option value="ate-150k">Até R$ 150 mil</option>
-                  <option value="150-300k">R$ 150 mil a R$ 300 mil</option>
-                  <option value="300-500k">R$ 300 mil a R$ 500 mil</option>
-                  <option value="acima-500k">Acima de R$ 500 mil</option>
-                </select>
-                <div class="field-error">Selecione uma faixa.</div>
-              </div>
-              <label class="checkbox-field">
-                <input type="checkbox" id="fr-consent" required>
-                <span>Autorizo o contato da equipe de expansão Laser &amp; Co e o uso dos meus dados conforme a LGPD.</span>
-              </label>
-              <button type="submit" class="btn btn-primary btn-lg btn-arrow btn-block btn-pulse" id="fr-submit" style="margin-top: var(--sp-4);">Quero receber a apresentação</button>
-            </form>
+        <form id="franquia-form" novalidate class="frlp-form-grid">
+          <div class="field">
+            <label class="field-label" for="fr-nome">Nome <span class="required">*</span></label>
+            <input type="text" id="fr-nome" name="nome" class="input" placeholder="Seu nome completo" required>
+            <div class="field-error">Informe seu nome.</div>
           </div>
-        </div>
-
+          <div class="field">
+            <label class="field-label" for="fr-email">E-mail <span class="required">*</span></label>
+            <input type="email" id="fr-email" name="email" class="input" placeholder="seu@email.com" required>
+            <div class="field-error">Informe um e-mail válido.</div>
+          </div>
+          <div class="field">
+            <label class="field-label" for="fr-tel">DDD + WhatsApp <span class="required">*</span></label>
+            <input type="tel" id="fr-tel" name="telefone" class="input" data-mask="phone" placeholder="(11) 99999-9999" inputmode="tel" required>
+            <div class="field-error">Informe um WhatsApp válido.</div>
+          </div>
+          <div class="field">
+            <label class="field-label" for="fr-uf">Estado de interesse <span class="required">*</span></label>
+            <select id="fr-uf" name="uf" class="select" required>
+              <option value="">Selecione o estado</option>
+              <option>AC</option><option>AL</option><option>AP</option><option>AM</option><option>BA</option><option>CE</option><option>DF</option><option>ES</option><option>GO</option><option>MA</option><option>MT</option><option>MS</option><option>MG</option><option>PA</option><option>PB</option><option>PR</option><option>PE</option><option>PI</option><option>RJ</option><option>RN</option><option>RS</option><option>RO</option><option>RR</option><option>SC</option><option>SP</option><option>SE</option><option>TO</option>
+            </select>
+            <div class="field-error">Selecione o estado.</div>
+          </div>
+          <div class="field">
+            <label class="field-label" for="fr-cidade">Cidade de interesse</label>
+            <input type="text" id="fr-cidade" name="cidade" class="input" placeholder="Ex.: Curitiba">
+          </div>
+          <div class="field">
+            <label class="field-label" for="fr-capital">Capital de investimento <span class="required">*</span></label>
+            <select id="fr-capital" name="capital" class="select" required>
+              <option value="">Selecione uma faixa</option>
+              <option value="ate-350k">Até R$ 350 mil</option>
+              <option value="350-500k">R$ 350 mil a R$ 500 mil</option>
+              <option value="500k-1mi">R$ 500 mil a R$ 1 milhão</option>
+              <option value="acima-1mi">Acima de R$ 1 milhão</option>
+            </select>
+            <div class="field-error">Selecione uma faixa.</div>
+          </div>
+          <div class="field frlp-field-wide">
+            <label class="field-label" for="fr-ocupacao">Qual sua ocupação atual</label>
+            <input type="text" id="fr-ocupacao" name="ocupacao" class="input" placeholder="Ex.: Empresário, investidor, médico...">
+          </div>
+          <div class="field frlp-field-submit">
+            <button type="submit" class="btn btn-primary btn-lg btn-arrow btn-block" id="fr-submit">Quero mais informações</button>
+          </div>
+        </form>
+        <p class="frlp-form-consent">Ao enviar, você autoriza o contato da equipe de expansão Laser &amp; Co e o uso dos seus dados conforme a LGPD.</p>
       </div>
     </div>
   </section>
 
-  <!-- ============ SEÇÃO 2, SEJA DONO DE UMA UNIDADE ============ -->
-  <section class="section section-light">
-    <div class="container">
-      <div class="cred-band">
-        <div class="cred-photo reveal" style="background-image: url('assets/img/franqueado-recepcao.jpg');" role="img" aria-label="Recepção de uma unidade Laser & Co"></div>
-        <div class="reveal reveal-delay-1">
-          <span class="eyebrow">O investimento</span>
-          <h2 class="section-title section-title-left" style="margin-bottom: var(--sp-4);">
-            Seja dono de uma <span class="italic">franquia Laser &amp; Co.</span>
-          </h2>
-          <p class="fundador-text">
-            Uma operação enxuta, com tecnologia premium e ticket acessível, num mercado que cresce mesmo quando a economia desacelera. Você abre com a marca, o método e o suporte de uma rede que já passou de 70 unidades.
-          </p>
-          <ul class="fr-bullets">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Modelo validado, com mais de 70 unidades operando</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Três frentes de receita: depilação, ultrassom e estética</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Implantação assistida, do ponto à inauguração</li>
-          </ul>
-          <a href="#form-franquia" class="btn btn-primary btn-arrow" style="margin-top: var(--sp-4);">Solicitar apresentação</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ SEÇÃO 3, POR QUE INVESTIR (vantagens) ============ -->
-  <section class="section section-wine">
+  <!-- ============ POR QUE ESCOLHER + BIG NUMBERS ============ -->
+  <section class="section section-light" id="frlp-numeros">
     <div class="container">
       <header class="section-header reveal">
-        <span class="eyebrow eyebrow-centered">Por que investir</span>
+        <span class="eyebrow eyebrow-centered">Por que escolher a Laser &amp; Co?</span>
         <h2 class="section-title">Um <span class="italic">mercado novo</span>, criado por nós.</h2>
-        <p class="section-sub">A Laser &amp; Co criou um segmento inédito ao democratizar laser e ultrassom para as classes B e C, a maior parte da população que nunca teve acesso a essas tecnologias.</p>
+        <p class="section-sub">A Laser &amp; Co criou um segmento inédito ao democratizar laser e ultrassom para as classes B e C, 88% da população que nunca teve acesso a essas tecnologias.</p>
       </header>
 
-      <div class="posicionamento-grid">
-        <article class="posicionamento-card reveal">
-          <div class="posicionamento-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg>
-          </div>
-          <h3 class="posicionamento-title">Mercado em expansão</h3>
-          <p class="posicionamento-desc">Estética é um dos setores que mais cresce no Brasil, com demanda alta mesmo em períodos de retração econômica.</p>
-        </article>
-        <article class="posicionamento-card reveal reveal-delay-1">
-          <div class="posicionamento-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-          </div>
-          <h3 class="posicionamento-title">3 receitas em 1</h3>
-          <p class="posicionamento-desc">Depilação como porta de entrada, ultrassom como ticket alto e estética como recorrência. Mais faturamento por unidade.</p>
-        </article>
-        <article class="posicionamento-card reveal reveal-delay-2">
-          <div class="posicionamento-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><path d="M16 2l5 2-2 5"/></svg>
-          </div>
-          <h3 class="posicionamento-title">Suporte integral</h3>
-          <p class="posicionamento-desc">Marketing centralizado, tráfego pago, gestão e operação. O site distribui leads automaticamente para a sua região.</p>
-        </article>
-        <article class="posicionamento-card reveal reveal-delay-3">
-          <div class="posicionamento-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.5 3 6 3s6-2 6-3v-5"/></svg>
-          </div>
-          <h3 class="posicionamento-title">Laser Academy</h3>
-          <p class="posicionamento-desc">Equipe técnica e comercial treinada na nossa universidade própria, com atualização contínua e suporte direto.</p>
-        </article>
+      <div class="frlp-bignum-grid reveal">
+        <div class="frlp-bignum">
+          <div class="frlp-bignum-value">88%</div>
+          <div class="frlp-bignum-label">das classes B e C nunca tiveram acesso a laser e ultrassom</div>
+        </div>
+        <div class="frlp-bignum">
+          <div class="frlp-bignum-value">+13,4%</div>
+          <div class="frlp-bignum-label">de crescimento do setor de estética (ABF)</div>
+        </div>
+        <div class="frlp-bignum">
+          <div class="frlp-bignum-value">+100</div>
+          <div class="frlp-bignum-label">tratamentos no portfólio da rede</div>
+        </div>
+        <div class="frlp-bignum">
+          <div class="frlp-bignum-value">+1 milhão</div>
+          <div class="frlp-bignum-label">de pessoas já atendidas</div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ SEÇÃO 4, NÚMEROS DO NEGÓCIO ============ -->
-  <section class="section section-light section-light-soft">
+  <!-- ============ NOSSOS NÚMEROS (financeiro) ============ -->
+  <section class="section section-light section-light-soft" id="frlp-investimento">
     <div class="container">
       <header class="section-header reveal">
-        <span class="eyebrow eyebrow-centered">Os números do negócio</span>
-        <h2 class="section-title">O que <span class="italic">esperar.</span></h2>
+        <span class="eyebrow eyebrow-centered">Nossos números</span>
+        <h2 class="section-title">O que <span class="italic">esperar do negócio.</span></h2>
       </header>
 
       <div class="numeros-grid reveal" data-motion-stagger=".numero-card">
         <article class="numero-card">
-          <div class="numero-card-head">
-            <span class="numero-card-ico" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 4 21 9 16 9"/><path d="M12 7v5l3 2"/></svg>
-            </span>
+          <div class="numero-card-head"><span class="numero-card-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span></div>
+          <div class="numero-card-body">
+            <h3 class="numero-card-label">Investimento</h3>
+            <div class="numero-card-value">a partir de R$ 300 mil</div>
+            <p class="numero-card-sub">taxa de franquia + obra + capital de giro</p>
           </div>
+        </article>
+        <article class="numero-card">
+          <div class="numero-card-head"><span class="numero-card-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="20" x2="4" y2="14"/><line x1="10" y1="20" x2="10" y2="10"/><line x1="16" y1="20" x2="16" y2="6"/><polyline points="3 11 10 4 15 9 21 3"/></svg></span></div>
+          <div class="numero-card-body">
+            <h3 class="numero-card-label">Lucratividade média</h3>
+            <div class="numero-card-value">15 a 30%</div>
+            <p class="numero-card-sub">em média</p>
+          </div>
+        </article>
+        <article class="numero-card">
+          <div class="numero-card-head"><span class="numero-card-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 4 21 9 16 9"/><path d="M12 7v5l3 2"/></svg></span></div>
           <div class="numero-card-body">
             <h3 class="numero-card-label">Payback</h3>
-            <div class="numero-card-value">18 a 24 meses</div>
+            <div class="numero-card-value">a partir de 24 meses</div>
             <p class="numero-card-sub">em média</p>
           </div>
         </article>
-
         <article class="numero-card">
-          <div class="numero-card-head">
-            <span class="numero-card-ico" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="20" x2="4" y2="14"/><line x1="10" y1="20" x2="10" y2="10"/><line x1="16" y1="20" x2="16" y2="6"/><polyline points="3 11 10 4 15 9 21 3"/><polyline points="16 3 21 3 21 8"/></svg>
-            </span>
-          </div>
+          <div class="numero-card-head"><span class="numero-card-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16c2-1 4-1 6 0l4 1c2 .5 4 .5 6-1"/><path d="M3 13c2-1 4-1 6 0l4 1c2 .5 4 .5 6-1"/><circle cx="16" cy="6" r="3"/></svg></span></div>
           <div class="numero-card-body">
-            <h3 class="numero-card-label">Margem de faturamento</h3>
-            <div class="numero-card-value">20 a 30%</div>
-            <p class="numero-card-sub">em média</p>
-          </div>
-        </article>
-
-        <article class="numero-card">
-          <div class="numero-card-head">
-            <span class="numero-card-ico" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16c2-1 4-1 6 0l4 1c2 .5 4 .5 6-1"/><path d="M3 13c2-1 4-1 6 0l4 1c2 .5 4 .5 6-1"/><circle cx="16" cy="6" r="3"/></svg>
-            </span>
-          </div>
-          <div class="numero-card-body">
-            <h3 class="numero-card-label">Royalties</h3>
-            <div class="numero-card-value">10%</div>
-            <p class="numero-card-sub">sobre o faturamento</p>
-          </div>
-        </article>
-
-        <article class="numero-card">
-          <div class="numero-card-head">
-            <span class="numero-card-ico" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="5"/><path d="M12 11v4M11 12h2"/><polyline points="5 8 5 3 8 3"/><polyline points="19 8 19 3 16 3"/></svg>
-            </span>
-          </div>
-          <div class="numero-card-body">
-            <h3 class="numero-card-label">Rentabilidade</h3>
-            <div class="numero-card-value">20%</div>
-            <p class="numero-card-sub">em média</p>
+            <h3 class="numero-card-label">Faturamento</h3>
+            <div class="numero-card-value">até R$ 1,8 MM/ano</div>
+            <p class="numero-card-sub">por unidade</p>
           </div>
         </article>
       </div>
@@ -246,51 +215,42 @@
     </div>
   </section>
 
-  <!-- ============ SEÇÃO 5, O FUNDADOR (prova real) ============ -->
-  <section class="section section-alt" id="fundador">
+  <!-- ============ DIFERENCIAIS (4 colunas de foto, auto-scroll) ============ -->
+  <section class="section section-wine frlp-difs-section">
     <div class="container">
-      <div class="fundador-section">
-        <div class="fundador-card reveal">
-          <div class="fundador-foto has-photo" style="background-image: url('assets/img/equipe/rafael-estevez.jpg');" role="img" aria-label="Rafael Estevez, fundador da Laser & Co"></div>
-          <div class="fundador-card-info">
-            <div class="fundador-card-name">Rafael Estevez</div>
-            <div class="fundador-card-role">Fundador da Laser &amp; Co</div>
-            <div class="fundador-card-meta">Criador da Botoclinic, rede que atraiu investimento da XP</div>
-          </div>
-        </div>
+      <header class="section-header reveal">
+        <span class="eyebrow eyebrow-centered">Diferenciais da Laser &amp; Co</span>
+        <h2 class="section-title">Transforme investimento <span class="italic">em resultado.</span></h2>
+        <p class="section-sub">Suporte completo, da escolha do ponto à inauguração. E, depois, em marketing, treinamento e operação.</p>
+      </header>
+    </div>
 
-        <div class="reveal reveal-delay-1">
-          <span class="eyebrow">Quem está por trás</span>
-          <h2 class="section-title section-title-left" style="margin-bottom: var(--sp-5);">
-            Não estamos testando uma ideia. <br>
-            <span class="italic">Já construímos um gigante.</span>
-          </h2>
-
-          <p class="fundador-text">
-            <strong style="color: var(--color-accent);">Rafael Estevez</strong> é o fundador da Laser &amp; Co. Antes dela, criou a <strong>Botoclinic</strong>, maior rede de harmonização facial do Brasil, que atraiu o investimento do fundo de Private Equity da <strong>XP</strong> em apenas um ano.
-          </p>
-          <p class="fundador-text">
-            Por trás da operação está a <strong>Franchising Factory</strong>, a consultoria de Rafael que já formatou mais de 150 marcas e atendeu mais de mil clientes, levando negócios da ideia à expansão nacional. Toda essa experiência está aplicada à Laser &amp; Co.
-          </p>
-
-          <div class="cred-chips" style="margin-top: var(--sp-5);">
-            <span class="cred-chip">70+ unidades</span>
-            <span class="cred-chip">+150 marcas formatadas</span>
-            <span class="cred-chip">Botoclinic + XP</span>
-            <span class="cred-chip">Anitta como sócia</span>
-          </div>
-        </div>
+    <div class="frlp-difs-viewport" aria-label="Diferenciais da rede">
+      <div class="frlp-difs-track">
+        <article class="frlp-dif-card" style="background-image: url('assets/img/franqueado-recepcao.jpg');"><div class="frlp-dif-overlay"></div><div class="frlp-dif-cap">Implantação assistida, do ponto à inauguração</div></article>
+        <article class="frlp-dif-card" style="background-image: url('assets/img/equipe/recepcao.jpg');"><div class="frlp-dif-overlay"></div><div class="frlp-dif-cap">Marketing centralizado e leads para a sua região</div></article>
+        <article class="frlp-dif-card" style="background-image: url('assets/img/procedimentos/rejuv-facial-4d-img.jpg');"><div class="frlp-dif-overlay"></div><div class="frlp-dif-cap">Laser Academy, equipe treinada na nossa universidade</div></article>
+        <article class="frlp-dif-card" style="background-image: url('assets/img/hero.jpg');"><div class="frlp-dif-overlay"></div><div class="frlp-dif-cap">Produtos exclusivos e suporte de operação contínuo</div></article>
+        <!-- duplicado para o loop infinito -->
+        <article class="frlp-dif-card" style="background-image: url('assets/img/franqueado-recepcao.jpg');" aria-hidden="true"><div class="frlp-dif-overlay"></div><div class="frlp-dif-cap">Implantação assistida, do ponto à inauguração</div></article>
+        <article class="frlp-dif-card" style="background-image: url('assets/img/equipe/recepcao.jpg');" aria-hidden="true"><div class="frlp-dif-overlay"></div><div class="frlp-dif-cap">Marketing centralizado e leads para a sua região</div></article>
+        <article class="frlp-dif-card" style="background-image: url('assets/img/procedimentos/rejuv-facial-4d-img.jpg');" aria-hidden="true"><div class="frlp-dif-overlay"></div><div class="frlp-dif-cap">Laser Academy, equipe treinada na nossa universidade</div></article>
+        <article class="frlp-dif-card" style="background-image: url('assets/img/hero.jpg');" aria-hidden="true"><div class="frlp-dif-overlay"></div><div class="frlp-dif-cap">Produtos exclusivos e suporte de operação contínuo</div></article>
       </div>
+    </div>
+
+    <div class="container" style="text-align: center; margin-top: var(--sp-6);">
+      <a href="#frlp-form" class="btn btn-primary btn-lg btn-arrow">Agende uma reunião</a>
     </div>
   </section>
 
-  <!-- ============ SEÇÃO 6, O QUE VOCÊ VAI VENDER ============ -->
+  <!-- ============ PORTFÓLIO DE SERVIÇOS ============ -->
   <section class="section section-light">
     <div class="container">
       <header class="section-header reveal">
         <span class="eyebrow eyebrow-centered">Portfólio de serviços</span>
         <h2 class="section-title">O que <span class="italic">você vai vender.</span></h2>
-        <p class="section-sub">Três frentes que se complementam: depilação como porta de entrada, ultrassom como ticket alto e estética como recorrência.</p>
+        <p class="section-sub">Três frentes que se complementam: depilação como porta de entrada, ultrassom como ticket alto e estética como recorrência. São mais de 100 tratamentos e mais de 1 milhão de pessoas já atendidas.</p>
       </header>
 
       <div class="portfolio-grid portfolio-grid-themed">
@@ -303,7 +263,7 @@
         <article class="portfolio-card-themed reveal reveal-delay-1">
           <div class="portfolio-card-num">02</div>
           <div class="portfolio-card-tag">Ticket alto</div>
-          <h3 class="portfolio-card-title">Ultrassom Microfocado</h3>
+          <h3 class="portfolio-card-title">Ultrassom</h3>
           <p class="portfolio-card-desc">Rejuvenescimento e lifting sem cortes. A maior margem da unidade, com alto valor percebido.</p>
         </article>
         <article class="portfolio-card-themed reveal reveal-delay-2">
@@ -316,20 +276,124 @@
     </div>
   </section>
 
-  <!-- ============ SEÇÃO 7, CTA FINAL com persona ============ -->
+  <!-- ============ POSICIONAMENTO ÚNICO ============ -->
+  <section class="section section-light section-light-soft">
+    <div class="container">
+      <header class="section-header reveal">
+        <span class="eyebrow eyebrow-centered">Posicionamento único</span>
+        <h2 class="section-title">A <span class="italic">única rede</span> com 3 frentes.</h2>
+        <p class="section-sub">Não somos mais uma franquia de estética. Somos a única rede que combina laser profissional + ultrassom + modelo acessível, com suporte completo da franqueadora.</p>
+      </header>
+
+      <div class="posicionamento-grid">
+        <article class="posicionamento-card reveal">
+          <div class="posicionamento-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg></div>
+          <h3 class="posicionamento-title">Mercado próprio</h3>
+          <p class="posicionamento-desc">Não dividimos espaço. Criamos um segmento novo, com tecnologia premium a preço acessível.</p>
+        </article>
+        <article class="posicionamento-card reveal reveal-delay-1">
+          <div class="posicionamento-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg></div>
+          <h3 class="posicionamento-title">Demanda crescente</h3>
+          <p class="posicionamento-desc">Estética é um dos setores que mais cresce no Brasil, e o público B/C concentra o grande volume.</p>
+        </article>
+        <article class="posicionamento-card reveal reveal-delay-2">
+          <div class="posicionamento-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+          <h3 class="posicionamento-title">3 receitas em 1</h3>
+          <p class="posicionamento-desc">Estética + depilação + ultrassom em uma só unidade. Ticket médio maior e fidelização alta.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DEPOIMENTOS (PLACEHOLDER, trocar pelos reais) ============ -->
+  <!-- ATENCAO: depoimentos abaixo sao PLACEHOLDER (nomes/textos provisorios), -->
+  <!-- combinados com o cliente. Substituir pelos depoimentos reais de franqueados. -->
+  <section class="section section-wine" id="frlp-depoimentos">
+    <div class="container">
+      <header class="section-header reveal">
+        <span class="eyebrow eyebrow-centered">Depoimentos</span>
+        <h2 class="section-title">Nossos franqueados <span class="italic">comprovam.</span></h2>
+      </header>
+
+      <div class="frlp-depo-grid reveal">
+        <figure class="frlp-depo-card">
+          <div class="frlp-depo-quote" aria-hidden="true">&ldquo;</div>
+          <blockquote class="frlp-depo-text">Entrei como cliente e me apaixonei pelo modelo. Hoje tenho a minha unidade e o retorno superou o que eu esperava. O suporte da rede faz toda a diferença no dia a dia.</blockquote>
+          <figcaption class="frlp-depo-autor">
+            <span class="frlp-depo-nome">Camila Ribeiro</span>
+            <span class="frlp-depo-unid">Franqueada, unidade Vila Mariana</span>
+          </figcaption>
+        </figure>
+        <figure class="frlp-depo-card">
+          <div class="frlp-depo-quote" aria-hidden="true">&ldquo;</div>
+          <blockquote class="frlp-depo-text">Já tinha experiência com franquias, mas nunca vi um ramo crescer tão rápido. Abri a primeira loja, deu certo, e já estou avaliando a segunda. Modelo enxuto e lucrativo.</blockquote>
+          <figcaption class="frlp-depo-autor">
+            <span class="frlp-depo-nome">Marcelo Tavares</span>
+            <span class="frlp-depo-unid">Franqueado, unidade Ipanema</span>
+          </figcaption>
+        </figure>
+        <figure class="frlp-depo-card">
+          <div class="frlp-depo-quote" aria-hidden="true">&ldquo;</div>
+          <blockquote class="frlp-depo-text">O que me convenceu foi a estrutura por trás da marca, do treinamento da equipe ao marketing que traz cliente. Me senti sócia de verdade, não só dona de uma loja.</blockquote>
+          <figcaption class="frlp-depo-autor">
+            <span class="frlp-depo-nome">Patrícia Nogueira</span>
+            <span class="frlp-depo-unid">Franqueada, unidade Maringá</span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ UMA HISTÓRIA DE SUCESSO (CEO) ============ -->
+  <section class="section section-light" id="frlp-historia">
+    <div class="container">
+      <div class="fundador-section">
+        <div class="fundador-card reveal">
+          <div class="fundador-foto has-photo" style="background-image: url('assets/img/equipe/rafael-estevez.jpg');" role="img" aria-label="Rafael Estevez, fundador da Laser & Co"></div>
+          <div class="fundador-card-info">
+            <div class="fundador-card-name">Rafael Estevez</div>
+            <div class="fundador-card-role">Fundador da Laser &amp; Co</div>
+            <div class="fundador-card-meta">Criador da Botoclinic, rede que atraiu investimento da XP</div>
+          </div>
+        </div>
+
+        <div class="reveal reveal-delay-1">
+          <span class="eyebrow">Uma história de sucesso</span>
+          <h2 class="section-title section-title-left" style="margin-bottom: var(--sp-5);">
+            Não estamos testando uma ideia. <br>
+            <span class="italic">Já construímos um gigante.</span>
+          </h2>
+          <p class="fundador-text">
+            <strong style="color: var(--color-accent);">Rafael Estevez</strong> é o fundador da Laser &amp; Co. Antes dela, criou a <strong>Botoclinic</strong>, maior rede de harmonização facial do Brasil, que atraiu o investimento do fundo de Private Equity da <strong>XP</strong> em apenas um ano.
+          </p>
+          <p class="fundador-text">
+            Por trás da operação está a <strong>Franchising Factory</strong>, a consultoria de Rafael que já formatou mais de 150 marcas e atendeu mais de mil clientes, levando negócios da ideia à expansão nacional.
+          </p>
+          <div class="cred-chips" style="margin-top: var(--sp-5);">
+            <span class="cred-chip">70+ unidades</span>
+            <span class="cred-chip">+150 marcas formatadas</span>
+            <span class="cred-chip">Botoclinic + XP</span>
+            <span class="cred-chip">Anitta como sócia</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA FINAL (próximo passo) com persona ============ -->
   <section class="section section-wine">
     <div class="container">
       <div class="cred-band cred-band-reverse">
-        <div class="cred-photo reveal" style="background-image: url('assets/img/equipe/rafael-estevez.jpg'); background-position: center 18%;" role="img" aria-label="Rafael Estevez, fundador da Laser & Co"></div>
+        <div class="cred-photo reveal" style="background-image: url('assets/img/equipe/rafael-estevez.jpg'); background-position: center 16%;" role="img" aria-label="Rafael Estevez, fundador da Laser & Co"></div>
         <div class="reveal reveal-delay-1">
-          <span class="eyebrow eyebrow-on-dark">Chegou a sua vez</span>
+          <span class="eyebrow eyebrow-centered" style="text-align:left;">Próximo passo</span>
           <h2 class="section-title section-title-left" style="margin-bottom: var(--sp-4);">
-            Invista com quem já <span class="italic">construiu e escalou.</span>
+            Chegou a hora de investir na <span class="italic">primeira rede de laser, ultrassom e estética do Brasil.</span>
           </h2>
           <p class="fundador-text">
-            Não perca a chance de ser dono de uma unidade da rede que está redefinindo a estética premium no Brasil. Receba a apresentação completa e fale com o nosso time de expansão.
+            Invista com quem fundou a Botoclinic e a Laser &amp; Co, e está redefinindo a estética premium no país. Receba a apresentação completa e fale com o nosso time de expansão.
           </p>
-          <a href="#form-franquia" class="btn btn-primary btn-lg btn-arrow btn-pulse" style="margin-top: var(--sp-4);">Receber a apresentação de negócio</a>
+          <a href="#frlp-form" class="btn btn-primary btn-lg btn-arrow btn-pulse" style="margin-top: var(--sp-4);">Agende uma reunião</a>
         </div>
       </div>
     </div>
@@ -337,74 +401,78 @@
 
 </main>
 
-<div data-include="footer"></div>
+<!-- ============ FOOTER MINIMALISTA (estilo LP) ============ -->
+<footer class="frlp-footer">
+  <div class="container frlp-footer-inner">
+    <img class="frlp-footer-logo" src="assets/logos/logo-bold-dourado.png" alt="Laser & Co">
+    <div class="frlp-footer-legal">
+      <span>Laser &amp; Co Brasil</span>
+      <span>CNPJ 53.078.691/0001-07</span>
+      <span>Rua Alvorada, 1047, Vila Olímpia, São Paulo/SP</span>
+    </div>
+  </div>
+</footer>
 
 <script src="scripts/data.js"></script>
 <script src="scripts/analytics.js"></script>
-<script src="scripts/cep.js"></script>
-<script src="scripts/theme.js"></script>
 <script src="scripts/main.js"></script>
-<script src="scripts/popup.js"></script>
 <script src="scripts/whatsapp.js"></script>
-<script src="scripts/chatbot.js"></script>
 
 <script>
 (function() {
-  const form = document.getElementById('franquia-form');
-  const submit = document.getElementById('fr-submit');
+  // header ganha sombra/contraste ao rolar
+  var header = document.getElementById('frlp-header');
+  var onScroll = function(){ if (header) header.classList.toggle('scrolled', window.pageYOffset > 12); };
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  var form = document.getElementById('franquia-form');
+  var submit = document.getElementById('fr-submit');
   if (!form) return;
 
-  form.querySelectorAll('.input, .select').forEach(input => {
-    input.addEventListener('input', () => input.closest('.field').classList.remove('has-error'));
-    input.addEventListener('change', () => input.closest('.field').classList.remove('has-error'));
+  form.querySelectorAll('.input, .select').forEach(function(input){
+    input.addEventListener('input', function(){ input.closest('.field').classList.remove('has-error'); });
+    input.addEventListener('change', function(){ input.closest('.field').classList.remove('has-error'); });
   });
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', function(e){
     e.preventDefault();
-    let ok = true;
-    form.querySelectorAll('.field').forEach(f => {
-      const input = f.querySelector('.input, .select');
+    var ok = true;
+    form.querySelectorAll('.field').forEach(function(f){
+      var input = f.querySelector('.input, .select');
       if (!input || !input.required) return;
-      let valid = true;
+      var valid = true;
       if (input.type === 'email') valid = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(input.value.trim());
       else if (input.name === 'telefone') valid = input.value.replace(/\D/g, '').length >= 10;
       else valid = !!input.value.trim();
       f.classList.toggle('has-error', !valid);
       if (!valid) ok = false;
     });
-
-    const consent = form.querySelector('#fr-consent');
-    if (!consent.checked) {
-      window.LaserUI.toast('É preciso autorizar o contato e o uso dos dados.', 'danger');
-      return;
-    }
     if (!ok) return;
 
-    const data = {
+    var data = {
       nome: form.querySelector('#fr-nome').value.trim(),
-      telefone: form.querySelector('#fr-tel').value.trim(),
       email: form.querySelector('#fr-email').value.trim(),
+      telefone: form.querySelector('#fr-tel').value.trim(),
+      uf: form.querySelector('#fr-uf').value,
+      cidade: form.querySelector('#fr-cidade').value.trim(),
       capital: form.querySelector('#fr-capital').value,
+      ocupacao: form.querySelector('#fr-ocupacao').value.trim()
     };
 
     submit.disabled = true;
     submit.innerHTML = 'Enviando...';
 
-    setTimeout(() => {
+    setTimeout(function(){
       window.LaserAnalytics.trackLead('franquia', data);
-      document.getElementById('fr-form-card').innerHTML = `
-        <div style="text-align: center; padding: var(--sp-4) 0;">
-          <div class="popup-success-icon" style="margin-bottom: var(--sp-4);">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <h2 class="fr-form-title">Solicitação enviada!</h2>
-          <p class="fr-form-sub">Em até 2 dias úteis, nossa equipe de expansão entra em contato com você, ${data.nome.split(' ')[0]}.</p>
-          <p style="font-size: var(--fs-sm); color: var(--color-text-muted); margin-top: var(--sp-3);">
-            Deixe o WhatsApp e o e-mail à mão. Você vai receber o dossiê completo da franquia em breve.
-          </p>
-        </div>
-      `;
-      window.scrollTo({ top: document.getElementById('form-franquia').offsetTop - 90, behavior: 'smooth' });
+      document.getElementById('frlp-form-card').innerHTML =
+        '<div style="text-align:center; padding: var(--sp-5) 0;">' +
+          '<div class="popup-success-icon" style="margin: 0 auto var(--sp-4);">' +
+            '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+          '</div>' +
+          '<h2 class="frlp-form-title">Solicitação enviada!</h2>' +
+          '<p class="frlp-form-invest" style="color: var(--color-text-soft);">Em até 2 dias úteis, nossa equipe de expansão entra em contato com você, ' + (data.nome.split(' ')[0] || '') + '.</p>' +
+        '</div>';
+      window.scrollTo({ top: document.getElementById('frlp-form').offsetTop - 80, behavior: 'smooth' });
     }, 800);
   });
 })();
