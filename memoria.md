@@ -1,4 +1,4 @@
-# Memória do projeto, Laser & Co. (atualizado 2026-05-21)
+# Memória do projeto, Laser & Co. (atualizado 2026-06-01)
 
 Memória completa do projeto para retomar do zero (sobrevive a `/clear`). Espelha o
 `CLAUDE.md`. Site institucional estático (HTML/CSS/JS, sem framework de build) da
@@ -6,17 +6,70 @@ Memória completa do projeto para retomar do zero (sobrevive a `/clear`). Espelh
 
 - **Repositório:** `lasercompany-institucional` (conta `OFerreira98`)
 - **Produção:** https://lasercompany-institucional.vercel.app
-- **Deploy:** `git push` (a Vercel publica sozinha) ou `vercel --prod` SEM `--yes`.
+- **Deploy (PADRÃO desde 06/2026):** ao concluir mudança aprovada, COMMITAR no git (main) E
+  `vercel --prod` (SEM `--yes`), sem precisar pedir toda vez. (Antes: só commitar quando pedir.)
 - **Verificar deploy:** `vercel ls lasercompany-institucional --prod`
 
 ---
 
 ## ⟶ PROSSEGUIR / CONTINUAR (LER PRIMEIRO AO RETOMAR)
 
-Quando o usuário disser **"prosseguir"** ou **"continuar"**, é daqui que retomamos. Estado em
-2026-05-21 (logo após `/clear`):
+Quando o usuário disser **"prosseguir"** ou **"continuar"**, é daqui que retomamos.
+Estado MAIS RECENTE embaixo (sessão 2026-06-01); o histórico anterior segue logo na sequência.
 
-### STATUS: ajustes de cores + tema + painel CONCLUÍDOS e COMMITADOS (2026-05-21)
+### ÚLTIMA SESSÃO (2026-06-01, com o Ferreira): agendamento, avatar do chat, rodapé 6 matérias
+
+**NOVO FLUXO PADRÃO (o cliente pediu explicitamente):** ao concluir CADA mudança aprovada,
+COMMITAR no git (direto na `main`) E publicar na Vercel (`vercel --prod`), sem precisar pedir
+toda vez. Antes a regra era "só commitar quando pedir". Registrado também no topo do CLAUDE.md.
+
+1. **Página Agendamento** (`agendamento.html`, `styles/pages.css`, `scripts/page-agendamento.js`):
+   - Título trocado de "Agende em três passos." para **"Agendar avaliação gratuita"**, maior
+     (`clamp(2.2rem, 4.4vw, 3.6rem)`), com "gratuita" no dourado itálico (mesmo gradiente).
+     Removido o eyebrow redundante "AVALIAÇÃO GRÁTIS".
+   - Subtítulo SEM "Laser & Co": "Escolha o procedimento, deixe seus dados e fale com a
+     unidade da sua região no WhatsApp." (a `<meta description>` ainda cita a marca, ok, é SEO.)
+   - Removidos os selos "100% grátis" e "Menos de 1 minuto" (`<ul class="ag-trust">`).
+   - **BUG corrigido (regra 10, contexto creme):** o painel 50/50 tem fundo creme (#F5EFE2), mas
+     stepper, abas (pills), lista de procedimentos, formulário do passo 2, botões-fantasma e o
+     resumo do passo 3 usavam tokens do tema vinho (texto `--color-text` CREME + surface
+     translúcido) → ficavam **creme-sobre-creme, invisíveis**. O cliente reclamou "os
+     procedimentos não aparecem" (só a aba ativa dourada e o "tem interesse?" dourado apareciam).
+     Reescrevi as cores pro contexto claro: bloco **"Contexto CREME do painel"** logo após as
+     regras `.agendamento-split` em `pages.css` (texto vinho `#1F0B0A`/`#2A0F0D`, cards brancos,
+     bordas `rgba(120,24,18,.x)`, acentos dourados PROFUNDOS `#9A6B1E`/`#B57C0C`/`#7A5418`; o
+     `#C8A064` do tema é claro demais pra texto sobre creme). Resumo do passo 3 (inline no
+     `page-agendamento.js`) também recolorido. Voltaram os 21 estética / 14 depilação / 14 ultrassom.
+
+2. **Avatar do chat (chatbot):**
+   - Cliente mandou `ChatGPT Image 30 de mai... .png` (recepcionista 3D no balcão "LASER &
+     COMPANY", 1254x1254, 1,83 MB). Otimizei via System.Drawing → **`assets/img/agente-chat.jpg`**
+     (320x320, 23 KB).
+   - Usada SÓ no **avatar do header do chat** (`.chatbot-avatar`, antes era o monograma "L&C";
+     virou 44px, `overflow:hidden` + `<img class="chatbot-avatar-photo">`).
+   - **ATENÇÃO p/ não repetir:** cheguei a colocar a foto TAMBÉM na bolinha flutuante, mas o
+     cliente pediu **só no chat** → revertido. A bolinha (`.chatbot-trigger`) mantém o ícone
+     SVG de balãozinho original (regra 13: bolinha vinho).
+   - O PNG bruto do ChatGPT é fonte local: ignorado no git+vercel (`assets/img/ChatGPT Image*`
+     adicionado ao `.gitignore` e `.vercelignore`).
+
+3. **Rodapé "Saiu na mídia" — 6 matérias no desktop** (`scripts/layout.js`, `styles/layouts.css`):
+   - Cliente: "deixa as 6 matérias no navegador, tem muito espaço embaixo." Antes sorteava só 3
+     (faixa 520px centralizada, sobrava espaço no rodapé largo).
+   - Agora `renderFooterMedia` rende as **6** (`shuffle(...).slice(0, 6)`). CSS: desktop =
+     `repeat(6, 1fr)` max-width **1080px** (6 em 1 linha); tablet `<=960px` = `repeat(3,1fr)`
+     max-width 560px (6 em 2 linhas de 3); mobile `<=700px` = 3 em 1 linha
+     (`.footer-media-card:nth-child(n+4){display:none}`, mantém compacto).
+   - Pool atual (`data.js > naMidia`) = 6 mini-cards COM imagem da matéria: 1 O Globo,
+     1 Agenda Carioca, **4 Veja Rio** (cada um artigo distinto). Este é o estado da Leva
+     jun/2026 e SUBSTITUI a descrição antiga "4 matérias só texto" mais abaixo nesta memória.
+
+**Commits desta sessão:** `4728436` (agendamento + avatar do chat), `428c8c3` (rodapé 6 matérias).
+Ambos em produção (`vercel --prod`), aliados a https://lasercompany-institucional.vercel.app.
+
+---
+
+### STATUS anterior: ajustes de cores + tema + painel CONCLUÍDOS e COMMITADOS (2026-05-21)
 Feito, testado no preview e commitado (rodada com o Ferreira):
 
 1. **Cores (aprovadas):** vinho default mais leve/quente, `--laser-wine-deep: #481712` (era
@@ -39,6 +92,10 @@ Feito, testado no preview e commitado (rodada com o Ferreira):
    "Visitantes no mês 61.380 / hoje 2.040"; mocks de tráfego escalados.
 
 ### "Saiu na mídia" (REGRA, salvar pra não repetir, 2026-05-30)
+> **ATUALIZAÇÃO jun/2026:** hoje são MINI-CARDS COM IMAGEM da matéria (pool de 6 em
+> `data.js > naMidia`), e o desktop mostra as 6 (ver sessão 2026-06-01 no topo). A descrição
+> "só texto / 4 matérias" abaixo é HISTÓRICA. O que CONTINUA valendo: mídia mora SÓ no rodapé
+> e NUNCA inventar veículo.
 - **MORA NO RODAPÉ (`scripts/layout.js`), nunca em seção de página.** Já levei bronca por
   criar uma seção "Na mídia" no meio da `franqueado.html`. NÃO FAZER.
 - **É só texto** (nome do veículo em itálico), sem logo/imagem. O slot é clicável (`<a>` com

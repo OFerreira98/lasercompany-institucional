@@ -66,6 +66,10 @@ rede de franquias de estética a laser. Hospedado no GitHub e publicado na Verce
     nenhuma página. NÃO inventar veículos (Exame, Estadão, Folha, Forbes etc. estavam fake e
     foram apagados). Os 4 reais: **Veja** (não "Veja Rio"), **ABF**, **Varejo** (= ACIRP),
     **Agenda Carioca**. Slots são `<a target="_blank" rel="noopener">` clicáveis.
+    **ATUALIZADO (jun/2026):** a versão NO AR evoluiu pra MINI-CARDS COM IMAGEM da matéria
+    (pool de 6 em `data.js > naMidia`: Veja Rio x4, O Globo, Agenda Carioca) e o **desktop
+    mostra as 6** (tablet 6 em 2 linhas, mobile 3). Ver "Leva jun/2026" + "Leva 01/06/2026"
+    abaixo. O que PERMANECE da regra: mídia mora SÓ no rodapé e NUNCA inventar veículo.
 
 12. **CEP nunca afirma "sua unidade é X" quando é em outra cidade longe.** Lógica em
     `scripts/cep.js findUnidade`: prefixo exato → mesma cidade → mesma UF marcado
@@ -279,3 +283,24 @@ Sequência de pedidos do cliente, todos no ar:
 **Próximo provável:** cliente revisa o mobile da home, depois partimos pras OUTRAS páginas
 (ele pediu pra fechar a home primeiro). Pendência herdada: imagens IA dos ~43 procedimentos,
 banco real, integração do painel, fotos reais de fachada/antes-depois.
+
+## Leva 01/06/2026 (entregue em produção)
+
+**NOVO FLUXO PADRÃO (cliente pediu):** ao concluir mudança aprovada, **commitar no git (main)
+E publicar na Vercel (`vercel --prod`)** sem pedir toda vez (antes era "só quando pedir").
+Commits da leva: `4728436`, `428c8c3`. Detalhes completos na `memoria.md` (sessão 01/06/2026).
+
+1. **Agendamento** (`agendamento.html`, `pages.css`, `page-agendamento.js`): título virou
+   **"Agendar avaliação gratuita"** maior ("gratuita" dourado itálico), sem o eyebrow
+   "AVALIAÇÃO GRÁTIS"; subtítulo sem "Laser & Co"; removidos os selos "100% grátis"/"Menos de
+   1 minuto". **Bug regra 10:** o painel 50/50 é creme, mas stepper/abas/lista/form/botões/
+   resumo usavam tokens do tema vinho (texto+surface creme) → creme-sobre-creme, INVISÍVEL
+   (cliente: "os procedimentos não aparecem"). Reescrito pro contexto claro (bloco "Contexto
+   CREME do painel" em `pages.css`). Procedimentos voltaram a aparecer.
+2. **Avatar do chat:** foto da recepcionista (`ChatGPT Image....png` 1,83MB → otimizada
+   `assets/img/agente-chat.jpg` 23KB) SÓ no avatar do header do chat (era "L&C"). A bolinha
+   flutuante mantém o ícone original (cliente reverteu: "só no chat"). PNG bruto fica local
+   (`assets/img/ChatGPT Image*` no `.gitignore`/`.vercelignore`).
+3. **Rodapé "Saiu na mídia":** desktop agora mostra as **6** (era 3, sobrava espaço);
+   `slice(0,6)` + CSS `repeat(6,1fr)` 1080px; tablet `<=960` 6 em 2 linhas; mobile `<=700`
+   3 (esconde `nth-child(n+4)`).
