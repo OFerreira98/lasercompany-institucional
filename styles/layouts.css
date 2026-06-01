@@ -1426,9 +1426,9 @@
 }
 .footer-media-strip {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr)); /* desktop: as 6 materias em uma linha */
   gap: var(--sp-4);
-  max-width: 520px;
+  max-width: 1080px;
   margin-inline: auto; /* centraliza o bloco de cards */
   width: 100%;
 }
@@ -1494,8 +1494,14 @@
   .footer-media-card { animation: none; }
 }
 
+/* Telas medias/tablet: as 6 em 2 linhas de 3 */
+@media (max-width: 960px) {
+  .footer-media-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 560px; }
+}
+/* Mobile: mantem compacto, 3 cards em 1 linha (esconde as 3 extras) */
 @media (max-width: 700px) {
   .footer-media-strip { grid-template-columns: repeat(3, 1fr); max-width: 100%; gap: 10px; }
+  .footer-media-card:nth-child(n+4) { display: none; }
 }
 .footer-media-note {
   font-size: 0.68rem;

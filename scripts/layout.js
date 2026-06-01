@@ -234,15 +234,16 @@
     bindHeaderScroll();
     // popula o mega-menu de procedimentos a partir de window.LaserData
     populateMegaMenu();
-    // renderiza os 3 mini-cards do "Saiu na mídia" (sorteio aleatorio do pool)
+    // renderiza os mini-cards do "Saiu na mídia" (6 no desktop, 3 no mobile via CSS)
     renderFooterMedia();
     // carrega GSAP + ScrollTrigger + Lenis + motion.js (em ordem)
     injectMotionScripts();
   }
 
   /* ---------- SAIU NA MÍDIA (rodapé) ----------
-     Sorteio aleatorio puro: a cada pageload escolhe 3 do pool e
-     renderiza como mini-cards. Pool em window.LaserData.naMidia. */
+     Embaralha o pool e renderiza as 6 materias (desktop preenche o espaco do
+     rodape). No mobile o CSS reduz pra 3 (esconde as extras). Pool em
+     window.LaserData.naMidia. */
   function renderFooterMedia() {
     const strip = document.getElementById('footer-media-strip');
     if (!strip || !window.LaserData || !Array.isArray(window.LaserData.naMidia)) return;
@@ -260,7 +261,7 @@
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
-    const picks = shuffle(window.LaserData.naMidia).slice(0, 3);
+    const picks = shuffle(window.LaserData.naMidia).slice(0, 6);
 
     // Imagem da materia (o print ja contem o titulo) + so o nome do
     // veiculo embaixo, pequeno e sem fundo. Cada card com delay de
