@@ -45,3 +45,6 @@ assets/img/*.mov
 # Exports brutos de IA (ChatGPT) soltos na raiz: fonte local, usar a versao
 # otimizada (ex.: agente-chat.jpg). Nao precisam ir pra producao.
 assets/img/ChatGPT Image*
+
+# Paginas de referencia baixadas (HTML+assets de modelos), local only
+Novo html- Seja um franqueado/

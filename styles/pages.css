@@ -3356,6 +3356,166 @@ body.page-unidades .page-hero-photo-bg::before {
 }
 @media (max-width: 860px) { .cred-band { grid-template-columns: 1fr; gap: var(--sp-5); } }
 
+/* ============================================================
+   SEJA UM FRANQUEADO v2 (01/06/2026) — refeita com base na
+   referência de franquia (funil: hero c/ form + números reais →
+   seja dono → por que investir → números → fundador → CTA persona).
+   Reaproveita .cred-band / .posicionamento-card / .numero-card /
+   .portfolio-card-themed / .fundador-*. Aqui só o que é novo do hero.
+   ============================================================ */
+.fr-hero {
+  position: relative;
+  overflow: hidden;
+  padding-top: clamp(7.5rem, 13vh, 10.5rem);
+  padding-bottom: clamp(2.5rem, 6vw, 4.5rem);
+  border-bottom: 1px solid var(--color-border);
+  background:
+    radial-gradient(60% 55% at 85% 8%, rgba(200,160,100,0.16), transparent 70%),
+    radial-gradient(50% 60% at 0% 100%, rgba(154,107,30,0.12), transparent 60%),
+    linear-gradient(150deg, #1F0B0A 0%, #2A0F0D 45%, #481712 100%);
+}
+.fr-hero-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: center;
+}
+.fr-hero-content { max-width: 620px; }
+.fr-hero-title {
+  font-family: var(--font-serif);
+  font-weight: var(--fw-light);
+  font-size: clamp(2.2rem, 4.6vw, 3.7rem);
+  line-height: 1.06;
+  letter-spacing: var(--ls-tight);
+  color: #F7F1E6;
+  margin: 0 0 var(--sp-4);
+}
+.fr-hero-title .italic {
+  font-style: italic;
+  background: linear-gradient(120deg, #E8C088, #B57C0C);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.fr-hero-sub {
+  font-size: var(--fs-lg);
+  line-height: 1.6;
+  color: rgba(245,239,226,0.82);
+  max-width: 52ch;
+  margin: 0;
+}
+.fr-hero-sub strong { color: #E8C088; font-weight: 600; }
+
+.fr-hero-stats {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: var(--sp-5) 0 0;
+  padding: 0;
+}
+.fr-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(245,240,230,0.06);
+  border: 1px solid rgba(200,160,100,0.32);
+  border-radius: var(--radius-pill);
+  padding: 0.5rem 0.9rem;
+  font-family: var(--font-accent);
+  font-size: var(--fs-sm);
+  color: #F5EFE2;
+}
+.fr-stat svg { width: 18px; height: 18px; color: #E8C088; flex-shrink: 0; }
+.fr-stat strong { color: #E8C088; font-weight: 700; }
+
+/* Card do formulário no hero escuro */
+.fr-form-card {
+  position: relative;
+  z-index: 2;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(200,160,100,0.34);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.42);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.fr-form-eyebrow {
+  display: inline-block;
+  font-family: var(--font-accent);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wider);
+  color: #E8C088;
+  margin-bottom: var(--sp-2);
+}
+.fr-form-title {
+  font-family: var(--font-serif);
+  font-weight: var(--fw-light);
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  line-height: 1.12;
+  color: #F7F1E6;
+  margin: 0 0 var(--sp-2);
+}
+.fr-form-title .italic {
+  font-style: italic;
+  background: linear-gradient(120deg, #E8C088, #B57C0C);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.fr-form-sub {
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+  color: rgba(245,239,226,0.78);
+  margin: 0 0 var(--sp-4);
+}
+.fr-form-card .field { margin-bottom: var(--sp-3); }
+.fr-form-card .field-label { color: rgba(245,239,226,0.74); }
+.fr-form-card .input,
+.fr-form-card .select {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(245,240,230,0.20);
+  color: #F7F1E6;
+}
+.fr-form-card .input::placeholder { color: rgba(245,239,226,0.42); }
+.fr-form-card .input:focus,
+.fr-form-card .select:focus {
+  border-color: #C8A064;
+  box-shadow: 0 0 0 4px rgba(200,160,100,0.18);
+  background: rgba(255,255,255,0.09);
+}
+.fr-form-card .checkbox-field { color: rgba(245,239,226,0.78); font-size: var(--fs-xs); }
+.fr-form-card .checkbox-field a { color: #E8C088; }
+
+/* Bullets com check dourado (seção "Seja dono") */
+.fr-bullets { list-style: none; margin: var(--sp-4) 0 0; padding: 0; display: grid; gap: 0.6rem; }
+.fr-bullets li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: var(--fs-base);
+  color: var(--color-text-soft);
+  line-height: 1.5;
+}
+.fr-bullets svg { width: 20px; height: 20px; color: #9A6B1E; flex-shrink: 0; margin-top: 2px; }
+
+/* CTA final: persona à direita (inverte a cred-band no desktop) */
+.cred-band-reverse { grid-template-columns: 1fr 1.05fr; }
+.cred-band-reverse .cred-photo { order: 2; aspect-ratio: 4 / 4.3; }
+
+@media (max-width: 920px) {
+  .fr-hero-grid { grid-template-columns: 1fr; }
+  .fr-hero-content { max-width: none; }
+}
+@media (max-width: 860px) {
+  .cred-band-reverse { grid-template-columns: 1fr; }
+  .cred-band-reverse .cred-photo { order: -1; aspect-ratio: 4 / 3; }
+}
+
 .fundador-card-info {
   position: relative;
   padding: var(--sp-4) var(--sp-5) var(--sp-5);

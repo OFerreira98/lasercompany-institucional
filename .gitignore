@@ -53,4 +53,7 @@ assets/img/*.mov
 # Usar a versao otimizada (ex.: agente-chat.jpg).
 assets/img/ChatGPT Image*
 
+# Paginas de referencia baixadas (HTML+assets do concorrente/modelo), local only
+Novo html- Seja um franqueado/
+
 .vercel
