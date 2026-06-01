@@ -49,4 +49,8 @@ test_*.png
 assets/img/*.mp4
 assets/img/*.mov
 
+# Exports brutos de IA (ChatGPT) soltos na raiz: fonte local, nao versionar.
+# Usar a versao otimizada (ex.: agente-chat.jpg).
+assets/img/ChatGPT Image*
+
 .vercel

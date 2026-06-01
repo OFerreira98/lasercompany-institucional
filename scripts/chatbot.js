@@ -22,7 +22,9 @@
 
 <div class="chatbot-window" id="chatbot-window" role="dialog" aria-modal="false" aria-labelledby="chatbot-name">
   <div class="chatbot-header">
-    <div class="chatbot-avatar" aria-hidden="true">L&amp;C</div>
+    <div class="chatbot-avatar" aria-hidden="true">
+      <img class="chatbot-avatar-photo" src="assets/img/agente-chat.jpg" alt="">
+    </div>
     <div class="chatbot-info">
       <div class="chatbot-info-name" id="chatbot-name">Agente de Atendimento</div>
       <div class="chatbot-info-status">Online agora</div>

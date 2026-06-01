@@ -14,6 +14,10 @@ rede de franquias de estética a laser. Hospedado no GitHub e publicado na Verce
 - **Produção:** https://lasercompany-institucional.vercel.app
 - **Deploy:** `vercel --prod` (SEM `--yes` — com `--yes` o classificador de auto-mode bloqueia)
 - **Verificar:** `vercel ls lasercompany-institucional --prod`
+- **Fluxo PADRÃO (o cliente pediu em jun/2026):** ao concluir uma mudança aprovada,
+  **commitar no git** (direto na `main`) **E** publicar na Vercel (`vercel --prod`), sem
+  precisar pedir toda vez. Commit com mensagem curta e descritiva. (Antes a regra era "só
+  commitar quando pedir"; agora o padrão é commit + deploy.)
 
 ---
 

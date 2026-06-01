@@ -198,13 +198,13 @@
           </div>
         </div>
 
-        <div style="background: var(--color-surface); padding: var(--sp-5); border-radius: var(--radius-lg); margin-bottom: var(--sp-5); border: 1px solid var(--color-border);">
-          <div style="font-family: var(--font-accent); font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: var(--ls-wider); color: var(--color-text-muted); margin-bottom: var(--sp-2);">Resumo do seu agendamento</div>
-          <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1rem; font-size: var(--fs-sm);">
-            <span style="color: var(--color-text-muted);">Procedimento:</span><strong>${state.procedimento.nome}</strong>
-            <span style="color: var(--color-text-muted);">Nome:</span><strong>${state.nome}</strong>
-            <span style="color: var(--color-text-muted);">WhatsApp:</span><strong>${state.whatsapp}</strong>
-            <span style="color: var(--color-text-muted);">CEP:</span><strong>${state.cep}</strong>
+        <div style="background: #FAF6EE; padding: var(--sp-5); border-radius: var(--radius-lg); margin-bottom: var(--sp-5); border: 1px solid rgba(120, 24, 18, 0.16);">
+          <div style="font-family: var(--font-accent); font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: var(--ls-wider); color: #8A6850; margin-bottom: var(--sp-2);">Resumo do seu agendamento</div>
+          <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1rem; font-size: var(--fs-sm); color: #2A0F0D;">
+            <span style="color: #8A6850;">Procedimento:</span><strong style="color: #2A0F0D;">${state.procedimento.nome}</strong>
+            <span style="color: #8A6850;">Nome:</span><strong style="color: #2A0F0D;">${state.nome}</strong>
+            <span style="color: #8A6850;">WhatsApp:</span><strong style="color: #2A0F0D;">${state.whatsapp}</strong>
+            <span style="color: #8A6850;">CEP:</span><strong style="color: #2A0F0D;">${state.cep}</strong>
           </div>
         </div>
 

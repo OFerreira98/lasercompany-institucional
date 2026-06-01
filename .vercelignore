@@ -41,3 +41,7 @@ node_modules/
 # (quando o cliente decidir usar, movemos pra subpasta e tiramos daqui)
 assets/img/*.mp4
 assets/img/*.mov
+
+# Exports brutos de IA (ChatGPT) soltos na raiz: fonte local, usar a versao
+# otimizada (ex.: agente-chat.jpg). Nao precisam ir pra producao.
+assets/img/ChatGPT Image*

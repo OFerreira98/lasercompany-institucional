@@ -2178,11 +2178,11 @@ body.page-unidades .page-hero-photo-bg::before {
 }
 .agendamento-title {
   font-family: var(--font-serif);
-  font-size: clamp(2rem, 3.4vw, 2.9rem);
+  font-size: clamp(2.2rem, 4.4vw, 3.6rem);
   font-weight: var(--fw-light);
-  line-height: 1.04;
+  line-height: 1.05;
   color: #1F0B0A;
-  margin: 0 0 var(--sp-2);
+  margin: 0 0 var(--sp-3);
 }
 .agendamento-title .italic {
   font-style: italic;
@@ -2218,6 +2218,108 @@ body.page-unidades .page-hero-photo-bg::before {
   font-size: var(--fs-xl) !important;
 }
 .agendamento-split .proc-segment-tabs { justify-content: flex-start; }
+
+/* ------------------------------------------------------------
+   Contexto CREME do painel (regra 10).
+   Stepper, abas, lista de procedimentos e formulário usam tokens
+   do tema vinho (texto e superfícies claras) que somem sobre o
+   fundo creme, o procedimento "desaparecia" porque era texto creme
+   sobre creme. Aqui reescrevemos as cores para o contexto claro:
+   texto vinho, superfícies brancas e acentos dourados profundos.
+   ------------------------------------------------------------ */
+/* Stepper */
+.agendamento-split .stepper-step { color: #8A6850; }
+.agendamento-split .stepper-step.active { color: #1F0B0A; }
+.agendamento-split .stepper-step.done { color: #9A6B1E; }
+.agendamento-split .stepper-num {
+  background: #FFFFFF;
+  border-color: rgba(120, 24, 18, 0.20);
+  color: #6E4A3A;
+}
+.agendamento-split .stepper-step.active .stepper-num,
+.agendamento-split .stepper-step.done .stepper-num {
+  background: #9A6B1E;
+  border-color: #9A6B1E;
+  color: #FAF6EE;
+  box-shadow: 0 0 16px rgba(154, 107, 30, 0.30);
+}
+.agendamento-split .stepper-line { background: rgba(120, 24, 18, 0.18); }
+.agendamento-split .stepper-step.done + .stepper-line { background: #9A6B1E; }
+
+/* Títulos e subtítulos dos passos */
+.agendamento-split .agendamento-step .section-title { color: #1F0B0A; }
+.agendamento-split .agendamento-step .section-title .italic {
+  background: linear-gradient(135deg, #B57C0C, #E8C088);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.agendamento-split .agendamento-step .section-sub { color: #4E1A15; }
+
+/* Abas de segmento (pills) */
+.agendamento-split .proc-segment-tabs .pill {
+  background: #FFFFFF;
+  border-color: rgba(120, 24, 18, 0.18);
+  color: #4E1A15;
+}
+.agendamento-split .proc-segment-tabs .pill:hover {
+  border-color: #C8A064;
+  background: #FAF6EE;
+  color: #7A5418;
+}
+.agendamento-split .proc-segment-tabs .pill.active {
+  background: #9A6B1E;
+  border-color: #9A6B1E;
+  color: #FAF6EE;
+}
+
+/* Lista de procedimentos */
+.agendamento-split .proc-option {
+  background: #FFFFFF;
+  border-color: rgba(120, 24, 18, 0.16);
+  color: #2A0F0D;
+}
+.agendamento-split .proc-option:hover {
+  border-color: #C8A064;
+  background: #FAF6EE;
+}
+.agendamento-split .proc-option.selected {
+  border-color: #9A6B1E;
+  background: #F7EEDD;
+  color: #7A5418;
+}
+
+/* Formulário (passo 2) */
+.agendamento-split .field-label { color: #6E4A3A; }
+.agendamento-split .input {
+  background: #FFFFFF;
+  border-color: rgba(120, 24, 18, 0.18);
+  color: #1F0B0A;
+}
+.agendamento-split .input::placeholder { color: #A98E7A; }
+.agendamento-split .input:hover { border-color: rgba(120, 24, 18, 0.32); }
+.agendamento-split .input:focus {
+  border-color: #9A6B1E;
+  box-shadow: 0 0 0 4px rgba(154, 107, 30, 0.16);
+  background: #FFFFFF;
+}
+.agendamento-split .field-hint { color: #8A6850; }
+.agendamento-split .alert {
+  background: #FAF6EE;
+  color: #4E1A15;
+}
+
+/* Botões fantasma (Voltar / Editar dados / Tentar outro CEP) */
+.agendamento-split .btn-ghost {
+  background: transparent;
+  border-color: rgba(120, 24, 18, 0.22);
+  color: #6E4A3A;
+}
+.agendamento-split .btn-ghost:hover {
+  background: #FAF6EE;
+  border-color: #9A6B1E;
+  color: #7A5418;
+}
 
 @media (max-width: 900px) {
   .agendamento-split { grid-template-columns: 1fr; min-height: 0; }
