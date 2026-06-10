@@ -15,7 +15,41 @@ Memória completa do projeto para retomar do zero (sobrevive a `/clear`). Espelh
 ## ⟶ PROSSEGUIR / CONTINUAR (LER PRIMEIRO AO RETOMAR)
 
 Quando o usuário disser **"prosseguir"** ou **"continuar"**, é daqui que retomamos.
-Estado MAIS RECENTE embaixo (sessão 2026-06-01); o histórico anterior segue logo na sequência.
+Estado MAIS RECENTE embaixo (sessão 2026-06-10); o histórico anterior segue logo na sequência.
+
+### ÚLTIMA SESSÃO (2026-06-10, com o jvneto, dev do Olimpo): BACKEND FASE 2 LIGADO
+
+Contexto: novo responsável (jvneto, máquina Linux, e-mail neto-vera@hotmail.com) assumiu a
+Fase 2 do backend (spec no PDF `1780540080493_Laser-Co-Backend-Fase2-DEV.pdf`, não versionado).
+**Itens 1-4 do PDF (prioridade ALTA) CONCLUÍDOS e VALIDADOS:**
+
+1. **Banco = Supabase COMPARTILHADO com o sistema unificado Olimpo** (projeto `lasercompany rh`,
+   ref `lkiihnxznphxqekrgsgi`, sa-east-1, 140+ tabelas de RH/CRM/SAC). Em vez de Neon+pg:
+   tabela dedicada **`public.site_leads`** (id/data jsonb/created_at, RLS ON, índice) criada
+   via Management API. **REGRAS DE OURO: não tocar nas outras tabelas; NUNCA resetar a senha
+   do Postgres** (derrubaria o Olimpo). Por isso o acesso é via **REST do Supabase (service
+   key)**, sem driver pg, mantendo zero-dependência (sem package.json).
+2. **Código (commit `8b3d037`):** `store.js` com 3 modos (Supabase → pg → demo); `auth.js`
+   com env `PAINEL_USERS` (JSON com senhaHash) substituindo os acessos de teste; novo
+   `GET /api/health` ({ok, store, usuariosReais}); `GET /api/leads` retorna `storeMode`;
+   `api-client.js` usa storeMode pro selo demo; login esconde acessos de teste quando real.
+   `.gitignore`: exceção `!api/_lib` (o padrão `_*` engolia a lib da API no add).
+3. **Deploy OPERACIONAL na conta Vercel do jvneto** (`lasercompanyia-web`):
+   **https://lasercompany-institucional-six.vercel.app** com envs SUPABASE_URL,
+   SUPABASE_SERVICE_KEY, AUTH_SECRET, PAINEL_USERS (Production). A produção ANTIGA
+   (OFerreira98, lasercompany-institucional.vercel.app) segue intacta em modo demo;
+   sem acesso à conta dele desta máquina (a env lá teria que ser setada pelo dono).
+4. **Credenciais reais** (franqueador + vmariana + ipanema, senhas fortes geradas):
+   **`_CREDENCIAIS-PAINEL.txt`** na raiz (NÃO versionado, chmod 600). laser2026 morreu na
+   produção nova (validado 401).
+5. **Validação ponta a ponta (tudo verde):** /api/health=supabase; POST lead público;
+   login real; GET autenticado vê o lead; PATCH persiste; linha confirmada no Supabase.
+
+**PRÓXIMO (itens restantes do PDF, ordem):** (5) CRUD persistente de usuários/promoções/equipe,
+(6) upload de currículo (usar Supabase Storage, já disponível, em vez de Vercel Blob),
+(7) mapa geográfico no painel (Leaflet), (8) domínio definitivo (decisão do cliente: apontar
+pro deploy novo ou setar envs na conta antiga), (9) harden auth (rate limit, troca de senha).
+Token do Supabase usado na sessão deve ser ROTACIONADO (foi colado em chat).
 
 ### ÚLTIMA SESSÃO (2026-06-01, com o Ferreira): agendamento, avatar do chat, rodapé 6 matérias
 

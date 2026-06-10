@@ -1,5 +1,29 @@
 # Backend + Painéis (Etapas 2 e 3)
 
+> **ATUALIZAÇÃO 10/06/2026 — FASE 2 LIGADA (Supabase).** O backend está OPERACIONAL
+> com banco real. O que mudou em relação ao plano original (que era Neon + driver pg):
+>
+> - **Banco:** Supabase compartilhado com o sistema unificado (projeto `lasercompany rh`,
+>   ref `lkiihnxznphxqekrgsgi`, região sa-east-1). Tabela DEDICADA **`public.site_leads`**
+>   (id text PK, data jsonb, created_at) com RLS ativado. NENHUMA tabela existente foi tocada.
+>   **NUNCA resetar a senha do Postgres desse projeto** (derrubaria o sistema de RH/CRM que
+>   usa o mesmo banco). Por isso o acesso é via **API REST do Supabase (service key)**, sem
+>   driver `pg` e sem `package.json` (mantém a arquitetura zero-dependência).
+> - **Adaptador:** `api/_lib/store.js` agora tem 3 modos automáticos:
+>   `SUPABASE_URL`+`SUPABASE_SERVICE_KEY` → Supabase; senão `DATABASE_URL` → pg; senão demo.
+> - **Usuários reais:** env `PAINEL_USERS` (JSON com `senhaHash`) substitui os acessos de
+>   teste. `AUTH_SECRET` definido. Sem as envs, o modo demo continua funcionando (fallback).
+> - **`GET /api/health`** (público): `{ ok, store, usuariosReais }`. O painel usa isso para
+>   esconder o selo "Demonstração" e o bloco de acessos de teste.
+> - **Deploy operacional:** projeto `lasercompany-institucional` na conta Vercel
+>   `lasercompanyia-web` → https://lasercompany-institucional-six.vercel.app
+>   (a produção antiga em OFerreira98 segue no ar em modo demo, intacta).
+> - **Credenciais reais:** arquivo local `_CREDENCIAIS-PAINEL.txt` (NÃO versionado).
+> - Validação ponta a ponta feita em 10/06/2026: health, lead público, login real,
+>   listagem autenticada, PATCH e persistência no banco. Tudo OK.
+>
+> O texto abaixo descreve o plano original (Neon + pg) e segue válido como alternativa.
+
 Este documento explica o que foi construído, **como testar agora** e **o que falta**
 você fazer (banco, senhas, deploy). Escrito para ser seguido sem conhecimento técnico
 profundo.
