@@ -76,10 +76,32 @@ Fase 2 do backend (spec no PDF `1780540080493_Laser-Co-Backend-Fase2-DEV.pdf`, n
      (seed). Motivo: site não coleta analytics de tráfego nem idade/gênero; entra na
      integração (Vercel/GA + dados do Olimpo).
 
+8. **PAINEL 100% BANCO (commit `a9a7213`, pedido "precisa todos vir do banco"):**
+   - **Tráfego REAL:** `analytics.js` manda beacon de pageview (página, referrer, sessão
+     aleatória; sem dado pessoal) pra `/api/track` → tabela `site_pageviews`; agregação no
+     banco via RPC `site_trafego_stats` → `/api/trafego`. As 4 telas de Tráfego mostram
+     online/visitantes/páginas/dispositivos/navegadores/origens REAIS (estado vazio
+     explicativo enquanto não há visitas).
+   - **Usuários do painel no banco:** `/api/usuarios` (CRUD, só franqueador) grava em
+     `site_config['usuarios']`; `auth.js` ficou ASSÍNCRONO e consulta o banco PRIMEIRO
+     (fallback env/demo). Usuário criado no painel LOGA de verdade (validado). Proteção:
+     não remove/rebaixa o último franqueador. Bootstrap: primeira escrita copia os usuários
+     da env (senhas atuais preservadas, validado).
+   - **/api/equipe** (registro por unidade) e **/api/conta** (perfil próprio + foto
+     miniatura 96px + TROCA DE SENHA validando a atual, validado e2e: senha nova loga,
+     velha falha, atual errada recusa).
+   - **Demográfico real:** gênero ESTIMADO pelo primeiro nome (rotulado) + horário de
+     contato + dia da semana, tudo dos leads do banco. Idade: site não coleta (nota na tela).
+   - **Promo desempenho real** (leads por brinde) e **comparação com a rede real**
+     (`redePorDia` no /api/stats). MOCK_* todos removidos do `painel-core.js`.
+   - Validação e2e completa em produção (10 checks) + screenshots (tráfego/demográfico/
+     usuários renderizando dado real, zero erro JS). Dados sintéticos de teste APAGADOS.
+
 **RESTA da Fase 2:** item 8 (domínio definitivo: decisão do cliente + acesso ao DNS; apontar
-pro deploy novo OU setar as envs na conta Vercel antiga do OFerreira98) e CRUD de usuários
-(integração Olimpo). **Segurança:** token do Supabase usado na sessão deve ser ROTACIONADO
-(foi colado em chat); o remote do git tem um token do GitHub embutido na URL (avisar o dono).
+pro deploy novo OU setar as envs na conta Vercel antiga do OFerreira98). **Telas que leem do
+data.js do site (não é mock):** cadastro de unidades e vagas abertas (são o conteúdo real do
+site). **Segurança:** token do Supabase usado na sessão deve ser ROTACIONADO (foi colado em
+chat); o remote do git tem um token do GitHub embutido na URL (avisar o dono).
 
 ### ÚLTIMA SESSÃO (2026-06-01, com o Ferreira): agendamento, avatar do chat, rodapé 6 matérias
 
