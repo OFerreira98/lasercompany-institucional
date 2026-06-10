@@ -60,6 +60,22 @@ Fase 2 do backend (spec no PDF `1780540080493_Laser-Co-Backend-Fase2-DEV.pdf`, n
    - **Rate limit (item 9):** login com 5 falhas por e-mail+IP / 10 min → 429 (validado:
      sexta tentativa leva 429; mensagem própria na tela de login).
 
+7. **Refinos pós-validação (commit `da600b9`):**
+   - **SAC (regra 10):** placeholders do modal eram creme-sobre-branco, INVISÍVEIS (campos
+     pareciam vazios/quebrados; cliente reclamou "os campos estão bem errados"). Fix em
+     `layouts.css`: `.sac-modal .input::placeholder { color:#8A6850 }` + select `:invalid`
+     em tom muted + `option` branco/vinho. Conferido com screenshot (playwright-core +
+     chromium do cache `~/.cache/ms-playwright`, headless funciona nesta máquina).
+   - **Painel sem emojis:** menu lateral agora usa `NAV_ICONS` (SVGs inline stroke
+     currentColor) no `painel-core.js`; CSS `.painel-nav-ico svg` no `painel.css`.
+     O usuário NÃO quer emoji no admin, usar sempre ícone SVG.
+   - **Auditoria "vem tudo do banco?":** LEADS e tudo derivado deles (Visão Geral, listas,
+     status/notas, ranking, mapa, promoções) = banco REAL. Ainda DEMONSTRAÇÃO (mock):
+     Tráfego (páginas/dispositivos/navegadores, "online agora"), Demográfico (idade/gênero),
+     Promo desempenho, Config>Usuários (lista) e "comparação com a rede" do franqueado
+     (seed). Motivo: site não coleta analytics de tráfego nem idade/gênero; entra na
+     integração (Vercel/GA + dados do Olimpo).
+
 **RESTA da Fase 2:** item 8 (domínio definitivo: decisão do cliente + acesso ao DNS; apontar
 pro deploy novo OU setar as envs na conta Vercel antiga do OFerreira98) e CRUD de usuários
 (integração Olimpo). **Segurança:** token do Supabase usado na sessão deve ser ROTACIONADO
