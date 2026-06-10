@@ -39,6 +39,9 @@ RELATORIO-CLIENTE.pdf
 # Ferramentas de dev (geradores, servidor de teste, mockups, extracao)
 # Tudo com prefixo _ é dev-only (espelha o .vercelignore)
 _*
+# EXCETO a lib da API (codigo de producao, precisa subir)
+!api/_lib/
+!api/_lib/**
 download.js
 generate_images*
 test_*.jpg

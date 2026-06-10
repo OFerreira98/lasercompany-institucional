@@ -26,11 +26,34 @@ function gerarHash(senha) {
 }
 
 /* Usuários de DEMO. senha de teste: laser2026 */
-const USERS = [
+const DEMO_USERS = [
   { email: 'franqueador@laserco.com.br', nome: 'Matriz Laser & Co', role: 'franqueador', unidadeId: null, senhaHash: sha256('laser2026') },
   { email: 'vmariana@laserco.com.br',    nome: 'Franquia Vila Mariana', role: 'franqueado', unidadeId: 'sp-vmariana', senhaHash: sha256('laser2026') },
   { email: 'ipanema@laserco.com.br',     nome: 'Franquia Ipanema',      role: 'franqueado', unidadeId: 'rj-ipanema',  senhaHash: sha256('laser2026') },
 ];
+
+/* >>> USUÁRIOS REAIS via env PAINEL_USERS (JSON) <<<
+   Quando a env existe, SUBSTITUI os usuários de demo (eles param de
+   funcionar). Formato (uma linha só, sem quebras):
+   [{"email":"...","nome":"...","role":"franqueador|franqueado",
+     "unidadeId":null,"senhaHash":"<sha256 da senha, via gerarHash()>"}]
+   Gerar hash: node -e "console.log(require('./api/_lib/auth').gerarHash('SENHA'))" */
+function loadUsers() {
+  const raw = process.env.PAINEL_USERS;
+  if (raw) {
+    try {
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr) && arr.length && arr.every((u) => u && u.email && u.senhaHash)) {
+        return arr;
+      }
+      console.error('[auth] PAINEL_USERS inválido (esperado array com email+senhaHash); usando demo.');
+    } catch (e) {
+      console.error('[auth] PAINEL_USERS não é JSON válido; usando demo:', e && e.message);
+    }
+  }
+  return DEMO_USERS;
+}
+const USERS = loadUsers();
 
 function b64url(buf) {
   return Buffer.from(buf).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');

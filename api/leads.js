@@ -48,7 +48,7 @@ module.exports = async (req, res) => {
     if (auth.role === 'franqueado' && auth.unidadeId) {
       all = all.filter((l) => l && l.dados && l.dados.unidadeId === auth.unidadeId);
     }
-    return sendJson(res, 200, { leads: all });
+    return sendJson(res, 200, { leads: all, storeMode: store.mode });
   }
 
   return sendJson(res, 405, { error: 'metodo_nao_permitido' });

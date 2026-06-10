@@ -91,7 +91,10 @@ window.LaserAPI = (function () {
   async function listLeads(session) {
     try {
       const j = await tryFetch('/leads', { headers: { Authorization: 'Bearer ' + session.token } });
-      return { leads: j.leads || [], mode: 'backend' };
+      // storeMode vem do servidor: 'supabase'/'postgres' = banco real; 'demo' = memória.
+      // Servidor antigo (sem storeMode) continua contando como backend.
+      const mode = j.storeMode === 'demo' ? 'demo' : 'backend';
+      return { leads: j.leads || [], mode: mode };
     } catch (e) {
       if (e.status === 401) throw e;
       return { leads: demoLeads(session), mode: 'demo' };

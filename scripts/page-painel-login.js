@@ -47,6 +47,17 @@
         document.getElementById('login-senha').value = el.dataset.fillSenha || 'laser2026';
       });
     });
+
+    // produção ligada (usuários reais via PAINEL_USERS)? esconde os acessos de teste
+    fetch('/api/health')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((h) => {
+        if (h && h.usuariosReais) {
+          const demo = document.querySelector('.login-demo');
+          if (demo) demo.remove();
+        }
+      })
+      .catch(() => {});
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
