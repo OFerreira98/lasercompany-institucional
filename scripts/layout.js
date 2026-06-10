@@ -103,6 +103,7 @@
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
           <h3>Recebemos sua mensagem.</h3>
+          <p><strong id="sac-protocolo"></strong></p>
           <p>Em breve, nosso SAC entra em contato.</p>
         </div>
       </div>
@@ -383,7 +384,7 @@
       return ok;
     }
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const fields = form.querySelectorAll('.field');
       let ok = true;
@@ -398,7 +399,28 @@
         mensagem: form.querySelector('#sac-mensagem').value.trim(),
       };
 
+      // Abre um ticket DE VERDADE no sistema de gestão de SAC (/api/sac).
+      // O lead também fica registrado no painel (trackLead) como histórico.
+      const btn = form.querySelector('#sac-submit');
+      btn.disabled = true;
+      const btnText = btn.querySelector('.btn-text');
+      const orig = btnText ? btnText.textContent : '';
+      if (btnText) btnText.textContent = 'Enviando...';
+      let numero = null;
+      try {
+        const r = await fetch('/api/sac', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (r.ok) { const j = await r.json(); numero = j.numero || null; }
+      } catch (err) { /* sem rede: o lead abaixo ainda registra o contato */ }
+
       window.LaserAnalytics && window.LaserAnalytics.trackLead && window.LaserAnalytics.trackLead('sac', payload);
+      const proto = success.querySelector('#sac-protocolo');
+      if (proto) proto.textContent = numero ? 'Seu protocolo é o número ' + numero + '.' : '';
+      btn.disabled = false;
+      if (btnText) btnText.textContent = orig;
       form.hidden = true;
       success.hidden = false;
     });
