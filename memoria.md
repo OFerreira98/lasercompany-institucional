@@ -45,11 +45,25 @@ Fase 2 do backend (spec no PDF `1780540080493_Laser-Co-Backend-Fase2-DEV.pdf`, n
 5. **Validação ponta a ponta (tudo verde):** /api/health=supabase; POST lead público;
    login real; GET autenticado vê o lead; PATCH persiste; linha confirmada no Supabase.
 
-**PRÓXIMO (itens restantes do PDF, ordem):** (5) CRUD persistente de usuários/promoções/equipe,
-(6) upload de currículo (usar Supabase Storage, já disponível, em vez de Vercel Blob),
-(7) mapa geográfico no painel (Leaflet), (8) domínio definitivo (decisão do cliente: apontar
-pro deploy novo ou setar envs na conta antiga), (9) harden auth (rate limit, troca de senha).
-Token do Supabase usado na sessão deve ser ROTACIONADO (foi colado em chat).
+6. **Itens 5-7 e 9 do PDF TAMBÉM CONCLUÍDOS (commit `b260c60`, validados em produção):**
+   - **Currículo (item 6):** `api/curriculos.js`, POST público (PDF/DOC até 4MB base64) pro
+     bucket PRIVADO `site-curriculos` do Supabase Storage; GET logado gera URL assinada 1h.
+     `page-vagas.js` sobe o arquivo de verdade; painel tem botão "Baixar currículo" no
+     detalhe (LGPD: 401 sem login, validado).
+   - **Promoções (item 5 parcial):** `api/promocoes.js` (GET logado / PUT só franqueador) +
+     tabela `site_config` (RLS ON) + `api/_lib/config.js`. Telas Promoções salvam/encerram
+     de verdade; fallback data.js quando nunca salvo. CRUD de USUÁRIOS/equipe ficou de fora
+     DE PROPÓSITO: o banco compartilhado já tem usuários/colaboradores do Olimpo, CRUD
+     paralelo geraria conflito (é da fase de integração).
+   - **Mapa (item 7):** `viewUnidadesMapa` com Leaflet sob demanda (CDN), pinos das 70
+     unidades (lat/lng já existiam no data.js) com leads por unidade no popup.
+   - **Rate limit (item 9):** login com 5 falhas por e-mail+IP / 10 min → 429 (validado:
+     sexta tentativa leva 429; mensagem própria na tela de login).
+
+**RESTA da Fase 2:** item 8 (domínio definitivo: decisão do cliente + acesso ao DNS; apontar
+pro deploy novo OU setar as envs na conta Vercel antiga do OFerreira98) e CRUD de usuários
+(integração Olimpo). **Segurança:** token do Supabase usado na sessão deve ser ROTACIONADO
+(foi colado em chat); o remote do git tem um token do GitHub embutido na URL (avisar o dono).
 
 ### ÚLTIMA SESSÃO (2026-06-01, com o Ferreira): agendamento, avatar do chat, rodapé 6 matérias
 

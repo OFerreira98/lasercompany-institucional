@@ -22,6 +22,23 @@
 > - Validação ponta a ponta feita em 10/06/2026: health, lead público, login real,
 >   listagem autenticada, PATCH e persistência no banco. Tudo OK.
 >
+> **Itens 5-7 e 9 da Fase 2 (também ligados em 10/06/2026):**
+> - **Currículo das vagas** (`api/curriculos.js`): POST público sobe o PDF/DOC (até 4MB,
+>   base64) para o bucket PRIVADO `site-curriculos` do Supabase Storage; o path vai no lead.
+>   GET (logado) gera URL assinada de 1h, e o painel ganhou o botão "Baixar currículo" no
+>   detalhe do lead (LGPD: só quem está logado baixa).
+> - **Promoções persistentes** (`api/promocoes.js` + tabela `site_config` + `api/_lib/config.js`):
+>   as telas Promoções do painel agora salvam de verdade (PUT só franqueador). Se nunca foi
+>   salvo nada, o painel mostra as promoções do `data.js` (fallback).
+> - **Mapa da rede no painel** (`painel-core.js viewUnidadesMapa`): Leaflet carregado sob
+>   demanda, pinos das 70 unidades (lat/lng do `data.js`) com volume de leads por unidade.
+> - **Rate limit no login** (`api/auth/login.js`): 5 falhas por e-mail+IP a cada 10 min → 429.
+>
+> **Restam da Fase 2:** item 8 (domínio definitivo: decisão do cliente + DNS) e a parte de
+> CRUD de USUÁRIOS/equipe do item 5, que fica para a integração com o sistema unificado
+> (o banco compartilhado já tem tabelas próprias de usuários/colaboradores; criar um CRUD
+> paralelo aqui geraria conflito).
+>
 > O texto abaixo descreve o plano original (Neon + pg) e segue válido como alternativa.
 
 Este documento explica o que foi construído, **como testar agora** e **o que falta**
