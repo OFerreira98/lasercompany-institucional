@@ -38,63 +38,76 @@ window.LaserPainel = (function () {
   const DET_SKIP = { hasUnidade: 1, whatsappClicked: 1, unidadeId: 1, procedimentoId: 1, curriculoPath: 1 };
 
   /* ---------------- MENUS ---------------- */
+  /* Ícones SVG do menu (stroke currentColor, herdam a cor do link).
+     Chaves usadas no campo ico dos itens; emoji não entra no painel. */
+  const NAV_ICONS = {
+    home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>',
+    leads: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5h13L22 12v6a2 2 0 01-2 2H4a2 2 0 01-2-2v-6l3.5-7z"/></svg>',
+    unidades: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/><path d="M10 21v-3h4v3"/></svg>',
+    trafego: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>',
+    demografico: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 20c.7-3.2 3.2-5 6.2-5s5.5 1.8 6.2 5"/><circle cx="17" cy="9.5" r="2.4"/><path d="M16 15.2c2.6.2 4.6 1.8 5.2 4.3"/></svg>',
+    promocoes: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>',
+    recrutamento: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2"/><path d="M3 12.5h18"/></svg>',
+    aparencia: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 100 18c1.2 0 2-.9 2-2 0-.6-.2-1-.5-1.4-.3-.4-.5-.8-.5-1.4 0-1.1.9-2 2-2h2.3A4.7 4.7 0 0021 9.8C20 5.9 16.3 3 12 3z"/><circle cx="7.5" cy="11" r="1" fill="currentColor"/><circle cx="10.5" cy="7.5" r="1" fill="currentColor"/><circle cx="15" cy="7.5" r="1" fill="currentColor"/></svg>',
+    config: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h10M18 8h2M4 16h2M10 16h10"/><circle cx="16" cy="8" r="2.2"/><circle cx="8" cy="16" r="2.2"/></svg>',
+  };
   const MENU_FRANQUEADOR = [
-    { id: 'visao-geral', ico: '🏠', label: 'Visão Geral' },
-    { ico: '📊', label: 'Leads', children: [
+    { id: 'visao-geral', ico: 'home', label: 'Visão Geral' },
+    { ico: 'leads', label: 'Leads', children: [
       { id: 'leads-todos', label: 'Todos os leads' },
       { id: 'leads-popup', label: 'Leads do pop-up' },
       { id: 'leads-agendamento', label: 'Leads de agendamento' },
       { id: 'leads-recrutamento', label: 'Leads de recrutamento' },
     ] },
-    { ico: '🏢', label: 'Unidades', children: [
+    { ico: 'unidades', label: 'Unidades', children: [
       { id: 'unidades-ranking', label: 'Ranking de unidades' },
       { id: 'unidades-mapa', label: 'Mapa da rede' },
       { id: 'unidades-cadastro', label: 'Cadastro de unidades' },
     ] },
-    { ico: '📈', label: 'Tráfego e Origem', children: [
+    { ico: 'trafego', label: 'Tráfego e Origem', children: [
       { id: 'trafego-tempo-real', label: 'Tempo real' },
       { id: 'trafego-origem', label: 'Origem dos visitantes' },
       { id: 'trafego-paginas', label: 'Páginas mais visitadas' },
       { id: 'trafego-dispositivos', label: 'Dispositivos' },
     ] },
-    { id: 'demo', ico: '👥', label: 'Demográfico' },
-    { ico: '🎯', label: 'Promoções', children: [
+    { id: 'demo', ico: 'demografico', label: 'Demográfico' },
+    { ico: 'promocoes', label: 'Promoções', children: [
       { id: 'promo-ativas', label: 'Promoções ativas' },
       { id: 'promo-cadastrar', label: 'Cadastrar promoção' },
       { id: 'promo-desempenho', label: 'Desempenho por promoção' },
     ] },
-    { ico: '💼', label: 'Recrutamento', children: [
+    { ico: 'recrutamento', label: 'Recrutamento', children: [
       { id: 'recrut-vagas', label: 'Vagas abertas' },
       { id: 'recrut-candidatos', label: 'Candidatos' },
     ] },
-    { ico: '🎨', label: 'Aparência do site', children: [
+    { ico: 'aparencia', label: 'Aparência do site', children: [
       { id: 'aparencia-tema', label: 'Tema do site' },
       { id: 'aparencia-sazonais', label: 'Temas sazonais' },
     ] },
-    { ico: '⚙️', label: 'Configurações', children: [
+    { ico: 'config', label: 'Configurações', children: [
       { id: 'config-usuarios', label: 'Usuários e permissões' },
       { id: 'config-conta', label: 'Conta' },
     ] },
   ];
   const MENU_FRANQUEADO = [
-    { id: 'visao-geral', ico: '🏠', label: 'Visão Geral' },
-    { ico: '📊', label: 'Meus Leads', children: [
+    { id: 'visao-geral', ico: 'home', label: 'Visão Geral' },
+    { ico: 'leads', label: 'Meus Leads', children: [
       { id: 'leads-todos', label: 'Todos' },
       { id: 'leads-popup', label: 'Pop-up' },
       { id: 'leads-agendamento', label: 'Agendamento' },
     ] },
-    { ico: '📈', label: 'Desempenho', children: [
+    { ico: 'trafego', label: 'Desempenho', children: [
       { id: 'desemp-procedimento', label: 'Por procedimento' },
       { id: 'desemp-periodo', label: 'Por período' },
       { id: 'desemp-rede', label: 'Comparação com a rede' },
     ] },
-    { ico: '💼', label: 'Vagas', children: [
+    { ico: 'recrutamento', label: 'Vagas', children: [
       { id: 'recrut-candidatos', label: 'Candidatos da minha unidade' },
     ] },
-    { ico: '👥', label: 'Equipe', children: [
+    { ico: 'demografico', label: 'Equipe', children: [
       { id: 'equipe-logins', label: 'Logins de funcionário' },
     ] },
-    { id: 'config-conta', ico: '⚙️', label: 'Minha conta' },
+    { id: 'config-conta', ico: 'config', label: 'Minha conta' },
   ];
 
   const VIEW_TITLE = {
@@ -509,7 +522,7 @@ window.LaserPainel = (function () {
   function viewStub(id) {
     state.presetTipos = null;
     document.getElementById('painel-view').innerHTML =
-      '<div class="painel-stub"><div class="painel-stub-ico">🛠️</div>' +
+      '<div class="painel-stub"><div class="painel-stub-ico"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 005 5L22 14l-8 8-2.7-2.7a4 4 0 00-5-5L2 10l8-8 4.7 4.3z" transform="rotate(45 12 12)"/></svg></div>' +
       '<h3>' + esc(VIEW_TITLE[id] || id) + '</h3>' +
       '<p>A navegação e a estrutura desta tela já estão prontas. O conteúdo detalhado (gráficos, tabelas e gestão) entra nas próximas etapas do painel, conforme combinado.</p>' +
       '<span class="painel-stub-tag">Em construção</span></div>';
@@ -834,10 +847,10 @@ window.LaserPainel = (function () {
     nav.innerHTML = menu.map((g) => {
       if (g.children) {
         return '<div class="painel-nav-group" data-group>' +
-          '<button class="painel-nav-head" type="button"><span class="painel-nav-ico">' + g.ico + '</span><span class="painel-nav-label">' + g.label + '</span><span class="painel-nav-caret">▸</span></button>' +
+          '<button class="painel-nav-head" type="button"><span class="painel-nav-ico">' + (NAV_ICONS[g.ico] || '') + '</span><span class="painel-nav-label">' + g.label + '</span><span class="painel-nav-caret">▸</span></button>' +
           '<div class="painel-nav-sub">' + g.children.map((c) => '<a class="painel-nav-link" href="#' + c.id + '" data-view="' + c.id + '">' + c.label + '</a>').join('') + '</div></div>';
       }
-      return '<div class="painel-nav-group"><a class="painel-nav-link" href="#' + g.id + '" data-view="' + g.id + '"><span class="painel-nav-ico">' + g.ico + '</span><span class="painel-nav-label">' + g.label + '</span></a></div>';
+      return '<div class="painel-nav-group"><a class="painel-nav-link" href="#' + g.id + '" data-view="' + g.id + '"><span class="painel-nav-ico">' + (NAV_ICONS[g.ico] || '') + '</span><span class="painel-nav-label">' + g.label + '</span></a></div>';
     }).join('');
     nav.querySelectorAll('.painel-nav-head').forEach((h) => h.addEventListener('click', () => h.closest('.painel-nav-group').classList.toggle('open')));
     nav.querySelectorAll('.painel-nav-link').forEach((a) => a.addEventListener('click', () => document.body.classList.remove('sidebar-open')));

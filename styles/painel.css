@@ -46,7 +46,8 @@
   transition: background .15s, color .15s;
 }
 .painel-nav-head:hover, .painel-nav-link:hover { background: var(--color-surface); color: var(--color-text); }
-.painel-nav-ico { width: 18px; text-align: center; flex-shrink: 0; opacity: .9; font-size: 0.95rem; }
+.painel-nav-ico { width: 18px; flex-shrink: 0; opacity: .9; display: inline-flex; align-items: center; justify-content: center; }
+.painel-nav-ico svg { width: 16px; height: 16px; display: block; }
 .painel-nav-label { flex: 1; }
 .painel-nav-caret { font-size: 0.7rem; transition: transform .2s; opacity: .6; }
 .painel-nav-group.open > .painel-nav-head .painel-nav-caret { transform: rotate(90deg); }

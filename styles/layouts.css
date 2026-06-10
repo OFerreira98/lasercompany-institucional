@@ -2107,6 +2107,13 @@ body:not(.painel-body):not(.page-has-dark-hero) { padding-top: 144px; }
   border-color: #9A6B1E;
   box-shadow: 0 0 0 3px rgba(154,107,30,0.14);
 }
+/* Regra 10 (contexto claro): o ::placeholder herdava --color-text-dim do tema
+   vinho (creme) e sumia no fundo branco. Campos pareciam vazios/quebrados. */
+.sac-modal .input::placeholder,
+.sac-modal .sac-textarea::placeholder { color: #8A6850; opacity: 1; }
+.sac-modal select.input { color: #1F0B0A; }
+.sac-modal select.input:invalid { color: #8A6850; }
+.sac-modal select.input option { background: #FFFFFF; color: #1F0B0A; }
 .sac-textarea {
   resize: vertical;
   min-height: 96px;
