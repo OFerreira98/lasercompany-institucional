@@ -2111,6 +2111,7 @@ body:not(.painel-body):not(.page-has-dark-hero) { padding-top: 144px; }
    vinho (creme) e sumia no fundo branco. Campos pareciam vazios/quebrados. */
 .sac-modal .input::placeholder,
 .sac-modal .sac-textarea::placeholder { color: #8A6850; opacity: 1; }
+.sac-success #sac-protocolo { color: #7A5418; }
 .sac-modal select.input { color: #1F0B0A; }
 .sac-modal select.input:invalid { color: #8A6850; }
 .sac-modal select.input option { background: #FFFFFF; color: #1F0B0A; }

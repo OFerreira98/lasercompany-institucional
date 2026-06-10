@@ -97,6 +97,25 @@ Fase 2 do backend (spec no PDF `1780540080493_Laser-Co-Backend-Fase2-DEV.pdf`, n
    - Validação e2e completa em produção (10 checks) + screenshots (tráfego/demográfico/
      usuários renderizando dado real, zero erro JS). Dados sintéticos de teste APAGADOS.
 
+9. **SAC DO SITE INTEGRADO AO SISTEMA DE GESTÃO DE SAC (commit `a3c76bc`):** o formulário
+   "Fale conosco" do site agora ABRE TICKET DE VERDADE no sistema de gestão de SAC do
+   jvneto (`/home/jvneto/ProjetosLMK/Laser/SAC`, Next.js, projeto Vercel `sac`,
+   sac-henna.vercel.app, MESMO Supabase compartilhado, tabela `sac_tickets`).
+   - **`api/sac.js`** (POST público): valida nome/mensagem/contato e insere em
+     `sac_tickets` seguindo o padrão do webhook de WhatsApp do próprio sistema:
+     `canal: 'formulario'`, `fase: 'Novo'` (coluna do Kanban), `status_multi:
+     ['em_andamento']`, `motivo_label` = área do form (Ouvidoria/Elogio/Dúvida/Outros),
+     `historico` com a ação. Retorna o `numero` (protocolo, sequence real do sistema).
+   - **`layout.js`**: o submit chama `/api/sac` e mostra "Seu protocolo é o número N."
+     na tela de sucesso (`#sac-protocolo`, dourado profundo `#7A5418`, regra 10). O
+     `trackLead('sac')` continua como registro no painel.
+   - Validado e2e: API direto (ticket 1022) e formulário REAL no navegador (ticket 1023,
+     protocolo exibido na tela). Ambos apareceram em `sac_tickets` com fase Novo e foram
+     APAGADOS depois do teste. (O ticket 1012 "Teste" é do próprio time, não tocar.)
+   - Referências do sistema SAC: criação em `src/app/actions/tickets.ts` (criarTicket),
+     webhook em `src/app/api/webhooks/uazapi/route.ts`, migrações em
+     `/home/jvneto/ProjetosLMK/Laser/RH/supabase/migrations/` (012, 036, 039, 041).
+
 **RESTA da Fase 2:** item 8 (domínio definitivo: decisão do cliente + acesso ao DNS; apontar
 pro deploy novo OU setar as envs na conta Vercel antiga do OFerreira98). **Telas que leem do
 data.js do site (não é mock):** cadastro de unidades e vagas abertas (são o conteúdo real do
