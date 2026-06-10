@@ -79,6 +79,7 @@ window.LaserAPI = (function () {
       return { token: j.token, user: j.user, mode: 'backend' };
     } catch (e) {
       if (e.status === 401) { const err = new Error('credenciais'); err.code = 'credenciais'; throw err; }
+      if (e.status === 429) { const err = new Error('muitas_tentativas'); err.code = 'muitas_tentativas'; throw err; }
       // sem backend (offline/local) -> valida contra usuários demo
       const u = DEMO_USERS.find((x) =>
         x.email.toLowerCase() === String(email || '').toLowerCase() && x.senha === senha);
@@ -116,5 +117,64 @@ window.LaserAPI = (function () {
     }
   }
 
-  return { login: login, listLeads: listLeads, updateLead: updateLead, DEMO_USERS: DEMO_USERS };
+  /* ---------- promoções (CRUD persistente, Fase 2) ---------- */
+  const PROMO_DEMO_KEY = 'laserco_promocoes_demo';
+  async function getPromocoes(session) {
+    try {
+      const j = await tryFetch('/promocoes', { headers: { Authorization: 'Bearer ' + session.token } });
+      if (j.promocoes) return { promocoes: j.promocoes, mode: 'backend' };
+    } catch (e) { if (e.status === 401) throw e; }
+    try {
+      const local = JSON.parse(localStorage.getItem(PROMO_DEMO_KEY) || 'null');
+      if (local) return { promocoes: local, mode: 'demo' };
+    } catch (e) {}
+    return { promocoes: null, mode: 'demo' }; // null = usar as do data.js
+  }
+  async function savePromocoes(session, lista) {
+    try {
+      const j = await tryFetch('/promocoes', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + session.token },
+        body: JSON.stringify({ promocoes: lista }),
+      });
+      return { promocoes: j.promocoes, mode: 'backend' };
+    } catch (e) {
+      if (e.status === 401 || e.status === 403) throw e;
+      try { localStorage.setItem(PROMO_DEMO_KEY, JSON.stringify(lista)); } catch (er) {}
+      return { promocoes: lista, mode: 'demo' };
+    }
+  }
+
+  /* ---------- currículo (upload público + download assinado) ---------- */
+  function uploadCurriculo(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onerror = () => resolve(null);
+      reader.onload = async () => {
+        try {
+          const base64 = String(reader.result).split(',')[1] || '';
+          const j = await tryFetch('/curriculos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome: file.name, mime: file.type, base64: base64 }),
+          });
+          resolve(j.path || null);
+        } catch (e) { resolve(null); }
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  async function getCurriculoUrl(session, path) {
+    const j = await tryFetch('/curriculos?path=' + encodeURIComponent(path), {
+      headers: { Authorization: 'Bearer ' + session.token },
+    });
+    return j.url;
+  }
+
+  return {
+    login: login, listLeads: listLeads, updateLead: updateLead,
+    getPromocoes: getPromocoes, savePromocoes: savePromocoes,
+    uploadCurriculo: uploadCurriculo, getCurriculoUrl: getCurriculoUrl,
+    DEMO_USERS: DEMO_USERS,
+  };
 })();

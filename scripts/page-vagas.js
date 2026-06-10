@@ -170,6 +170,12 @@
     }
     if (!ok) return;
 
+    const arquivo = form.querySelector('#vg-cv').files[0] || null;
+    if (arquivo && arquivo.size > 4 * 1024 * 1024) {
+      window.LaserUI.toast('O currículo precisa ter no máximo 4MB.', 'danger');
+      return;
+    }
+
     const submitBtn = form.querySelector('#vaga-submit');
     submitBtn.disabled = true;
     submitBtn.textContent = 'Enviando…';
@@ -184,11 +190,16 @@
       cidadeCandidato: form.querySelector('#vg-cidade').value.trim(),
       linkedin: form.querySelector('#vg-linkedin').value.trim(),
       mensagem: form.querySelector('#vg-msg').value.trim(),
-      curriculoNome: form.querySelector('#vg-cv').files[0]?.name || null,
+      curriculoNome: arquivo ? arquivo.name : null,
     };
 
-    // Em produção: POST /api/candidaturas + upload do arquivo para o RH
-    setTimeout(() => {
+    // Sobe o arquivo do currículo (Supabase Storage via /api/curriculos).
+    // Se o upload falhar, a candidatura segue só com o nome (não bloqueia).
+    (async () => {
+      if (arquivo && window.LaserAPI && window.LaserAPI.uploadCurriculo) {
+        const path = await window.LaserAPI.uploadCurriculo(arquivo);
+        if (path) data.curriculoPath = path;
+      }
       window.LaserAnalytics.trackLead('recrutamento', data);
 
       // Tela de sucesso
@@ -207,7 +218,7 @@
         </div>
       `;
       document.getElementById('vaga-success-close').addEventListener('click', closeModal);
-    }, 800);
+    })();
   }
 
   function closeModal() {

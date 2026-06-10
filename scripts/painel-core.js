@@ -35,7 +35,7 @@ window.LaserPainel = (function () {
     curriculoNome: 'Currículo', mensagem: 'Mensagem', brinde: 'Brinde',
     capital: 'Capital para investir', linkedin: 'LinkedIn',
   };
-  const DET_SKIP = { hasUnidade: 1, whatsappClicked: 1, unidadeId: 1, procedimentoId: 1 };
+  const DET_SKIP = { hasUnidade: 1, whatsappClicked: 1, unidadeId: 1, procedimentoId: 1, curriculoPath: 1 };
 
   /* ---------------- MENUS ---------------- */
   const MENU_FRANQUEADOR = [
@@ -300,6 +300,7 @@ window.LaserPainel = (function () {
       return '<div class="det-row"><span class="det-k">' + esc(label) + '</span><span class="det-v">' + esc(d[k]) + '</span></div>';
     }).join('');
     const wa = waLink(lead);
+    const temCv = Boolean(d.curriculoPath);
     content.innerHTML =
       '<div class="det-eyebrow">' + esc(TIPO_LABEL[lead.tipo] || lead.tipo) + ' · ' + fmtData(lead.createdAt) + '</div>' +
       '<h3 class="det-title">' + esc(lead.nome) + '</h3>' +
@@ -308,8 +309,22 @@ window.LaserPainel = (function () {
         STATUS.map((s) => '<option value="' + s.key + '"' + (s.key === lead.status ? ' selected' : '') + '>' + s.label + '</option>').join('') + '</select></div>' +
       '<div class="det-field"><label>Anotações internas</label><textarea id="det-notas" class="painel-textarea" rows="3" placeholder="Ex.: ligou, pediu retorno amanhã...">' + esc(lead.raw.notas || '') + '</textarea></div>' +
       '<div class="det-actions">' + (wa ? '<a class="btn btn-primary" href="' + wa + '" target="_blank" rel="noopener">Chamar no WhatsApp</a>' : '') +
+        (temCv ? '<button class="btn btn-outline" id="det-cv" type="button">Baixar currículo</button>' : '') +
         '<button class="btn btn-outline" id="det-save" type="button">Salvar alterações</button></div>';
     modal.classList.add('visible'); document.body.style.overflow = 'hidden';
+    if (temCv) {
+      document.getElementById('det-cv').addEventListener('click', async () => {
+        const b = document.getElementById('det-cv'); b.disabled = true; b.textContent = 'Gerando link...';
+        try {
+          const url = await window.LaserAPI.getCurriculoUrl(state.session, d.curriculoPath);
+          window.open(url, '_blank', 'noopener');
+          b.textContent = 'Baixar currículo'; b.disabled = false;
+        } catch (e) {
+          b.textContent = 'Currículo indisponível';
+          setTimeout(() => { b.textContent = 'Baixar currículo'; b.disabled = false; }, 2500);
+        }
+      });
+    }
     document.getElementById('det-save').addEventListener('click', async () => {
       const ns = document.getElementById('det-status').value;
       const notas = document.getElementById('det-notas').value;
@@ -530,13 +545,52 @@ window.LaserPainel = (function () {
       '<div class="painel-grid-2">' + card('Top 10 unidades', 'leads no período', cv('u-bar'), true) + card('Ranking completo', nf(nUni) + ' unidades', rankList(pairs), true) + '</div>');
     vgChart('u-bar', barCfg(col0(top), col1(top), false));
   }
+  /* Carrega o Leaflet sob demanda (CDN), só quando a tela do mapa abre. */
+  var _leafletPromise = null;
+  function loadLeaflet() {
+    if (window.L) return Promise.resolve();
+    if (_leafletPromise) return _leafletPromise;
+    _leafletPromise = new Promise(function (resolve, reject) {
+      var css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+      document.head.appendChild(css);
+      var js = document.createElement('script');
+      js.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+      js.onload = resolve;
+      js.onerror = reject;
+      document.head.appendChild(js);
+    });
+    return _leafletPromise;
+  }
   function viewUnidadesMapa() {
     var p = topPairs(countBy(state.all.filter(function (l) { return l.uf; }), function (l) { return l.uf; }), 16);
-    var totalU = (window.LaserData && window.LaserData.unidades) ? window.LaserData.unidades.length : 70;
+    var us = (window.LaserData && window.LaserData.unidades) || [];
+    var totalU = us.length || 70;
+    var leadsPorUnidade = countBy(state.all.filter(function (l) { return l.unidadeId; }), function (l) { return l.unidadeId; });
     setView('<div class="painel-kpis">' + kpiCard(p.length, 'Estados com presença', true) + kpiCard(totalU, 'Unidades na rede') + kpiCard(p[0] ? p[0][0] : '-', 'Estado líder') + '</div>' +
-      '<div class="painel-grid-2">' + card('Leads por estado', 'distribuição da rede', cv('uf-bar'), true) + card('Concentração por estado', '', rankList(p), true) + '</div>' +
-      '<p class="painel-sub" style="margin-top:var(--sp-2)">O mapa geográfico interativo entra na fase de integração com o sistema unificado.</p>');
+      card('Mapa da rede', 'pinos das unidades, com leads por unidade', '<div id="painel-mapa" style="height:460px;border-radius:var(--radius-md);overflow:hidden"></div>', true) +
+      '<div class="painel-grid-2" style="margin-top:var(--sp-4)">' + card('Leads por estado', 'distribuição da rede', cv('uf-bar'), true) + card('Concentração por estado', '', rankList(p), true) + '</div>');
     vgChart('uf-bar', barCfg(col0(p), col1(p), false));
+    loadLeaflet().then(function () {
+      var el = document.getElementById('painel-mapa');
+      if (!el || !window.L) return;
+      var map = L.map(el, { scrollWheelZoom: false }).setView([-15.6, -50.0], 4);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap', maxZoom: 18,
+      }).addTo(map);
+      us.forEach(function (u) {
+        if (typeof u.lat !== 'number' || typeof u.lng !== 'number') return;
+        var n = leadsPorUnidade[u.id] || 0;
+        L.circleMarker([u.lat, u.lng], {
+          radius: 7 + Math.min(n, 30) / 4,
+          color: '#9A6B1E', weight: 2, fillColor: '#C8A064', fillOpacity: 0.85,
+        }).addTo(map).bindPopup('<strong>' + esc(u.nome) + '</strong><br>' + esc(u.cidade) + '/' + esc(u.uf) + '<br>' + n + ' lead(s) no período');
+      });
+    }).catch(function () {
+      var el = document.getElementById('painel-mapa');
+      if (el) el.innerHTML = '<div class="painel-empty">Não foi possível carregar o mapa (sem internet?).</div>';
+    });
   }
   function viewUnidadesCadastro() {
     var us = (window.LaserData && window.LaserData.unidades) || [];
@@ -578,13 +632,60 @@ window.LaserPainel = (function () {
     vgChart('demo-id-bar', barCfg(col0(MOCK_IDADE), col1(MOCK_IDADE), false));
     vgChart('demo-gen-don', donutCfg(col0(MOCK_GEN), col1(MOCK_GEN)));
   }
+  /* Promoções persistentes (Fase 2): lista salva via /api/promocoes;
+     se nunca foi salva, parte das do data.js. */
+  async function loadPromos() {
+    try {
+      var r = await window.LaserAPI.getPromocoes(state.session);
+      if (r.promocoes) return r.promocoes;
+    } catch (e) { if (e.status === 401) logout(); }
+    return ((window.LaserData && window.LaserData.promocoes) || []).slice();
+  }
   function viewPromoAtivas() {
-    var ps = (window.LaserData && window.LaserData.promocoes) || [];
-    var html = ps.map(function (p) { return '<div class="painel-chart-card flush"><div style="font-family:var(--font-accent);font-weight:600">' + esc(p.titulo) + '</div><div style="color:var(--color-accent-pale);font-size:var(--fs-xl);font-family:var(--font-accent);margin:6px 0">' + esc(p.preco || '') + ' <small style="color:var(--color-text-muted);text-decoration:line-through;font-size:0.55em">' + esc(p.precoOriginal || '') + '</small></div><div style="font-size:var(--fs-xs);color:var(--color-text-muted)">Válida até ' + esc(p.valida || '-') + ' · ' + esc(p.desconto || '') + '</div></div>'; }).join('');
-    setView('<div class="painel-grid-3">' + (html || '<div class="painel-empty">Sem promoções ativas.</div>') + '</div>');
+    setView('<div class="painel-empty">Carregando promoções...</div>');
+    loadPromos().then(function (ps) {
+      var podeExcluir = state.session && state.session.user && state.session.user.role === 'franqueador';
+      var html = ps.map(function (p, i) { return '<div class="painel-chart-card flush"><div style="font-family:var(--font-accent);font-weight:600">' + esc(p.titulo) + '</div><div style="color:var(--color-accent-pale);font-size:var(--fs-xl);font-family:var(--font-accent);margin:6px 0">' + esc(p.preco || '') + ' <small style="color:var(--color-text-muted);text-decoration:line-through;font-size:0.55em">' + esc(p.precoOriginal || '') + '</small></div><div style="font-size:var(--fs-xs);color:var(--color-text-muted)">Válida até ' + esc(p.valida || '-') + ' · ' + esc(p.desconto || '') + '</div>' + (podeExcluir ? '<button class="painel-act" type="button" data-promo-del="' + i + '" style="margin-top:8px">Encerrar</button>' : '') + '</div>'; }).join('');
+      setView('<div class="painel-grid-3">' + (html || '<div class="painel-empty">Sem promoções ativas.</div>') + '</div>');
+      document.querySelectorAll('[data-promo-del]').forEach(function (b) {
+        b.addEventListener('click', async function () {
+          if (!confirm('Encerrar a promoção "' + (ps[Number(b.dataset.promoDel)] || {}).titulo + '"?')) return;
+          ps.splice(Number(b.dataset.promoDel), 1);
+          try { await window.LaserAPI.savePromocoes(state.session, ps); } catch (e) { if (e.status === 401) return logout(); }
+          viewPromoAtivas();
+        });
+      });
+    });
   }
   function viewPromoCadastrar() {
-    setView(card('Cadastrar promoção', 'demonstração (salvar entra na integração com o sistema)', '<div style="display:grid;gap:var(--sp-4);max-width:520px"><div class="det-field"><label>Título</label><input class="painel-input" style="width:100%" placeholder="Ex.: Rejuvenescimento Facial 4D"></div><div class="det-field"><label>Preço promocional</label><input class="painel-input" style="width:100%" placeholder="R$ 397"></div><div class="det-field"><label>Válida até</label><input class="painel-input" type="date" style="width:100%"></div><button class="btn btn-primary" type="button" onclick="return false">Salvar promoção</button></div>', true));
+    setView(card('Cadastrar promoção', 'a promoção salva fica disponível para toda a rede', '<div style="display:grid;gap:var(--sp-4);max-width:520px"><div class="det-field"><label>Título</label><input id="promo-titulo" class="painel-input" style="width:100%" placeholder="Ex.: Rejuvenescimento Facial 4D"></div><div class="det-field"><label>Preço promocional</label><input id="promo-preco" class="painel-input" style="width:100%" placeholder="R$ 397"></div><div class="det-field"><label>Preço original (opcional)</label><input id="promo-preco-orig" class="painel-input" style="width:100%" placeholder="R$ 597"></div><div class="det-field"><label>Válida até</label><input id="promo-valida" class="painel-input" type="date" style="width:100%"></div><button class="btn btn-primary" id="promo-salvar" type="button">Salvar promoção</button><div id="promo-msg" style="font-size:var(--fs-sm)"></div></div>', true));
+    document.getElementById('promo-salvar').addEventListener('click', async function () {
+      var titulo = document.getElementById('promo-titulo').value.trim();
+      var msg = document.getElementById('promo-msg');
+      if (!titulo) { msg.textContent = 'Informe o título da promoção.'; return; }
+      var btn = document.getElementById('promo-salvar');
+      btn.disabled = true; btn.textContent = 'Salvando...';
+      var ps = await loadPromos();
+      ps.unshift({
+        titulo: titulo,
+        preco: document.getElementById('promo-preco').value.trim(),
+        precoOriginal: document.getElementById('promo-preco-orig').value.trim(),
+        desconto: '',
+        valida: document.getElementById('promo-valida').value,
+      });
+      try {
+        var r = await window.LaserAPI.savePromocoes(state.session, ps);
+        msg.textContent = r.mode === 'backend' ? 'Promoção salva. Já aparece em "Promoções ativas".' : 'Salva neste navegador (modo demonstração).';
+        document.getElementById('promo-titulo').value = '';
+        document.getElementById('promo-preco').value = '';
+        document.getElementById('promo-preco-orig').value = '';
+        document.getElementById('promo-valida').value = '';
+      } catch (e) {
+        if (e.status === 401) return logout();
+        msg.textContent = e.status === 403 ? 'Só o franqueador pode salvar promoções.' : 'Não foi possível salvar. Tente de novo.';
+      }
+      btn.disabled = false; btn.textContent = 'Salvar promoção';
+    });
   }
   function viewPromoDesempenho() {
     var ps = (window.LaserData && window.LaserData.promocoes) || [];

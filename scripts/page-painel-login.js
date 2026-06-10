@@ -34,7 +34,9 @@
         erro.hidden = false;
         erro.textContent = err && err.code === 'credenciais'
           ? 'E-mail ou senha incorretos.'
-          : 'Não foi possível entrar. Tente novamente.';
+          : (err && err.code === 'muitas_tentativas'
+            ? 'Muitas tentativas. Aguarde alguns minutos e tente de novo.'
+            : 'Não foi possível entrar. Tente novamente.');
         btn.disabled = false;
         btn.textContent = orig;
       }
