@@ -35,7 +35,7 @@ module.exports = async (req, res) => {
   const body = await readBody(req);
   const chave = String(body.email || '').toLowerCase().slice(0, 120) + '|' + clientIp(req);
   if (bloqueado(chave)) return sendJson(res, 429, { error: 'muitas_tentativas' });
-  const user = authenticate(body.email, body.senha);
+  const user = await authenticate(body.email, body.senha);
   if (!user) {
     registraFalha(chave);
     return sendJson(res, 401, { error: 'credenciais_invalidas' });

@@ -89,15 +89,41 @@ function verifyToken(token) {
   return payload;
 }
 
-function authenticate(email, senha) {
-  const u = USERS.find(x => x.email.toLowerCase() === String(email || '').toLowerCase());
-  if (!u) return null;
+function matchUser(list, email, senha) {
+  const u = (list || []).find(x => x && x.email && x.email.toLowerCase() === String(email || '').toLowerCase());
+  if (!u || !u.senhaHash) return null;
   const given = sha256(senha || '');
   const a = Buffer.from(given);
   const b = Buffer.from(u.senhaHash);
   if (a.length !== b.length) return null;
   if (!crypto.timingSafeEqual(a, b)) return null;
-  return { email: u.email, nome: u.nome, role: u.role, unidadeId: u.unidadeId };
+  return { email: u.email, nome: u.nome, role: u.role, unidadeId: u.unidadeId || null };
 }
 
-module.exports = { createToken, verifyToken, authenticate, gerarHash, USERS };
+/* Usuários cadastrados PELO PAINEL ficam no banco (site_config,
+   chave 'usuarios') e têm prioridade. Fallback: env PAINEL_USERS,
+   depois demo. Assim o CRUD de usuários funciona sem mexer em env. */
+async function dbUsers() {
+  try {
+    const { getConfig, hasSupabase } = require('./config');
+    if (!hasSupabase()) return null;
+    const arr = await getConfig('usuarios');
+    return Array.isArray(arr) && arr.length ? arr : null;
+  } catch (e) {
+    console.error('[auth] erro ao ler usuarios do banco:', e && e.message);
+    return null;
+  }
+}
+
+async function authenticate(email, senha) {
+  const fromDb = await dbUsers();
+  if (fromDb) {
+    const hit = matchUser(fromDb, email, senha);
+    if (hit) return hit;
+    // e-mail existe no banco? então o banco manda (não cai pro fallback)
+    if (fromDb.some(x => x && x.email && x.email.toLowerCase() === String(email || '').toLowerCase())) return null;
+  }
+  return matchUser(USERS, email, senha);
+}
+
+module.exports = { createToken, verifyToken, authenticate, gerarHash, USERS, dbUsers };

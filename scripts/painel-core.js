@@ -133,8 +133,8 @@ window.LaserPainel = (function () {
     'leads-agendamento': 'Solicitações de avaliação pelo agendamento.',
     'leads-recrutamento': 'Candidaturas recebidas pelas vagas.',
     'recrut-candidatos': 'Candidaturas recebidas pelas vagas.',
-    'demo': 'Idade e gênero do público (demonstração).',
-    'config-usuarios': 'Gerencie acessos e permissões do painel.',
+    'demo': 'Perfil do público, calculado dos leads reais.',
+    'config-usuarios': 'Acessos do painel, salvos no banco e válidos no login.',
     'config-conta': 'Seus dados de acesso e perfil.',
   };
 
@@ -539,13 +539,6 @@ window.LaserPainel = (function () {
   function col0(a) { return a.map(function (x) { return x[0]; }); }
   function col1(a) { return a.map(function (x) { return x[1]; }); }
   function nf(n) { return Number(n).toLocaleString('pt-BR'); }
-  const MOCK_PAGINAS = [['Início', 58240], ['Procedimentos', 41360], ['Agendamento', 23110], ['Unidades', 18470], ['Seja um franqueado', 9320], ['Vagas', 6240]];
-  const MOCK_PG_TIME = ['1m12s', '2m48s', '3m21s', '1m54s', '2m37s', '1m08s'];
-  const MOCK_PG_EXIT = [32, 21, 44, 28, 26, 51];
-  const MOCK_DISP = [['Celular', 68], ['Desktop', 26], ['Tablet', 6]];
-  const MOCK_BROWSER = [['Chrome', 58], ['Safari', 27], ['Edge', 8], ['Samsung Internet', 4], ['Outros', 3]];
-  const MOCK_IDADE = [['18-24', 14], ['25-34', 38], ['35-44', 27], ['45-54', 14], ['55+', 7]];
-  const MOCK_GEN = [['Feminino', 82], ['Masculino', 16], ['Outro', 2]];
 
   function viewUnidadesRanking() {
     var by = countBy(state.all.filter(function (l) { return l.unidadeId; }), function (l) { return l.unidadeNome || l.unidadeId; });
@@ -609,41 +602,100 @@ window.LaserPainel = (function () {
     var us = (window.LaserData && window.LaserData.unidades) || [];
     setView(card('Unidades cadastradas', us.length + ' unidades na rede', tableHTML(['Unidade', 'Cidade', 'Endereço', 'Contato'], us.map(function (u) { return [esc(u.nome), esc(u.cidade) + '/' + esc(u.uf), esc(u.endereco), esc(u.telefone || u.whatsapp || '-')]; })), true));
   }
+  /* ---- TRÁFEGO REAL: pageviews coletados pelo site (analytics.js ->
+     /api/track -> site_pageviews) e agregados no banco (/api/trafego). ---- */
+  function omitKey(obj, key) { var o = {}; Object.keys(obj || {}).forEach(function (k) { if (k !== key) o[k] = obj[k]; }); return o; }
+  function pgLabel(p) {
+    var MAP = { '/': 'Início', '/index': 'Início', '/procedimentos': 'Procedimentos', '/unidades': 'Unidades', '/agendamento': 'Agendamento', '/vagas': 'Vagas', '/contato': 'Contato', '/franqueado': 'Seja um franqueado', '/blog': 'Blog' };
+    var k = String(p).replace(/\.html$/, '').replace(/\/+$/, '') || '/';
+    return MAP[k] || k;
+  }
+  function trafegoVazio() { return '<div class="painel-empty">Coleta de tráfego ativa. Os números aparecem conforme o site recebe visitas (tudo vem do banco; nada de demonstração).</div>'; }
+  function loadTrafego() {
+    return window.LaserAPI.getTrafego(state.session, 30).catch(function (e) { if (e.status === 401) logout(); return null; });
+  }
   function viewTrafegoTempoReal() {
-    var now = Date.now();
-    var horaLeads = state.all.filter(function (l) { return now - new Date(l.createdAt) <= 3600000; }).length;
-    var online = 28 + state.all.length % 22;
-    var v30 = 64 + state.all.length % 40;
-    setView('<div class="painel-kpis">' + kpiCard(online + '<span class="kpi-live"></span>', 'Online agora', true) + kpiCard(nf(v30), 'Visitantes (30 min)') + kpiCard('2.040', 'Visitantes hoje') + kpiCard('61.380', 'Visitantes no mês') + kpiCard(horaLeads, 'Leads na última hora') + '</div><div class="painel-grid-2">' + card('Origem do tráfego', 'agora', cv('tr-orig', true), true) + card('Dispositivos', '', cv('tr-disp', true), true) + '</div>');
-    var op = origemPairs(); vgChart('tr-orig', donutCfg(col0(op), col1(op)));
-    vgChart('tr-disp', donutCfg(col0(MOCK_DISP), col1(MOCK_DISP)));
+    setView('<div class="painel-empty">Carregando tráfego...</div>');
+    loadTrafego().then(function (t) {
+      var now = Date.now();
+      var horaLeads = state.all.filter(function (l) { return now - new Date(l.createdAt) <= 3600000; }).length;
+      if (!t || !t.views) { setView('<div class="painel-kpis">' + kpiCard(horaLeads, 'Leads na última hora', true) + '</div>' + trafegoVazio()); return; }
+      setView('<div class="painel-kpis">' + kpiCard(t.online + '<span class="kpi-live"></span>', 'Online agora (5 min)', true) + kpiCard(nf(t.ultimos30min), 'Visitantes (30 min)') + kpiCard(nf(t.visitantesHoje), 'Visitantes hoje') + kpiCard(nf(t.visitantes), 'Visitantes (30 dias)') + kpiCard(horaLeads, 'Leads na última hora') + '</div><div class="painel-grid-2">' + card('Origem dos visitantes', '30 dias, sem navegação interna', cv('tr-orig', true), true) + card('Dispositivos', '30 dias', cv('tr-disp', true), true) + '</div>');
+      var op = topPairs(omitKey(t.origens, 'interno'), 8);
+      var dp = topPairs(t.dispositivos || {}, 5);
+      if (op.length) vgChart('tr-orig', donutCfg(col0(op), col1(op)));
+      if (dp.length) vgChart('tr-disp', donutCfg(col0(dp), col1(dp)));
+    });
   }
   function viewTrafegoOrigem() {
-    var op = origemPairs();
-    setView('<div class="painel-grid-2">' + card('Origem dos visitantes', 'distribuição', cv('o-don', true), true) + card('Ranking de origem', '', rankList(op), true) + '</div>');
-    vgChart('o-don', donutCfg(op.map(function (x) { return x[0]; }), op.map(function (x) { return x[1]; })));
+    setView('<div class="painel-empty">Carregando origem dos visitantes...</div>');
+    loadTrafego().then(function (t) {
+      var lop = origemPairs(); // origem dos LEADS (registrada no lead, banco)
+      var vop = t && t.views ? topPairs(omitKey(t.origens, 'interno'), 10) : [];
+      setView('<div class="painel-grid-2">' +
+        card('Origem dos visitantes', vop.length ? 'pageviews, 30 dias' : '', vop.length ? cv('o-don', true) : trafegoVazio(), true) +
+        card('Ranking de origem (visitantes)', '', rankList(vop), true) + '</div>' +
+        '<div class="painel-grid-2" style="margin-top:var(--sp-4)">' + card('Origem dos leads', 'de onde veio quem converteu', rankList(lop), true) + '</div>');
+      if (vop.length) vgChart('o-don', donutCfg(col0(vop), col1(vop)));
+    });
   }
   function viewTrafegoPaginas() {
-    var totalViews = MOCK_PAGINAS.reduce(function (s, p) { return s + p[1]; }, 0);
-    var rows = MOCK_PAGINAS.map(function (p, i) { return [p[0], nf(p[1]), MOCK_PG_TIME[i], MOCK_PG_EXIT[i] + '%']; });
-    setView('<div class="painel-kpis">' + kpiCard(nf(totalViews), 'Visualizações (30 dias)', true) + kpiCard('2m31s', 'Tempo médio na página') + kpiCard('33%', 'Taxa de saída média') + '</div>' +
-      '<div class="painel-grid-2">' + card('Páginas mais visitadas', 'últimos 30 dias (demonstração)', cv('pg-bar'), true) + card('Detalhe por página', '', tableHTML(['Página', 'Views', 'Tempo médio', 'Saída'], rows), true) + '</div>');
-    vgChart('pg-bar', barCfg(col0(MOCK_PAGINAS), col1(MOCK_PAGINAS), true));
+    setView('<div class="painel-empty">Carregando páginas...</div>');
+    loadTrafego().then(function (t) {
+      if (!t || !t.views) { setView(trafegoVazio()); return; }
+      var pg = topPairs(t.paginas || {}, 12).map(function (p) { return [pgLabel(p[0]), p[1]]; });
+      var rows = pg.map(function (p) { return [p[0], nf(p[1]), Math.round(p[1] / t.views * 100) + '%']; });
+      setView('<div class="painel-kpis">' + kpiCard(nf(t.views), 'Visualizações (30 dias)', true) + kpiCard(nf(t.visitantes), 'Visitantes únicos') + kpiCard(nf(t.viewsHoje), 'Visualizações hoje') + '</div>' +
+        '<div class="painel-grid-2">' + card('Páginas mais visitadas', 'últimos 30 dias', cv('pg-bar'), true) + card('Detalhe por página', '', tableHTML(['Página', 'Views', '% do total'], rows), true) + '</div>');
+      if (pg.length) vgChart('pg-bar', barCfg(col0(pg), col1(pg), true));
+    });
   }
   function viewTrafegoDispositivos() {
-    setView('<div class="painel-kpis">' + kpiCard('68%', 'Celular', true) + kpiCard('26%', 'Desktop') + kpiCard('6%', 'Tablet') + '</div>' +
-      '<div class="painel-grid-2">' + card('Dispositivos', 'distribuição (demonstração)', cv('d-don', true), true) + card('Navegadores', 'demonstração', rankList(MOCK_BROWSER), true) + '</div>');
-    vgChart('d-don', donutCfg(col0(MOCK_DISP), col1(MOCK_DISP)));
+    setView('<div class="painel-empty">Carregando dispositivos...</div>');
+    loadTrafego().then(function (t) {
+      if (!t || !t.views) { setView(trafegoVazio()); return; }
+      var dp = topPairs(t.dispositivos || {}, 5);
+      var total = dp.reduce(function (s, x) { return s + x[1]; }, 0) || 1;
+      var pct = function (nome) { var hit = dp.filter(function (x) { return x[0] === nome; })[0]; return Math.round((hit ? hit[1] : 0) / total * 100) + '%'; };
+      setView('<div class="painel-kpis">' + kpiCard(pct('Celular'), 'Celular', true) + kpiCard(pct('Desktop'), 'Desktop') + kpiCard(pct('Tablet'), 'Tablet') + '</div>' +
+        '<div class="painel-grid-2">' + card('Dispositivos', 'distribuição, 30 dias', cv('d-don', true), true) + card('Navegadores', '30 dias', rankList(topPairs(t.navegadores || {}, 8)), true) + '</div>');
+      if (dp.length) vgChart('d-don', donutCfg(col0(dp), col1(dp)));
+    });
+  }
+  /* DEMOGRÁFICO REAL: derivado dos leads do banco. O site não pergunta
+     idade/gênero, então: gênero é ESTIMADO pelo primeiro nome (heurística
+     pt-BR, rotulada como estimativa) e os demais cortes são horário de
+     contato e dia da semana, calculados dos timestamps reais. */
+  var FEM_SEM_A = { isabel: 1, raquel: 1, ester: 1, esther: 1, ruth: 1, carmen: 1, ines: 1, beatriz: 1, lais: 1, tais: 1, thais: 1, iris: 1, miriam: 1, mirian: 1, suelen: 1, ellen: 1, helen: 1, nicole: 1, michele: 1, michelle: 1, daniele: 1, danielle: 1, gabrielle: 1, isabelle: 1, joyce: 1, ingrid: 1, kelly: 1, evelyn: 1, yasmin: 1, jasmin: 1, elisabete: 1, rute: 1, edith: 1, liz: 1, denise: 1, simone: 1, viviane: 1, eliane: 1, rosangela: 1, solange: 1, alice: 1, clarice: 1 };
+  var MASC_COM_A = { luca: 1, lucca: 1, joshua: 1, nikita: 1, jona: 1, elia: 1, josue: 1 };
+  function generoPorNome(nome) {
+    var n = String(nome || '').trim().toLowerCase().split(/\s+/)[0]
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    if (!n) return 'Não identificado';
+    if (MASC_COM_A[n]) return 'Masculino';
+    if (FEM_SEM_A[n]) return 'Feminino';
+    if (/a$/.test(n)) return 'Feminino';
+    if (/(o|r|s|l|n|m|d|u|i|e)$/.test(n)) return 'Masculino';
+    return 'Não identificado';
   }
   function viewDemografico() {
-    var faixaTop = MOCK_IDADE.slice().sort(function (a, b) { return b[1] - a[1]; })[0];
-    var totalG = MOCK_GEN.reduce(function (s, x) { return s + x[1]; }, 0);
-    var fem = (MOCK_GEN.filter(function (x) { return x[0] === 'Feminino'; })[0] || ['', 0])[1];
-    setView('<div class="painel-kpis">' + kpiCard(faixaTop[0] + ' anos', 'Faixa predominante', true) + kpiCard(Math.round(fem / totalG * 100) + '%', 'Público feminino') + kpiCard(MOCK_IDADE.length, 'Faixas monitoradas') + '</div>' +
-      '<div class="painel-grid-2">' + card('Faixa etária (idade)', 'distribuição dos leads por idade (demonstração)', cv('demo-id-bar'), true) + card('Distribuição por gênero', 'demonstração', cv('demo-gen-don', true), true) + '</div>' +
-      card('Resumo demográfico', 'idade e gênero (demonstração)', '<div class="painel-grid-2" style="margin-bottom:0">' + tableHTML(['Faixa etária (idade)', 'Participação'], MOCK_IDADE.map(function (x) { return [x[0] + ' anos', x[1] + '%']; })) + tableHTML(['Gênero', 'Participação'], MOCK_GEN.map(function (x) { return [x[0], x[1] + '%']; })) + '</div>', true));
-    vgChart('demo-id-bar', barCfg(col0(MOCK_IDADE), col1(MOCK_IDADE), false));
-    vgChart('demo-gen-don', donutCfg(col0(MOCK_GEN), col1(MOCK_GEN)));
+    var leads = state.all;
+    if (!leads.length) { setView('<div class="painel-empty">Sem leads ainda. O demográfico é calculado dos leads reais do banco.</div>'); return; }
+    var gen = countBy(leads, function (l) { return generoPorNome(l.nome); });
+    var gp = topPairs(gen, 3);
+    var fem = gen['Feminino'] || 0;
+    var HORAS = [['Manhã (6h-12h)', 6, 12], ['Tarde (12h-18h)', 12, 18], ['Noite (18h-24h)', 18, 24], ['Madrugada (0h-6h)', 0, 6]];
+    var hor = HORAS.map(function (h) { return [h[0], leads.filter(function (l) { var x = new Date(l.createdAt).getHours(); return x >= h[1] && x < h[2]; }).length]; });
+    var DIAS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+    var sem = DIAS.map(function (d, i) { return [d, leads.filter(function (l) { return new Date(l.createdAt).getDay() === i; }).length]; });
+    var horTop = hor.slice().sort(function (a, b) { return b[1] - a[1]; })[0];
+    setView('<div class="painel-kpis">' + kpiCard(Math.round(fem / leads.length * 100) + '%', 'Público feminino (estimado)', true) + kpiCard(horTop[0].split(' ')[0], 'Horário de pico') + kpiCard(nf(leads.length), 'Leads analisados') + '</div>' +
+      '<div class="painel-grid-2">' + card('Gênero', 'estimado pelo primeiro nome do lead', cv('demo-gen-don', true), true) + card('Horário de contato', 'quando os leads chegam', cv('demo-hor-bar'), true) + '</div>' +
+      card('Dia da semana', 'leads por dia da semana', cv('demo-sem-bar'), true) +
+      '<p class="painel-sub" style="margin-top:var(--sp-2)">O site não pergunta idade nem gênero; o gênero acima é estimativa pelo primeiro nome. Idade real entra quando houver coleta (integração com o sistema).</p>');
+    vgChart('demo-gen-don', donutCfg(col0(gp), col1(gp)));
+    vgChart('demo-hor-bar', barCfg(col0(hor), col1(hor), false));
+    vgChart('demo-sem-bar', barCfg(col0(sem), col1(sem), false));
   }
   /* Promoções persistentes (Fase 2): lista salva via /api/promocoes;
      se nunca foi salva, parte das do data.js. */
@@ -701,81 +753,167 @@ window.LaserPainel = (function () {
     });
   }
   function viewPromoDesempenho() {
-    var ps = (window.LaserData && window.LaserData.promocoes) || [];
-    setView(card('Desempenho por promoção', 'leads gerados (demonstração)', cv('pr-bar')));
-    vgChart('pr-bar', barCfg(ps.map(function (p) { return p.titulo; }), ps.map(function (p, i) { return 40 + (i * 17 + state.all.length) % 90; }), true));
+    // REAL: leads de promoção (popup do brinde / chatbot) agrupados pelo brinde
+    var promoLeads = state.all.filter(function (l) { return (l.raw.dados && l.raw.dados.brinde) || String(l.tipo).indexOf('popup') === 0; });
+    if (!promoLeads.length) {
+      setView(card('Desempenho por promoção', 'leads gerados pelas promoções (banco)', '<div class="painel-empty">Nenhum lead de promoção ainda. Quando alguém resgatar um brinde no site, aparece aqui.</div>'));
+      return;
+    }
+    var t = topPairs(countBy(promoLeads, function (l) { return (l.raw.dados && l.raw.dados.brinde) || 'Brinde padrão'; }), 8);
+    setView('<div class="painel-kpis">' + kpiCard(nf(promoLeads.length), 'Leads de promoção', true) + kpiCard(t[0] ? esc(t[0][0]) : '-', 'Brinde campeão') + '</div>' +
+      card('Desempenho por promoção', 'leads gerados, dados reais', cv('pr-bar')));
+    vgChart('pr-bar', barCfg(col0(t), col1(t), true));
   }
   function viewRecrutVagas() {
     var vs = (window.LaserData && window.LaserData.vagas) || [];
     setView(card('Vagas abertas', vs.length + ' vagas', tableHTML(['Função', 'Cidade', 'Regime', 'Status'], vs.map(function (v) { return [esc(v.funcao), esc(v.cidade), esc(v.tipo) + ' · ' + esc(v.nivel), v.destaque ? 'Em destaque' : '-']; })), true));
   }
-  const PERMS = [
-    { key: 'ver', label: 'Ver leads' },
-    { key: 'editar', label: 'Editar leads' },
-    { key: 'exportar', label: 'Exportar CSV' },
-    { key: 'promos', label: 'Gerenciar promoções' },
-    { key: 'usuarios', label: 'Gerenciar usuários' },
-  ];
-  var _usuarios = null;
-  function roleLabel(r) { return r === 'franqueador' ? 'Franqueador' : (r === 'recepcao' ? 'Recepção' : 'Franqueado'); }
+  function roleLabel(r) { return r === 'franqueador' ? 'Franqueador' : 'Franqueado'; }
   function unidadeNomePorId(id) { var u = (window.LaserData && window.LaserData.unidades || []).filter(function (x) { return x.id === id; })[0]; return u ? u.nome + '/' + u.uf : (id ? id : 'Rede toda'); }
-  function ensureUsuarios() {
-    if (_usuarios) return _usuarios;
-    var us = (window.LaserAPI && window.LaserAPI.DEMO_USERS) || [];
-    _usuarios = us.map(function (u) { return { nome: u.nome, email: u.email, role: u.role, unidadeId: u.unidadeId || '', perms: u.role === 'franqueador' ? PERMS.map(function (p) { return p.key; }) : ['ver', 'editar', 'exportar'] }; });
-    if (!_usuarios.length) _usuarios.push({ nome: 'Franqueador', email: 'franqueador@laserco.com.br', role: 'franqueador', unidadeId: '', perms: PERMS.map(function (p) { return p.key; }) });
-    _usuarios.push({ nome: 'Recepção, V. Mariana', email: 'recepcao.vmariana@laserco.com.br', role: 'recepcao', unidadeId: 'vmariana', perms: ['ver'] });
-    return _usuarios;
-  }
-  function permChips(perms) { return PERMS.filter(function (p) { return perms.indexOf(p.key) >= 0; }).map(function (p) { return '<span class="perm-chip">' + p.label + '</span>'; }).join('') || '<span class="muted">Sem permissões</span>'; }
+  /* USUÁRIOS REAIS: CRUD persistido no banco via /api/usuarios.
+     Quem entra aqui consegue logar de verdade no painel. */
   function viewConfigUsuarios() {
-    var us = ensureUsuarios();
-    var rows = us.map(function (u, i) { return [esc(u.nome), esc(u.email), roleLabel(u.role), esc(unidadeNomePorId(u.unidadeId)), '<div class="perm-chips">' + permChips(u.perms) + '</div>', '<button class="painel-act det" type="button" data-edit="' + i + '">Editar</button>']; });
-    setView('<div class="painel-toolbar" style="justify-content:flex-end"><button class="btn btn-primary" type="button" id="u-novo">+ Convidar usuário</button></div>' +
-      '<div id="u-form-box"></div>' +
-      card('Usuários e permissões', us.length + ' acessos (demonstração, salvar conecta na integração)', tableHTML(['Nome', 'E-mail', 'Perfil', 'Unidade', 'Permissões', ''], rows), true));
-    var box = document.getElementById('u-form-box');
-    function unidadeOptions(sel) { var opt = '<option value="">Rede toda</option>'; (window.LaserData && window.LaserData.unidades || []).slice().sort(function (a, b) { return a.nome.localeCompare(b.nome); }).forEach(function (u) { opt += '<option value="' + u.id + '"' + (u.id === sel ? ' selected' : '') + '>' + esc(u.nome) + ' (' + u.uf + ')</option>'; }); return opt; }
-    function openForm(idx) {
-      var u = idx == null ? { nome: '', email: '', role: 'franqueado', unidadeId: '', perms: ['ver', 'editar'] } : us[idx];
-      box.innerHTML = card(idx == null ? 'Convidar usuário' : 'Editar usuário', '', '<div class="painel-form"><div class="det-field"><label>Nome</label><input id="uf-nome" class="painel-input" style="width:100%" value="' + esc(u.nome) + '"></div>' +
-        '<div class="det-field"><label>E-mail</label><input id="uf-email" class="painel-input" type="email" style="width:100%" value="' + esc(u.email) + '"></div>' +
-        '<div class="det-field"><label>Perfil</label><select id="uf-role" class="painel-select"><option value="franqueado"' + (u.role === 'franqueado' ? ' selected' : '') + '>Franqueado</option><option value="recepcao"' + (u.role === 'recepcao' ? ' selected' : '') + '>Recepção</option><option value="franqueador"' + (u.role === 'franqueador' ? ' selected' : '') + '>Franqueador</option></select></div>' +
-        '<div class="det-field"><label>Unidade</label><select id="uf-uni" class="painel-select">' + unidadeOptions(u.unidadeId) + '</select></div>' +
-        '<div class="det-field" style="grid-column:1/-1"><label>Permissões</label><div class="perm-list">' + PERMS.map(function (p) { return '<label class="perm-item"><input type="checkbox" value="' + p.key + '"' + (u.perms.indexOf(p.key) >= 0 ? ' checked' : '') + '> ' + p.label + '</label>'; }).join('') + '</div></div></div>' +
-        '<div class="det-actions"><button class="btn btn-primary" type="button" id="uf-save">Salvar</button><button class="btn btn-outline" type="button" id="uf-cancel">Cancelar</button></div>', true);
-      document.getElementById('uf-cancel').addEventListener('click', function () { box.innerHTML = ''; });
-      document.getElementById('uf-save').addEventListener('click', function () {
-        var perms = Array.prototype.slice.call(box.querySelectorAll('.perm-item input:checked')).map(function (c) { return c.value; });
-        var data = { nome: document.getElementById('uf-nome').value || 'Sem nome', email: document.getElementById('uf-email').value, role: document.getElementById('uf-role').value, unidadeId: document.getElementById('uf-uni').value, perms: perms };
-        if (idx == null) us.push(data); else us[idx] = data;
-        router();
+    setView('<div class="painel-empty">Carregando usuários...</div>');
+    window.LaserAPI.getUsuarios(state.session).then(function (us) {
+      var rows = us.map(function (u, i) {
+        return [esc(u.nome), esc(u.email), roleLabel(u.role), esc(unidadeNomePorId(u.unidadeId)),
+          '<button class="painel-act det" type="button" data-edit="' + i + '">Editar</button> ' +
+          '<button class="painel-act" type="button" data-del="' + i + '">Remover</button>'];
       });
-    }
-    var novo = document.getElementById('u-novo'); if (novo) novo.addEventListener('click', function () { openForm(null); });
-    document.querySelectorAll('#painel-view [data-edit]').forEach(function (b) { b.addEventListener('click', function () { openForm(parseInt(b.dataset.edit, 10)); }); });
+      setView('<div class="painel-toolbar" style="justify-content:flex-end"><button class="btn btn-primary" type="button" id="u-novo">+ Convidar usuário</button></div>' +
+        '<div id="u-form-box"></div>' +
+        card('Usuários do painel', us.length + ' acessos ativos (salvos no banco, valem no login)', tableHTML(['Nome', 'E-mail', 'Perfil', 'Unidade', ''], rows), true));
+      var box = document.getElementById('u-form-box');
+      function unidadeOptions(sel) { var opt = '<option value="">Rede toda (franqueador)</option>'; (window.LaserData && window.LaserData.unidades || []).slice().sort(function (a, b) { return a.nome.localeCompare(b.nome); }).forEach(function (u) { opt += '<option value="' + u.id + '"' + (u.id === sel ? ' selected' : '') + '>' + esc(u.nome) + ' (' + u.uf + ')</option>'; }); return opt; }
+      function openForm(idx) {
+        var u = idx == null ? { nome: '', email: '', role: 'franqueado', unidadeId: '' } : us[idx];
+        box.innerHTML = card(idx == null ? 'Convidar usuário' : 'Editar usuário', idx == null ? 'a senha definida aqui vale no login' : 'deixe a senha em branco para não trocar',
+          '<div class="painel-form"><div class="det-field"><label>Nome</label><input id="uf-nome" class="painel-input" style="width:100%" value="' + esc(u.nome) + '"></div>' +
+          '<div class="det-field"><label>E-mail</label><input id="uf-email" class="painel-input" type="email" style="width:100%" value="' + esc(u.email) + '"' + (idx != null ? ' disabled' : '') + '></div>' +
+          '<div class="det-field"><label>Perfil</label><select id="uf-role" class="painel-select"><option value="franqueado"' + (u.role === 'franqueado' ? ' selected' : '') + '>Franqueado</option><option value="franqueador"' + (u.role === 'franqueador' ? ' selected' : '') + '>Franqueador</option></select></div>' +
+          '<div class="det-field"><label>Unidade</label><select id="uf-uni" class="painel-select">' + unidadeOptions(u.unidadeId) + '</select></div>' +
+          '<div class="det-field"><label>Senha (mín. 8 caracteres)</label><input id="uf-senha" class="painel-input" type="text" style="width:100%" placeholder="' + (idx == null ? 'Defina a senha do acesso' : 'Em branco = não trocar') + '"></div></div>' +
+          '<div class="det-actions"><button class="btn btn-primary" type="button" id="uf-save">Salvar</button><button class="btn btn-outline" type="button" id="uf-cancel">Cancelar</button><span id="uf-msg" style="font-size:var(--fs-sm)"></span></div>', true);
+        document.getElementById('uf-cancel').addEventListener('click', function () { box.innerHTML = ''; });
+        document.getElementById('uf-save').addEventListener('click', async function () {
+          var msg = document.getElementById('uf-msg');
+          var data = {
+            nome: document.getElementById('uf-nome').value.trim(),
+            email: (idx == null ? document.getElementById('uf-email').value.trim() : u.email),
+            role: document.getElementById('uf-role').value,
+            unidadeId: document.getElementById('uf-uni').value || null,
+          };
+          var senha = document.getElementById('uf-senha').value;
+          if (senha) data.senha = senha;
+          if (idx == null && !senha) { msg.textContent = 'Defina a senha do novo acesso.'; return; }
+          var b = document.getElementById('uf-save'); b.disabled = true; b.textContent = 'Salvando...';
+          try {
+            if (idx == null) await window.LaserAPI.createUsuario(state.session, data);
+            else await window.LaserAPI.updateUsuario(state.session, data);
+            router();
+          } catch (e) {
+            if (e.status === 401) return logout();
+            var ERROS = { email_ja_existe: 'Já existe acesso com esse e-mail.', senha_curta: 'A senha precisa de pelo menos 8 caracteres.', unidade_obrigatoria: 'Escolha a unidade do franqueado.', ultimo_franqueador: 'É o último franqueador, não dá pra rebaixar.', email_invalido: 'E-mail inválido.', nome_obrigatorio: 'Informe o nome.', sem_banco: 'Banco indisponível no momento.' };
+            msg.textContent = ERROS[(e.body || {}).error] || 'Não foi possível salvar. Tente de novo.';
+            b.disabled = false; b.textContent = 'Salvar';
+          }
+        });
+      }
+      var novo = document.getElementById('u-novo'); if (novo) novo.addEventListener('click', function () { openForm(null); });
+      document.querySelectorAll('#painel-view [data-edit]').forEach(function (b) { b.addEventListener('click', function () { openForm(parseInt(b.dataset.edit, 10)); }); });
+      document.querySelectorAll('#painel-view [data-del]').forEach(function (b) {
+        b.addEventListener('click', async function () {
+          var u = us[parseInt(b.dataset.del, 10)];
+          if (!confirm('Remover o acesso de ' + u.email + '?')) return;
+          try { await window.LaserAPI.deleteUsuario(state.session, u.email); router(); }
+          catch (e) {
+            if (e.status === 401) return logout();
+            alert((e.body || {}).error === 'ultimo_franqueador' ? 'É o último franqueador, não dá pra remover.' : 'Não foi possível remover.');
+          }
+        });
+      });
+    }).catch(function (e) {
+      if (e.status === 401) return logout();
+      setView('<div class="painel-empty">' + (e.status === 403 ? 'Só o franqueador gerencia usuários.' : 'Não foi possível carregar os usuários.') + '</div>');
+    });
   }
+  /* MINHA CONTA REAL: perfil salvo no banco (/api/conta), inclusive a
+     foto (miniatura) e a TROCA DE SENHA (valida a senha atual). */
   function viewConfigConta() {
     var u = state.session.user;
-    var inicial = String(u.nome || u.email || '?').trim().charAt(0).toUpperCase();
-    setView(card('Minha conta', 'seus dados de acesso (demonstração)',
-      '<div class="acct-head"><div class="acct-avatar" id="acct-avatar">' + esc(inicial) + '</div>' +
-        '<div><div class="acct-name">' + esc(u.nome || '-') + '</div><div class="muted">' + roleLabel(u.role) + (u.unidadeId ? ' · ' + esc(unidadeNomePorId(u.unidadeId)) : ' · rede toda') + '</div>' +
-        '<label class="btn btn-outline acct-photo-btn" style="margin-top:var(--sp-3)">Alterar foto<input type="file" id="acct-photo" accept="image/*" hidden></label></div></div>' +
-      '<div class="painel-form" style="margin-top:var(--sp-5)">' +
-        '<div class="det-field"><label>Nome</label><input id="ac-nome" class="painel-input" style="width:100%" value="' + esc(u.nome || '') + '"></div>' +
-        '<div class="det-field"><label>E-mail</label><input id="ac-email" class="painel-input" type="email" style="width:100%" value="' + esc(u.email || '') + '"></div>' +
-        '<div class="det-field"><label>Telefone</label><input id="ac-fone" class="painel-input" style="width:100%" placeholder="(00) 00000-0000"></div>' +
-        '<div class="det-field"><label>Cargo</label><input id="ac-cargo" class="painel-input" style="width:100%" placeholder="Ex.: Proprietário"></div>' +
-        '<div class="det-field" style="grid-column:1/-1"><label>Observações</label><textarea id="ac-obs" class="painel-textarea" rows="3" style="width:100%" placeholder="Notas internas (opcional)"></textarea></div>' +
-      '</div>' +
-      '<div class="det-actions"><button class="btn btn-primary" type="button" id="ac-save">Salvar alterações</button><button class="btn btn-outline" type="button" onclick="return false">Alterar senha</button><span class="muted" id="ac-msg"></span></div>', true));
-    var photo = document.getElementById('acct-photo');
-    if (photo) photo.addEventListener('change', function () {
-      var f = photo.files && photo.files[0]; if (!f) return;
-      var rd = new FileReader(); rd.onload = function (e) { var av = document.getElementById('acct-avatar'); if (av) { av.textContent = ''; av.style.backgroundImage = 'url(' + e.target.result + ')'; av.style.backgroundSize = 'cover'; av.style.backgroundPosition = 'center'; } }; rd.readAsDataURL(f);
-    });
-    var save = document.getElementById('ac-save'); if (save) save.addEventListener('click', function () { var m = document.getElementById('ac-msg'); if (m) m.textContent = 'Salvo nesta sessão. A gravação real entra na integração.'; });
+    setView('<div class="painel-empty">Carregando sua conta...</div>');
+    window.LaserAPI.getConta(state.session).then(function (conta) {
+      var inicial = String(conta.nome || u.nome || u.email || '?').trim().charAt(0).toUpperCase();
+      var fotoNova = undefined; // só envia se trocar
+      setView(card('Minha conta', 'seus dados, salvos no banco',
+        '<div class="acct-head"><div class="acct-avatar" id="acct-avatar">' + (conta.foto ? '' : esc(inicial)) + '</div>' +
+          '<div><div class="acct-name">' + esc(conta.nome || u.nome || '-') + '</div><div class="muted">' + roleLabel(u.role) + (u.unidadeId ? ' · ' + esc(unidadeNomePorId(u.unidadeId)) : ' · rede toda') + '</div>' +
+          '<label class="btn btn-outline acct-photo-btn" style="margin-top:var(--sp-3)">Alterar foto<input type="file" id="acct-photo" accept="image/jpeg,image/png,image/webp" hidden></label></div></div>' +
+        '<div class="painel-form" style="margin-top:var(--sp-5)">' +
+          '<div class="det-field"><label>Nome</label><input id="ac-nome" class="painel-input" style="width:100%" value="' + esc(conta.nome || u.nome || '') + '"></div>' +
+          '<div class="det-field"><label>E-mail (login)</label><input id="ac-email" class="painel-input" type="email" style="width:100%" value="' + esc(u.email || '') + '" disabled></div>' +
+          '<div class="det-field"><label>Telefone</label><input id="ac-fone" class="painel-input" style="width:100%" placeholder="(00) 00000-0000" value="' + esc(conta.telefone || '') + '"></div>' +
+          '<div class="det-field"><label>Cargo</label><input id="ac-cargo" class="painel-input" style="width:100%" placeholder="Ex.: Proprietário" value="' + esc(conta.cargo || '') + '"></div>' +
+          '<div class="det-field" style="grid-column:1/-1"><label>Observações</label><textarea id="ac-obs" class="painel-textarea" rows="3" style="width:100%" placeholder="Notas internas (opcional)">' + esc(conta.obs || '') + '</textarea></div>' +
+        '</div>' +
+        '<div class="det-actions"><button class="btn btn-primary" type="button" id="ac-save">Salvar alterações</button><span class="muted" id="ac-msg"></span></div>', true) +
+        card('Alterar senha', 'vale no próximo login',
+          '<div class="painel-form"><div class="det-field"><label>Senha atual</label><input id="ac-s-atual" class="painel-input" type="password" style="width:100%"></div>' +
+          '<div class="det-field"><label>Nova senha (mín. 8)</label><input id="ac-s-nova" class="painel-input" type="password" style="width:100%"></div></div>' +
+          '<div class="det-actions"><button class="btn btn-outline" type="button" id="ac-s-save">Trocar senha</button><span class="muted" id="ac-s-msg"></span></div>', true));
+      var av = document.getElementById('acct-avatar');
+      function pintaFoto(src) { if (av && src) { av.textContent = ''; av.style.backgroundImage = 'url(' + src + ')'; av.style.backgroundSize = 'cover'; av.style.backgroundPosition = 'center'; } }
+      pintaFoto(conta.foto);
+      var photo = document.getElementById('acct-photo');
+      if (photo) photo.addEventListener('change', function () {
+        var f = photo.files && photo.files[0]; if (!f) return;
+        // reduz para miniatura 96px antes de salvar (cabe no banco)
+        var rd = new FileReader();
+        rd.onload = function (e) {
+          var img = new Image();
+          img.onload = function () {
+            var c = document.createElement('canvas'); c.width = 96; c.height = 96;
+            var ctx = c.getContext('2d');
+            var s = Math.min(img.width, img.height);
+            ctx.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, 96, 96);
+            fotoNova = c.toDataURL('image/jpeg', 0.82);
+            pintaFoto(fotoNova);
+          };
+          img.src = e.target.result;
+        };
+        rd.readAsDataURL(f);
+      });
+      document.getElementById('ac-save').addEventListener('click', async function () {
+        var m = document.getElementById('ac-msg');
+        var b = document.getElementById('ac-save'); b.disabled = true; b.textContent = 'Salvando...';
+        var payload = {
+          nome: document.getElementById('ac-nome').value,
+          telefone: document.getElementById('ac-fone').value,
+          cargo: document.getElementById('ac-cargo').value,
+          obs: document.getElementById('ac-obs').value,
+        };
+        if (fotoNova !== undefined) payload.foto = fotoNova;
+        try { await window.LaserAPI.saveConta(state.session, payload); m.textContent = 'Salvo.'; }
+        catch (e) { if (e.status === 401) return logout(); m.textContent = 'Não foi possível salvar.'; }
+        b.disabled = false; b.textContent = 'Salvar alterações';
+      });
+      document.getElementById('ac-s-save').addEventListener('click', async function () {
+        var m = document.getElementById('ac-s-msg');
+        var atual = document.getElementById('ac-s-atual').value;
+        var nova = document.getElementById('ac-s-nova').value;
+        if (nova.length < 8) { m.textContent = 'A nova senha precisa de pelo menos 8 caracteres.'; return; }
+        var b = document.getElementById('ac-s-save'); b.disabled = true; b.textContent = 'Trocando...';
+        try {
+          await window.LaserAPI.saveConta(state.session, { senhaAtual: atual, senhaNova: nova });
+          m.textContent = 'Senha trocada. Use a nova no próximo login.';
+          document.getElementById('ac-s-atual').value = ''; document.getElementById('ac-s-nova').value = '';
+        } catch (e) {
+          if (e.status === 401) return logout();
+          m.textContent = (e.body || {}).error === 'senha_atual_incorreta' ? 'Senha atual incorreta.' : 'Não foi possível trocar a senha.';
+        }
+        b.disabled = false; b.textContent = 'Trocar senha';
+      });
+    }).catch(function (e) { if (e.status === 401) return logout(); setView('<div class="painel-empty">Não foi possível carregar a conta.</div>'); });
   }
   function viewDesempProcedimento() {
     var t = topPairs(countBy(state.all.filter(function (l) { return l.procedimento; }), function (l) { return l.procedimento; }), 8);
@@ -788,15 +926,60 @@ window.LaserPainel = (function () {
     var el = document.getElementById('dpd-line'); if (el && window.Chart) { var ctx = el.getContext('2d'); var g = ctx.createLinearGradient(0, 0, 0, 240); g.addColorStop(0, 'rgba(200,160,100,0.35)'); g.addColorStop(1, 'rgba(200,160,100,0)'); vgChart('dpd-line', { type: 'line', data: { labels: dias.map(function (d) { return d.key; }), datasets: [{ data: dias.map(function (d) { return d.count; }), borderColor: '#C8A064', borderWidth: 2, fill: true, backgroundColor: g, tension: 0.35, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { color: '#6E4A3A', maxTicksLimit: 8, font: { size: 10 } } }, y: { beginAtZero: true, grid: { color: 'rgba(70,25,20,0.06)' }, ticks: { color: '#6E4A3A', precision: 0, font: { size: 10 } } } } } }); }
   }
   function viewDesempRede() {
-    var rede = (window.LaserPainelData ? window.LaserPainelData.seed() : []).map(normalize);
-    var meus = leadsPorDia(state.all, 14), redeDias = leadsPorDia(rede, 14), nU = 14;
-    setView(card('Comparação com a rede', 'seus leads/dia vs média da rede (14 dias)', cv('cr-line')));
-    if (document.getElementById('cr-line') && window.Chart) {
-      vgChart('cr-line', { type: 'line', data: { labels: meus.map(function (d) { return d.key; }), datasets: [{ label: 'Sua unidade', data: meus.map(function (d) { return d.count; }), borderColor: '#C8A064', borderWidth: 2, tension: 0.35, pointRadius: 0 }, { label: 'Média da rede', data: redeDias.map(function (d) { return Math.round(d.count / nU * 10) / 10; }), borderColor: '#9A6B3A', borderWidth: 2, borderDash: [5, 4], tension: 0.35, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#4E1A15', font: { size: 11 }, boxWidth: 12 } } }, scales: { x: { grid: { display: false }, ticks: { color: '#6E4A3A', font: { size: 10 } } }, y: { beginAtZero: true, grid: { color: 'rgba(70,25,20,0.06)' }, ticks: { color: '#6E4A3A', font: { size: 10 } } } } } });
-    }
+    // REAL: a contagem da rede vem de /api/stats (redePorDia, só números)
+    setView('<div class="painel-empty">Carregando comparação com a rede...</div>');
+    window.LaserAPI.getStats(state.session).then(function (st) {
+      var meus = leadsPorDia(state.all, 14);
+      var redeMap = (st && st.redePorDia) || {};
+      var unidadesAtivas = Math.max(1, Object.keys((st && st.porUnidade) || {}).length, 1);
+      var totalU = (window.LaserData && window.LaserData.unidades || []).length || 70;
+      var hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+      var redeDias = [];
+      for (var i = 13; i >= 0; i--) {
+        var d = new Date(hoje.getTime() - i * 86400000);
+        var iso = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        redeDias.push(redeMap[iso] || 0);
+      }
+      setView(card('Comparação com a rede', 'seus leads/dia vs média por unidade da rede (14 dias, dados reais do banco)', cv('cr-line')) +
+        '<p class="painel-sub" style="margin-top:var(--sp-2)">Média = leads de toda a rede divididos pelas ' + totalU + ' unidades.</p>');
+      if (document.getElementById('cr-line') && window.Chart) {
+        vgChart('cr-line', { type: 'line', data: { labels: meus.map(function (d) { return d.key; }), datasets: [{ label: 'Sua unidade', data: meus.map(function (d) { return d.count; }), borderColor: '#C8A064', borderWidth: 2, tension: 0.35, pointRadius: 0 }, { label: 'Média da rede', data: redeDias.map(function (n) { return Math.round(n / totalU * 100) / 100; }), borderColor: '#9A6B3A', borderWidth: 2, borderDash: [5, 4], tension: 0.35, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#4E1A15', font: { size: 11 }, boxWidth: 12 } } }, scales: { x: { grid: { display: false }, ticks: { color: '#6E4A3A', font: { size: 10 } } }, y: { beginAtZero: true, grid: { color: 'rgba(70,25,20,0.06)' }, ticks: { color: '#6E4A3A', font: { size: 10 } } } } } });
+      }
+    }).catch(function (e) { if (e.status === 401) logout(); });
   }
+  /* EQUIPE REAL: registro da equipe da unidade, persistido no banco
+     (/api/equipe). Adição e remoção salvam de verdade. */
   function viewEquipeLogins() {
-    setView(card('Logins da equipe', 'acessos com permissão reduzida (só visualização)', tableHTML(['Nome', 'E-mail', 'Permissão'], [['Recepção', 'recepcao@unidade.com.br', 'Visualização'], ['Atendimento', 'atendimento@unidade.com.br', 'Visualização']]) + '<div style="margin-top:var(--sp-4)"><button class="btn btn-outline" type="button" onclick="return false">Adicionar acesso</button></div>', true));
+    setView('<div class="painel-empty">Carregando equipe...</div>');
+    window.LaserAPI.getEquipe(state.session).then(function (eq) {
+      var rows = eq.map(function (m, i) { return [esc(m.nome), esc(m.email || '-'), esc(m.funcao || '-'), '<button class="painel-act" type="button" data-eq-del="' + i + '">Remover</button>']; });
+      setView(card('Equipe da unidade', eq.length + ' pessoa(s) registradas (salvo no banco)',
+        (rows.length ? tableHTML(['Nome', 'E-mail', 'Função', ''], rows) : '<div class="painel-empty">Ninguém registrado ainda.</div>') +
+        '<div class="painel-form" style="margin-top:var(--sp-4)">' +
+        '<div class="det-field"><label>Nome</label><input id="eq-nome" class="painel-input" style="width:100%"></div>' +
+        '<div class="det-field"><label>E-mail (opcional)</label><input id="eq-email" class="painel-input" type="email" style="width:100%"></div>' +
+        '<div class="det-field"><label>Função</label><input id="eq-funcao" class="painel-input" style="width:100%" placeholder="Ex.: Recepção"></div></div>' +
+        '<div class="det-actions"><button class="btn btn-primary" type="button" id="eq-add">Adicionar</button><span id="eq-msg" style="font-size:var(--fs-sm)"></span></div>', true));
+      document.getElementById('eq-add').addEventListener('click', async function () {
+        var nome = document.getElementById('eq-nome').value.trim();
+        var msg = document.getElementById('eq-msg');
+        if (!nome) { msg.textContent = 'Informe o nome.'; return; }
+        eq.push({ nome: nome, email: document.getElementById('eq-email').value.trim(), funcao: document.getElementById('eq-funcao').value.trim() });
+        try { await window.LaserAPI.saveEquipe(state.session, eq); router(); }
+        catch (e) { if (e.status === 401) return logout(); msg.textContent = 'Não foi possível salvar.'; }
+      });
+      document.querySelectorAll('#painel-view [data-eq-del]').forEach(function (b) {
+        b.addEventListener('click', async function () {
+          if (!confirm('Remover ' + eq[parseInt(b.dataset.eqDel, 10)].nome + ' da equipe?')) return;
+          eq.splice(parseInt(b.dataset.eqDel, 10), 1);
+          try { await window.LaserAPI.saveEquipe(state.session, eq); router(); }
+          catch (e) { if (e.status === 401) return logout(); alert('Não foi possível salvar.'); }
+        });
+      });
+    }).catch(function (e) {
+      if (e.status === 401) return logout();
+      setView('<div class="painel-empty">Não foi possível carregar a equipe.</div>');
+    });
   }
   const THEMES_BASE = [{ id: 'default', label: 'Vinho & Dourado', desc: 'Padrão', bg: 'linear-gradient(135deg,#5E211B,#481712)' }, { id: 'roteiro-light', label: 'Versão Clara', desc: 'Creme + vinho', bg: 'linear-gradient(135deg,#F3E4DC,#9E2E22)' }];
   const THEMES_SAZ = [{ id: 'dia-das-maes', label: 'Dia das Mães', bg: '#E08CB4' }, { id: 'dia-dos-namorados', label: 'Dia dos Namorados', bg: '#C84B5A' }, { id: 'dia-dos-pais', label: 'Dia dos Pais', bg: '#5B9BD5' }, { id: 'outubro-rosa', label: 'Outubro Rosa', bg: '#D88FA5' }, { id: 'novembro-azul', label: 'Novembro Azul', bg: '#2E6FA8' }, { id: 'setembro-amarelo', label: 'Setembro Amarelo', bg: '#F5C342' }];

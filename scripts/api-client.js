@@ -171,10 +171,53 @@ window.LaserAPI = (function () {
     return j.url;
   }
 
+  /* ---------- tráfego real / stats / usuários / equipe (Fase 2) ---------- */
+  function authGet(session, path) {
+    return tryFetch(path, { headers: { Authorization: 'Bearer ' + session.token } });
+  }
+  function authSend(session, path, method, body) {
+    return tryFetch(path, {
+      method: method,
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + session.token },
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+  }
+  async function getTrafego(session, dias) {
+    try { return (await authGet(session, '/trafego?dias=' + (dias || 30))).trafego || null; }
+    catch (e) { if (e.status === 401) throw e; return null; }
+  }
+  async function getStats(session) {
+    try { return (await authGet(session, '/stats')).stats || null; }
+    catch (e) { if (e.status === 401) throw e; return null; }
+  }
+  async function getUsuarios(session) {
+    return (await authGet(session, '/usuarios')).usuarios || [];
+  }
+  function createUsuario(session, u) { return authSend(session, '/usuarios', 'POST', u); }
+  function updateUsuario(session, u) { return authSend(session, '/usuarios', 'PATCH', u); }
+  function deleteUsuario(session, email) { return authSend(session, '/usuarios?email=' + encodeURIComponent(email), 'DELETE'); }
+  async function getConta(session) {
+    return (await authGet(session, '/conta')).conta || {};
+  }
+  function saveConta(session, conta) { return authSend(session, '/conta', 'PUT', conta); }
+  async function getEquipe(session, unidadeId) {
+    const q = unidadeId ? '?unidadeId=' + encodeURIComponent(unidadeId) : '';
+    return (await authGet(session, '/equipe' + q)).equipe || [];
+  }
+  function saveEquipe(session, equipe, unidadeId) {
+    const q = unidadeId ? '?unidadeId=' + encodeURIComponent(unidadeId) : '';
+    return authSend(session, '/equipe' + q, 'PUT', { equipe: equipe });
+  }
+
   return {
     login: login, listLeads: listLeads, updateLead: updateLead,
     getPromocoes: getPromocoes, savePromocoes: savePromocoes,
     uploadCurriculo: uploadCurriculo, getCurriculoUrl: getCurriculoUrl,
+    getTrafego: getTrafego, getStats: getStats,
+    getUsuarios: getUsuarios, createUsuario: createUsuario,
+    updateUsuario: updateUsuario, deleteUsuario: deleteUsuario,
+    getEquipe: getEquipe, saveEquipe: saveEquipe,
+    getConta: getConta, saveConta: saveConta,
     DEMO_USERS: DEMO_USERS,
   };
 })();

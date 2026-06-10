@@ -110,6 +110,38 @@ window.LaserAnalytics = (function() {
     } catch(e) { return 'desconhecido'; }
   }
 
+  /* ---------- pageview beacon (tráfego REAL do painel) ----------
+     Sem dado pessoal: página, referrer e um id de sessão aleatório.
+     O servidor (/api/track) deriva dispositivo/navegador/origem. */
+  function sessionId() {
+    try {
+      let s = localStorage.getItem('laserco_sess');
+      if (!s) {
+        s = 's' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+        localStorage.setItem('laserco_sess', s);
+      }
+      return s;
+    } catch (e) { return 'anon'; }
+  }
+  function trackPageview() {
+    try {
+      if (window.location.pathname.indexOf('/painel') === 0) return; // painel não é tráfego do site
+      const params = new URLSearchParams(window.location.search);
+      const payload = JSON.stringify({
+        p: window.location.pathname,
+        r: document.referrer || '',
+        utm: params.get('utm_source') || '',
+        s: sessionId(),
+      });
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon('/api/track', new Blob([payload], { type: 'application/json' }));
+      } else if (typeof fetch === 'function') {
+        fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload, keepalive: true }).catch(function () {});
+      }
+    } catch (e) {}
+  }
+  trackPageview();
+
   return {
     trackLead, trackEvent, getLeads, getEvents, getTrafficSource,
   };
