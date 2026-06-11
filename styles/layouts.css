@@ -1227,6 +1227,22 @@
   position: relative;
 }
 
+/* Tema clean: rodapé VINHO (decisão da reunião) com tokens re-mapeados
+   pro contexto escuro (regra 10: fundo vinho -> texto creme) */
+:root[data-theme="clean"] .site-footer {
+  background: #481712;
+  --color-text: #F5F0E6;
+  --color-text-soft: #DDD3C0;
+  --color-text-muted: #B9AF9C;
+  --color-text-dim: rgba(245, 240, 230, 0.5);
+  --color-heading: #F5F0E6;
+  --color-border: rgba(245, 240, 230, 0.12);
+  --color-border-strong: rgba(245, 240, 230, 0.25);
+  --color-surface: rgba(255, 248, 230, 0.05);
+  --color-surface-hover: rgba(255, 248, 230, 0.09);
+  --color-accent: #C8A064;
+  --color-accent-pale: #E8D4A8;
+}
 :root[data-theme="roteiro-light"] .site-footer {
   background: var(--color-bg-alt);
 }

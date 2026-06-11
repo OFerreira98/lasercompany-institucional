@@ -22,9 +22,8 @@ window.LaserTheme = (function() {
 
   const themes = {
     base: [
-      { id: 'default',       label: 'Design System',    swatch: '#C8A064', desc: 'Vinho profundo + Dourado quente (padrão)' },
-      { id: 'roteiro-dark',  label: 'Roteiro Dark',     swatch: '#9A6B1E', desc: 'Identidade do roteiro, versão escura' },
-      { id: 'roteiro-light', label: 'Roteiro Light',    swatch: '#F3E4DC', desc: 'Versão clara, creme + vinho' },
+      { id: 'clean',         label: 'Cinza & Dourado',  swatch: '#B08A4F', desc: 'Padrão (reunião 09/06): fundo claro, vinho nos títulos e rodapé' },
+      { id: 'default',       label: 'Vinho & Dourado',  swatch: '#C8A064', desc: 'Versão anterior, vinho profundo' },
     ],
     sazonais: [
       { id: 'outubro-rosa',     label: 'Outubro Rosa',      swatch: '#E08CB4' },
@@ -55,7 +54,7 @@ window.LaserTheme = (function() {
     if (b && BASE_IDS.indexOf(b) >= 0) return b;
     var old = read(LEGACY_KEY);
     if (old && BASE_IDS.indexOf(old) >= 0) return old;
-    return 'default';
+    return 'clean';
   }
   function getAccent(){
     var a = read(ACCENT_KEY);

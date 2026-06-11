@@ -981,12 +981,12 @@ window.LaserPainel = (function () {
       setView('<div class="painel-empty">Não foi possível carregar a equipe.</div>');
     });
   }
-  const THEMES_BASE = [{ id: 'default', label: 'Vinho & Dourado', desc: 'Padrão', bg: 'linear-gradient(135deg,#5E211B,#481712)' }, { id: 'roteiro-light', label: 'Versão Clara', desc: 'Creme + vinho', bg: 'linear-gradient(135deg,#F3E4DC,#9E2E22)' }];
+  const THEMES_BASE = [{ id: 'clean', label: 'Cinza & Dourado', desc: 'Padrão (reunião 09/06)', bg: 'linear-gradient(135deg,#FAFAFA,#B08A4F)' }, { id: 'default', label: 'Vinho & Dourado', desc: 'Versão anterior', bg: 'linear-gradient(135deg,#5E211B,#481712)' }];
   const THEMES_SAZ = [{ id: 'dia-das-maes', label: 'Dia das Mães', bg: '#E08CB4' }, { id: 'dia-dos-namorados', label: 'Dia dos Namorados', bg: '#C84B5A' }, { id: 'dia-dos-pais', label: 'Dia dos Pais', bg: '#5B9BD5' }, { id: 'outubro-rosa', label: 'Outubro Rosa', bg: '#D88FA5' }, { id: 'novembro-azul', label: 'Novembro Azul', bg: '#2E6FA8' }, { id: 'setembro-amarelo', label: 'Setembro Amarelo', bg: '#F5C342' }];
-  const THEME_BASE_IDS = ['default', 'roteiro-dark', 'roteiro-light'];
+  const THEME_BASE_IDS = ['clean', 'default', 'roteiro-dark', 'roteiro-light'];
   function thGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function thSet(k, v) { try { if (v == null || v === '') localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
-  function siteBase() { var b = thGet('laserco_base'); if (b && THEME_BASE_IDS.indexOf(b) >= 0) return b; var o = thGet('laserco_theme'); if (o && THEME_BASE_IDS.indexOf(o) >= 0) return o; return 'default'; }
+  function siteBase() { var b = thGet('laserco_base'); if (b && THEME_BASE_IDS.indexOf(b) >= 0) return b; var o = thGet('laserco_theme'); if (o && THEME_BASE_IDS.indexOf(o) >= 0) return o; return 'clean'; }
   function siteAccent() { var a = thGet('laserco_accent'); if (a) return a; var o = thGet('laserco_theme'); if (o && THEME_BASE_IDS.indexOf(o) < 0) return o; return ''; }
   function persistTheme(base, accent) { thSet('laserco_base', base || 'default'); thSet('laserco_accent', accent || ''); thSet('laserco_theme', accent || base || 'default'); }
   function themeOpt(t, kind) { var cur = kind === 'accent' ? siteAccent() : siteBase(); var a = cur === t.id; return '<button type="button" class="theme-opt' + (a ? ' active' : '') + '" data-kind="' + (kind || 'base') + '" data-theme="' + t.id + '"><span class="theme-sw" style="background:' + t.bg + '"></span><span class="theme-opt-l">' + t.label + (t.desc ? '<small>' + t.desc + '</small>' : '') + '</span>' + (a ? '<span class="theme-tag">Ativo</span>' : '') + '</button>'; }

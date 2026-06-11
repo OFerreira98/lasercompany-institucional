@@ -464,13 +464,8 @@
       const y = window.scrollY;
       const diff = y - lastY;
 
-      if (y <= topZone) {
-        h.classList.remove('is-hidden');
-      } else if (diff > threshold) {
-        h.classList.add('is-hidden');
-      } else if (diff < -threshold) {
-        h.classList.remove('is-hidden');
-      }
+      // Reunião Will 09/06/2026: cabeçalho SEMPRE FIXO (não some ao rolar).
+      h.classList.remove('is-hidden');
 
       if (isOverlayMode) {
         if (y > heroBreakpoint()) {

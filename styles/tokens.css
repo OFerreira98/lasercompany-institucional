@@ -22,10 +22,17 @@
 
 /* ---------- TOKENS UNIVERSAIS (não mudam por tema) ---------- */
 :root {
-  /* Tipografia */
-  --font-serif: 'Cormorant Garamond', 'Playfair Display', 'Didot', Georgia, serif;
-  --font-sans:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --font-accent:'Manrope', 'Gotham', 'Inter', system-ui, sans-serif;
+  /* Tipografia (reunião Will 09/06/2026, igual ao site oficial):
+     Didot Bold nos títulos (h2/h3/h6) com fallback serifado equivalente
+     (Didot é paga; Playfair Display é o substituto web mais próximo) e
+     Montserrat no corpo do texto e h5. */
+  --font-serif: 'Didot', 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --font-sans:  'Montserrat', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-accent:'Montserrat', 'Manrope', 'Gotham', 'Inter', system-ui, sans-serif;
+
+  /* Cor dos títulos: por padrão acompanha o texto; o tema clean troca
+     pra vinho (decisão da reunião: vinho SÓ em títulos/rodapé/CTA final) */
+  --color-heading: var(--color-text);
 
   /* Escala tipográfica (clamp para responsividade fluida) */
   --fs-xs:    clamp(0.72rem, 0.7rem + 0.1vw, 0.78rem);
@@ -220,6 +227,45 @@
   --shadow-md: 0 10px 28px rgba(58, 20, 15, 0.13);
   --shadow-lg: 0 18px 50px rgba(58, 20, 15, 0.17);
   --shadow-glow: 0 0 32px rgba(158, 46, 34, 0.18);
+
+  color-scheme: light;
+}
+
+/* =============================================================
+   TEMA CLEAN — Cinza & Dourado (PADRÃO desde a reunião Will 09/06/2026)
+   Fundo cinza quase branco (#FAFAFA, referência passada pelo cliente)
+   mesclado com bege; dourado mais leve (sem "caixas gritando");
+   vinho SÓ em títulos, rodapé e bloco final.
+   ============================================================= */
+:root[data-theme="clean"] {
+  --color-bg:           #FAFAFA;
+  --color-bg-alt:       #F3EFE7;
+  --color-bg-elevated:  #FFFFFF;
+  --color-surface:      rgba(94, 33, 27, 0.045);
+  --color-surface-hover:rgba(94, 33, 27, 0.09);
+
+  --color-text:         #2B2622;
+  --color-text-soft:    #4A423B;
+  --color-text-muted:   #7A6F63;
+  --color-text-dim:     rgba(43, 38, 34, 0.55);
+
+  --color-heading:      #5E211B;   /* títulos em vinho */
+
+  --color-accent:       #B08A4F;   /* dourado mais leve */
+  --color-accent-soft:  #C8A064;
+  --color-accent-deep:  #8E6A3A;
+  --color-accent-pale:  #E4D2B0;
+  --color-accent-grad:  linear-gradient(90deg, #8E6A3A 0%, #D9BE8C 50%, #8E6A3A 100%);
+  --color-accent-glow:  rgba(176, 138, 79, 0.22);
+
+  --color-border:       rgba(43, 38, 34, 0.10);
+  --color-border-strong:rgba(43, 38, 34, 0.22);
+  --color-border-accent:rgba(176, 138, 79, 0.45);
+
+  --shadow-sm: 0 2px 8px rgba(43, 38, 34, 0.07);
+  --shadow-md: 0 10px 28px rgba(43, 38, 34, 0.10);
+  --shadow-lg: 0 18px 50px rgba(43, 38, 34, 0.14);
+  --shadow-glow: 0 0 32px rgba(176, 138, 79, 0.16);
 
   color-scheme: light;
 }

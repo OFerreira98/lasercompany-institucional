@@ -4258,3 +4258,59 @@ body.page-franqueado-lp { background: #F5EFE2; }
   /* telas minusculas: blog volta a 1 coluna pra nao espremer */
   .blog-grid, .blog-grid-4 { grid-template-columns: 1fr !important; }
 }
+
+/* ============================================================
+   TEMA CLEAN (Cinza & Dourado), overrides de contexto
+   Reunião Will 09/06/2026: site claro (#FAFAFA mesclado com bege),
+   vinho SÓ em títulos, rodapé e no CTA FINAL da home.
+   Regra 10: contexto escuro -> título creme; contexto claro -> vinho.
+   ============================================================ */
+
+/* Seções vinho viram claras (bege mesclado) no tema clean... */
+:root[data-theme="clean"] .section-wine {
+  background: linear-gradient(180deg, #F3EFE7 0%, #FAFAFA 100%);
+  color: var(--color-text);
+}
+:root[data-theme="clean"] .section-wine .eyebrow { color: #8E6A3A; }
+:root[data-theme="clean"] .section-wine .section-sub { color: var(--color-text-soft); }
+:root[data-theme="clean"] .section-wine .btn-outline {
+  border-color: rgba(94, 33, 27, 0.35);
+  color: #5E211B;
+}
+:root[data-theme="clean"] .section-wine .btn-outline:hover {
+  background: rgba(94, 33, 27, 0.07);
+  border-color: #5E211B;
+}
+
+/* ...EXCETO o CTA final da home (#agendamento-curto): único bloco vinho */
+:root[data-theme="clean"] #agendamento-curto.section-wine {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(200,160,100,0.10), transparent 50%),
+    radial-gradient(circle at 100% 100%, rgba(154,107,30,0.10), transparent 55%),
+    linear-gradient(180deg, #481712 0%, #2A0F0D 100%);
+  color: #F5EFE2;
+}
+:root[data-theme="clean"] #agendamento-curto.section-wine .eyebrow { color: #E8C088; }
+:root[data-theme="clean"] #agendamento-curto.section-wine .section-sub { color: rgba(245, 239, 226, 0.78); }
+:root[data-theme="clean"] #agendamento-curto.section-wine .btn-outline {
+  border-color: rgba(245, 239, 226, 0.45);
+  color: #F5EFE2;
+}
+
+/* Contextos ESCUROS (foto/vinho): títulos voltam pro creme no clean */
+:root[data-theme="clean"] .hero,
+:root[data-theme="clean"] .page-hero-photo-bg,
+:root[data-theme="clean"] .franqueado-hero,
+:root[data-theme="clean"] #agendamento-curto {
+  --color-heading: #F5EFE2;
+  --color-text: #F5EFE2;
+  --color-text-soft: #DDD3C0;
+}
+
+/* Títulos SOBRE FOTO continuam creme no tema clean (regra 10) */
+:root[data-theme="clean"] .segment-photo-title,
+:root[data-theme="clean"] .segment-photo-card h3,
+:root[data-theme="clean"] [class*="-photo-card"] h3,
+:root[data-theme="clean"] [class*="-photo-card"] h4 {
+  color: #F5EFE2;
+}

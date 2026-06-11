@@ -36,14 +36,18 @@ a:hover { color: var(--color-accent); }
 
 ul, ol { list-style: none; padding: 0; }
 
-/* Tipografia raiz */
+/* Tipografia raiz (reunião Will: Didot Bold em h2/h3/h6, Montserrat no
+   corpo e no h5; cor dos títulos vem do token --color-heading, que no
+   tema clean é vinho) */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-serif);
   font-weight: var(--fw-light);
   line-height: 1.1;
   letter-spacing: var(--ls-tight);
-  color: var(--color-text);
+  color: var(--color-heading, var(--color-text));
 }
+h2, h3, h6 { font-weight: var(--fw-bold); }
+h5 { font-family: var(--font-sans); font-weight: var(--fw-semibold); }
 
 h1 { font-size: var(--fs-display); }
 h2 { font-size: var(--fs-3xl); }
