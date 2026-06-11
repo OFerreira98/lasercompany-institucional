@@ -576,3 +576,38 @@
 /* form do painel (login / configurações) */
 .painel-content .login-card,
 .painel-card.login-card { background: #FFFFFF; border-color: rgba(70,25,20,0.10); }
+
+/* ============================================================
+   TOUR GUIADO (overlay com spotlight + balao)
+   ============================================================ */
+.tour-ring {
+  position: fixed; z-index: 99998; border-radius: 10px; pointer-events: none;
+  box-shadow: 0 0 0 4px #C8A064, 0 0 0 9999px rgba(20, 4, 4, 0.72);
+  transition: top .2s ease, left .2s ease, width .2s ease, height .2s ease;
+}
+.tour-ring.hidden { width: 0; height: 0; top: 50%; left: 50%; box-shadow: 0 0 0 9999px rgba(20, 4, 4, 0.72); }
+.tour-pop {
+  position: fixed; z-index: 99999; width: 312px; max-width: 88vw;
+  background: #2A0F0D; color: #F5EFE2; border: 1px solid #74302A;
+  border-radius: 14px; padding: 18px 18px 16px; box-shadow: 0 22px 55px rgba(0, 0, 0, 0.5);
+}
+.tour-pop.tour-pop-center { top: 50% !important; left: 50% !important; transform: translate(-50%, -50%); }
+.tour-pop h4 { margin: 0 0 7px; color: #E8C088; font-size: 16px; font-family: 'Playfair Display', Georgia, serif; }
+.tour-pop p { margin: 0 0 15px; font-size: 13.5px; line-height: 1.55; color: #F0E6D2; }
+.tour-pop-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.tour-dots { display: flex; gap: 5px; }
+.tour-dot { width: 7px; height: 7px; border-radius: 50%; background: #5E211B; transition: background .2s; }
+.tour-dot.on { background: #C8A064; }
+.tour-btns { display: flex; gap: 8px; }
+.tour-btn {
+  cursor: pointer; border-radius: 8px; padding: 7px 14px; font-size: 12.5px; font-weight: 600;
+  border: 1px solid #C8A064; background: transparent; color: #E8C088; font-family: inherit;
+}
+.tour-btn:hover { background: rgba(200, 160, 100, 0.15); }
+.tour-btn.primary { background: #C8A064; color: #2A0F0D; border-color: #C8A064; }
+.tour-btn.primary:hover { background: #E8C088; }
+.tour-x {
+  position: absolute; top: 9px; right: 12px; cursor: pointer; background: none; border: none;
+  color: #C8A064; font-size: 20px; line-height: 1; padding: 0;
+}
+.tour-x:hover { color: #E8C088; }

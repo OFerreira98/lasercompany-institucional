@@ -1419,15 +1419,130 @@ window.LaserPainel = (function () {
     });
   }
 
+  /* ---------------- TOUR GUIADO (JS puro, sem dependencia) ----------------
+     Spotlight (anel fixo com box-shadow gigante) + balao com Proximo/Voltar.
+     Os passos miram elementos que sempre existem (menu, topo, conteudo).
+     Roda nos dois paineis: os passos de menu casam por texto do rotulo. */
+  var TOUR_KEY = 'laserco_tour_done';
+  var _tour = { i: 0, steps: [], ring: null, pop: null, onMove: null };
+  function tourSteps() {
+    return [
+      { title: 'Bem-vindo ao seu painel', body: 'Vou te mostrar, em 1 minuto, onde fica cada coisa. Pode avançar com <strong>Próximo</strong> ou fechar no X a qualquer momento.' },
+      { sel: '#painel-nav', openSidebar: true, title: 'Menu lateral', body: 'Tudo começa por aqui. Cada item abre uma tela. Os que têm uma setinha <strong>▸</strong> abrem mais opções embaixo ao clicar.' },
+      { selLabel: 'Leads', openSidebar: true, title: 'Leads, o seu dia a dia', body: 'É a tela mais importante: a lista de contatos que o site captou. Daqui você liga no WhatsApp, muda o status e fecha negócio.' },
+      { sel: '[data-view="visao-geral"]', openSidebar: true, title: 'Visão Geral', body: 'O resumo da rede: números do mês, gráficos e os últimos contatos. Bom para bater o olho de manhã.' },
+      { sel: '#painel-view', title: 'Área de conteúdo', body: 'É aqui no centro que a tela escolhida aparece, com os números, gráficos, tabelas e formulários.' },
+      { sel: '#painel-logout', title: 'Sua conta e sair', body: 'No topo ficam o seu nome e o botão <strong>Sair</strong>. Sempre saia ao usar um computador que não é só seu.' },
+      { selLabel: 'Ajuda', openSidebar: true, title: 'Ajuda quando precisar', body: 'Volte sempre nesta tela para <strong>refazer este tour</strong>, ler o <strong>manual completo</strong> ou <strong>abrir um chamado</strong> com o nosso suporte.' },
+      { title: 'Pronto! Bom trabalho', body: 'Você já sabe se virar no painel. Qualquer dúvida, o manual e o suporte estão aqui na tela de Ajuda. 👏' },
+    ];
+  }
+  function tourTargetEl(step) {
+    if (step.sel) return document.querySelector(step.sel);
+    if (step.selLabel) {
+      var els = document.querySelectorAll('.painel-nav-head, .painel-nav-link');
+      var alvo = String(step.selLabel).toLowerCase();
+      for (var k = 0; k < els.length; k++) {
+        if (els[k].textContent.trim().toLowerCase().indexOf(alvo) >= 0) return els[k];
+      }
+    }
+    return null;
+  }
+  function tourPosition() {
+    if (!_tour.ring || !_tour.pop) return;
+    var step = _tour.steps[_tour.i];
+    var el = tourTargetEl(step);
+    var ring = _tour.ring, pop = _tour.pop;
+    if (!el) { ring.className = 'tour-ring hidden'; pop.className = 'tour-pop tour-pop-center'; pop.style.top = ''; pop.style.left = ''; return; }
+    var r = el.getBoundingClientRect();
+    var pad = 6;
+    ring.className = 'tour-ring';
+    ring.style.top = (r.top - pad) + 'px'; ring.style.left = (r.left - pad) + 'px';
+    ring.style.width = (r.width + pad * 2) + 'px'; ring.style.height = (r.height + pad * 2) + 'px';
+    pop.className = 'tour-pop';
+    var pw = pop.offsetWidth, ph = pop.offsetHeight, top, left;
+    if (r.bottom + 14 + ph < window.innerHeight) top = r.bottom + 12;
+    else if (r.top - 14 - ph > 0) top = r.top - ph - 12;
+    else top = Math.max(12, (window.innerHeight - ph) / 2);
+    left = r.left;
+    if (left + pw > window.innerWidth - 12) left = window.innerWidth - pw - 12;
+    if (left < 12) left = 12;
+    pop.style.top = top + 'px'; pop.style.left = left + 'px';
+  }
+  function tourRender() {
+    var step = _tour.steps[_tour.i], n = _tour.steps.length;
+    if (step.openSidebar && window.innerWidth <= 900) document.body.classList.add('sidebar-open');
+    else document.body.classList.remove('sidebar-open');
+    var el = tourTargetEl(step);
+    if (el && el.scrollIntoView) { try { el.scrollIntoView({ block: 'center', inline: 'nearest' }); } catch (e) {} }
+    var dots = ''; for (var d = 0; d < n; d++) dots += '<span class="tour-dot' + (d === _tour.i ? ' on' : '') + '"></span>';
+    _tour.pop.innerHTML =
+      '<button class="tour-x" type="button" aria-label="Fechar">&times;</button>' +
+      '<h4>' + esc(step.title) + '</h4><p>' + step.body + '</p>' +
+      '<div class="tour-pop-foot"><div class="tour-dots">' + dots + '</div><div class="tour-btns">' +
+      (_tour.i > 0 ? '<button class="tour-btn" data-tour-prev type="button">Voltar</button>' : '') +
+      '<button class="tour-btn primary" data-tour-next type="button">' + (_tour.i + 1 === n ? 'Concluir' : 'Próximo') + '</button>' +
+      '</div></div>';
+    _tour.pop.querySelector('.tour-x').onclick = tourEnd;
+    var nx = _tour.pop.querySelector('[data-tour-next]');
+    if (nx) nx.onclick = function () { if (_tour.i + 1 === n) tourEnd(); else { _tour.i++; tourRender(); } };
+    var pv = _tour.pop.querySelector('[data-tour-prev]');
+    if (pv) pv.onclick = function () { if (_tour.i > 0) { _tour.i--; tourRender(); } };
+    tourPosition();
+    setTimeout(tourPosition, 240);
+  }
+  function tourKeyHandler(e) {
+    if (e.key === 'Escape') tourEnd();
+    else if (e.key === 'ArrowRight') { if (_tour.i + 1 < _tour.steps.length) { _tour.i++; tourRender(); } }
+    else if (e.key === 'ArrowLeft') { if (_tour.i > 0) { _tour.i--; tourRender(); } }
+  }
+  function startTour() {
+    if (_tour.ring) tourEnd();
+    _tour.steps = tourSteps(); _tour.i = 0;
+    _tour.ring = document.createElement('div'); _tour.ring.className = 'tour-ring hidden';
+    _tour.pop = document.createElement('div'); _tour.pop.className = 'tour-pop tour-pop-center';
+    document.body.appendChild(_tour.ring); document.body.appendChild(_tour.pop);
+    _tour.onMove = function () { tourPosition(); };
+    window.addEventListener('resize', _tour.onMove, true);
+    window.addEventListener('scroll', _tour.onMove, true);
+    document.addEventListener('keydown', tourKeyHandler);
+    tourRender();
+  }
+  function tourEnd() {
+    if (_tour.ring) { _tour.ring.remove(); _tour.ring = null; }
+    if (_tour.pop) { _tour.pop.remove(); _tour.pop = null; }
+    window.removeEventListener('resize', _tour.onMove, true);
+    window.removeEventListener('scroll', _tour.onMove, true);
+    document.removeEventListener('keydown', tourKeyHandler);
+    document.body.classList.remove('sidebar-open');
+    try { localStorage.setItem(TOUR_KEY, '1'); } catch (e) {}
+  }
+
   /* ---------------- AJUDA E SUPORTE ----------------
-     Embute o widget de chamados do nosso sistema de suporte (SupraDesk).
-     O cliente abre ticket sem sair do painel. */
+     Junta numa tela: o tour guiado, o manual em PDF (ver/baixar) e o widget
+     de chamados do nosso sistema de suporte (SupraDesk). O manual completo
+     em PDF e do painel do ADMIN, entao so aparece para o franqueador. */
   var SUPORTE_EMBED = 'https://supradesk.vercel.app/embed/support/751b2d91-d709-452c-a5cc-31c4e59a10c5';
+  var MANUAL_PDF = 'Manual-Painel-Admin-Laser-Co.pdf';
   function viewAjuda() {
     state.presetTipos = null;
-    setView(card('Ajuda e suporte', 'abra um chamado direto para a nossa equipe',
-      '<p class="painel-sub" style="margin:0 0 var(--sp-4)">Precisa de ajuda, encontrou um problema ou quer sugerir algo? Use o formulário abaixo para abrir um chamado. Nossa equipe recebe na hora e responde por aqui.</p>' +
-      '<iframe src="' + SUPORTE_EMBED + '" title="Suporte" loading="lazy" style="width:100%;height:72vh;min-height:640px;border:0;border-radius:12px;background:#FFFFFF"></iframe>', true));
+    var manualCard = state.mode === 'franqueador'
+      ? card('Manual completo (PDF)', 'explica cada tela passo a passo, em linguagem simples',
+          '<div class="det-actions" style="margin:0 0 var(--sp-4)">' +
+          '<a class="btn btn-primary" href="' + MANUAL_PDF + '" download>Baixar manual (PDF)</a>' +
+          '<a class="btn btn-outline" href="' + MANUAL_PDF + '" target="_blank" rel="noopener">Abrir em nova aba</a></div>' +
+          '<iframe src="' + MANUAL_PDF + '#view=FitH" title="Manual do painel" style="width:100%;height:60vh;min-height:520px;border:0;border-radius:12px;background:#FFFFFF"></iframe>', true)
+      : '';
+    setView(
+      card('Tour guiado do painel', 'um passeio rápido pelas principais áreas',
+        '<p class="painel-sub" style="margin:0 0 var(--sp-4)">Um tour interativo destaca cada parte do painel e explica para que serve. Dá para refazer quando quiser.</p>' +
+        '<button class="btn btn-primary" id="tour-start" type="button">Iniciar tour guiado</button>', true) +
+      manualCard +
+      card('Abrir um chamado', 'fale direto com a nossa equipe de suporte',
+        '<p class="painel-sub" style="margin:0 0 var(--sp-4)">Encontrou um problema ou quer sugerir algo? Abra um chamado abaixo. Nossa equipe recebe na hora e responde por aqui.</p>' +
+        '<iframe src="' + SUPORTE_EMBED + '" title="Suporte" loading="lazy" style="width:100%;height:64vh;min-height:560px;border:0;border-radius:12px;background:#FFFFFF"></iframe>', true)
+    );
+    var b = document.getElementById('tour-start'); if (b) b.onclick = startTour;
   }
 
   function viewEdicaoFranqueado() {
@@ -1596,7 +1711,9 @@ window.LaserPainel = (function () {
     await carregar();
     window.addEventListener('hashchange', router);
     router();
+    // Primeira visita: dispara o tour guiado uma vez (depois fica em Ajuda).
+    try { if (!localStorage.getItem(TOUR_KEY)) setTimeout(startTour, 900); } catch (e) {}
   }
 
-  return { init: init, getSession: getSession, setSession: setSession, logout: logout };
+  return { init: init, getSession: getSession, setSession: setSession, logout: logout, startTour: startTour };
 })();
