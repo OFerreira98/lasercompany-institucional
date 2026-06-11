@@ -1084,7 +1084,7 @@ window.LaserPainel = (function () {
     if (btn) { btn.disabled = true; }
     try {
       const r = await window.LaserAPI.saveConteudo(state.session, patch);
-      if (msgEl) msgEl.textContent = 'Salvo. O site já reflete a mudança (até 1 min de cache).';
+      if (msgEl) msgEl.textContent = 'Salvo. O site já reflete a mudança (recarregue a página do site pra ver).';
       return r;
     } catch (e) {
       if (e.status === 401) { logout(); return null; }
@@ -1434,7 +1434,7 @@ window.LaserPainel = (function () {
       { sel: '#painel-view', title: 'Área de conteúdo', body: 'É aqui no centro que a tela escolhida aparece, com os números, gráficos, tabelas e formulários.' },
       { sel: '#painel-logout', title: 'Sua conta e sair', body: 'No topo ficam o seu nome e o botão <strong>Sair</strong>. Sempre saia ao usar um computador que não é só seu.' },
       { selLabel: 'Ajuda', openSidebar: true, title: 'Ajuda quando precisar', body: 'Volte sempre nesta tela para <strong>refazer este tour</strong>, ler o <strong>manual completo</strong> ou <strong>abrir um chamado</strong> com o nosso suporte.' },
-      { title: 'Pronto! Bom trabalho', body: 'Você já sabe se virar no painel. Qualquer dúvida, o manual e o suporte estão aqui na tela de Ajuda. 👏' },
+      { title: 'Pronto! Bom trabalho', body: 'Você já sabe se virar no painel. Qualquer dúvida, o manual e o suporte estão aqui na tela de Ajuda.' },
     ];
   }
   function tourTargetEl(step) {
