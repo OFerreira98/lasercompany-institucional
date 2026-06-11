@@ -46,6 +46,10 @@ window.LaserConteudo = (function () {
         });
       });
     }
+    // Vagas editadas no painel substituem a lista padrão do data.js
+    if (Array.isArray(c.vagas) && window.LaserData) {
+      window.LaserData.vagas = c.vagas.slice();
+    }
     const umap = c.unidadesFotos || {};
     if (window.LaserData && Array.isArray(window.LaserData.unidades)) {
       window.LaserData.unidades.forEach(function (u) {
@@ -81,6 +85,11 @@ window.LaserConteudo = (function () {
         else setTimeout(aplica, 150);
       };
       aplica();
+    }
+    // Banner do hero da página franqueado (arte inteira, como na home)
+    if (c.franqueadoBanner) {
+      const fh = document.querySelector('.frlp-hero-media');
+      if (fh) fh.style.backgroundImage = "url('" + c.franqueadoBanner + "')";
     }
     // Foto da fachada no "Posicionamento único" (página franqueado)
     if (c.franqueadoFachada) {

@@ -783,9 +783,68 @@ window.LaserPainel = (function () {
       card('Desempenho por promoção', 'leads gerados, dados reais', cv('pr-bar')));
     vgChart('pr-bar', barCfg(col0(t), col1(t), true));
   }
+  /* Vagas com CRUD persistente (reunião Will): criar/apagar pelo painel.
+     Lista salva em conteudo.vagas; sem edição salva, vale a do data.js. */
   function viewRecrutVagas() {
-    var vs = (window.LaserData && window.LaserData.vagas) || [];
-    setView(card('Vagas abertas', vs.length + ' vagas', tableHTML(['Função', 'Cidade', 'Regime', 'Status'], vs.map(function (v) { return [esc(v.funcao), esc(v.cidade), esc(v.tipo) + ' · ' + esc(v.nivel), v.destaque ? 'Em destaque' : '-']; })), true));
+    var soLeitura = !(state.session && state.session.user && state.session.user.role === 'franqueador');
+    setView('<div class="painel-empty">Carregando vagas...</div>');
+    window.LaserAPI.getConteudo().then(function (c) {
+      var vs = Array.isArray(c.vagas) ? c.vagas.slice() : ((window.LaserData && window.LaserData.vagas) || []).slice();
+      function render() {
+        var rows = vs.map(function (v, i) {
+          return [esc(v.funcao), esc(v.cidade), esc(v.tipo) + ' · ' + esc(v.nivel), v.destaque ? 'Em destaque' : '-',
+            soLeitura ? '' : '<button class="painel-act" type="button" data-vg-del="' + i + '">Apagar</button>'];
+        });
+        setView(card('Vagas abertas', vs.length + ' vaga(s) no site' + (Array.isArray(c.vagas) ? ' (lista editada, salva no banco)' : ''),
+          tableHTML(['Função', 'Cidade', 'Regime', 'Status', ''], rows) +
+          (soLeitura ? '' :
+          '<div class="painel-form" style="margin-top:var(--sp-5)">' +
+          '<div class="det-field"><label>Função</label><input id="vg-n-funcao" class="painel-input" style="width:100%" placeholder="Ex.: Esteticista"></div>' +
+          '<div class="det-field"><label>Cidade</label><input id="vg-n-cidade" class="painel-input" style="width:100%" placeholder="Ex.: São Paulo, SP"></div>' +
+          '<div class="det-field"><label>Regime</label><select id="vg-n-tipo" class="painel-select"><option>CLT</option><option>PJ</option><option>Estágio</option></select></div>' +
+          '<div class="det-field"><label>Nível</label><select id="vg-n-nivel" class="painel-select"><option>Júnior</option><option>Pleno</option><option>Sênior</option></select></div>' +
+          '<div class="det-field" style="grid-column:1/-1"><label>Descrição</label><textarea id="vg-n-desc" class="painel-textarea" rows="2" style="width:100%"></textarea></div>' +
+          '<label class="perm-item" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="vg-n-destaque"> Vaga em destaque</label></div>' +
+          '<div class="det-actions"><button class="btn btn-primary" id="vg-n-add" type="button">Adicionar vaga</button>' +
+          '<button class="btn btn-outline" id="vg-n-reset" type="button">Voltar às vagas padrão</button>' +
+          '<span id="vg-n-msg" style="font-size:var(--fs-sm)"></span></div>'), true));
+        if (soLeitura) return;
+        document.querySelectorAll('[data-vg-del]').forEach(function (b) {
+          b.addEventListener('click', async function () {
+            if (!confirm('Apagar a vaga "' + vs[Number(b.dataset.vgDel)].funcao + '"?')) return;
+            vs.splice(Number(b.dataset.vgDel), 1);
+            await cmsSalvar({ vagas: vs }, document.getElementById('vg-n-msg'));
+            c.vagas = vs.slice();
+            render();
+          });
+        });
+        document.getElementById('vg-n-add').addEventListener('click', async function () {
+          var funcao = document.getElementById('vg-n-funcao').value.trim();
+          var cidade = document.getElementById('vg-n-cidade').value.trim();
+          var msg = document.getElementById('vg-n-msg');
+          if (!funcao || !cidade) { msg.textContent = 'Informe função e cidade.'; return; }
+          vs.push({
+            id: 'v_' + Date.now().toString(36),
+            funcao: funcao,
+            cidade: cidade,
+            tipo: document.getElementById('vg-n-tipo').value,
+            nivel: document.getElementById('vg-n-nivel').value,
+            desc: document.getElementById('vg-n-desc').value.trim() || 'Vaga na rede Laser & Co.',
+            destaque: document.getElementById('vg-n-destaque').checked,
+          });
+          await cmsSalvar({ vagas: vs }, msg, this);
+          c.vagas = vs.slice();
+          render();
+        });
+        document.getElementById('vg-n-reset').addEventListener('click', async function () {
+          await cmsSalvar({ vagas: null }, document.getElementById('vg-n-msg'), this);
+          delete c.vagas;
+          vs = ((window.LaserData && window.LaserData.vagas) || []).slice();
+          render();
+        });
+      }
+      render();
+    });
   }
   function roleLabel(r) { return r === 'franqueador' ? 'Franqueador' : 'Franqueado'; }
   function unidadeNomePorId(id) { var u = (window.LaserData && window.LaserData.unidades || []).filter(function (x) { return x.id === id; })[0]; return u ? u.nome + '/' + u.uf : (id ? id : 'Rede toda'); }
@@ -1375,7 +1434,13 @@ window.LaserPainel = (function () {
     if (!cmsGuard()) return;
     setView('<div class="painel-empty">Carregando...</div>');
     window.LaserAPI.getConteudo().then(function (c) {
-      setView(card('Foto da fachada (Posicionamento único)', 'imagem à direita do bloco "A única rede com 3 frentes"',
+      setView(card('Banner do topo (hero)', 'arte inteira de fundo do topo da página de franquia',
+        (c.franqueadoBanner ? '<img src="' + esc(c.franqueadoBanner) + '" style="width:100%;max-width:420px;border-radius:8px;margin-bottom:var(--sp-3)">' : '<div class="painel-empty">Sem banner enviado; o site usa a foto padrão da recepção.</div>') +
+        '<div style="display:grid;gap:var(--sp-3);max-width:560px;margin-bottom:var(--sp-5)">' +
+        '<label class="btn btn-outline" style="justify-content:center;max-width:280px">' + (c.franqueadoBanner ? 'Trocar banner' : '+ Enviar banner') + '<input type="file" id="cms-fr-banner" accept="image/jpeg,image/png,image/webp" hidden></label>' +
+        cmsDica('<strong>Tamanho ideal: 1920 x 1080px (paisagem), JPG ou PNG, até 4MB.</strong>') +
+        '<div class="det-actions">' + (c.franqueadoBanner ? '<button class="btn btn-outline" id="cms-fr-banner-rm" type="button">Voltar ao padrão</button>' : '') + '</div></div>', true) +
+        card('Foto da fachada (Posicionamento único)', 'imagem à direita do bloco "A única rede com 3 frentes"',
         '<img src="' + esc(c.franqueadoFachada || 'assets/img/unidades/botafogo-praia-shopping-rio-de-janeiro-rj.jpg') + '" style="width:100%;max-width:380px;border-radius:8px;margin-bottom:var(--sp-3)">' +
         '<div style="display:grid;gap:var(--sp-3);max-width:560px">' +
         '<label class="btn btn-outline" style="justify-content:center;max-width:280px">Trocar foto<input type="file" id="cms-fr-fachada" accept="image/jpeg,image/png,image/webp" hidden></label>' +
@@ -1394,6 +1459,20 @@ window.LaserPainel = (function () {
       var rs = document.getElementById('cms-fr-reset');
       if (rs) rs.addEventListener('click', async function () {
         await cmsSalvar({ franqueadoFachada: null }, document.getElementById('cms-fr-msg'), this);
+        router();
+      });
+      document.getElementById('cms-fr-banner').addEventListener('change', async function () {
+        var f = this.files && this.files[0]; if (!f) return;
+        var msg = document.getElementById('cms-fr-msg'); msg.textContent = 'Enviando banner...';
+        try {
+          var url = await window.LaserAPI.uploadMidia(state.session, f);
+          await cmsSalvar({ franqueadoBanner: url }, msg);
+          router();
+        } catch (e) { if (e.status === 401) return logout(); msg.textContent = 'Falha no envio.'; }
+      });
+      var rb = document.getElementById('cms-fr-banner-rm');
+      if (rb) rb.addEventListener('click', async function () {
+        await cmsSalvar({ franqueadoBanner: null }, document.getElementById('cms-fr-msg'), this);
         router();
       });
     });

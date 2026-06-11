@@ -229,6 +229,10 @@
 
   function init() {
     renderVagas();
+    // CMS: se houver vagas editadas no painel, re-renderiza quando chegarem
+    if (window.LaserConteudo && window.LaserConteudo.ready) {
+      window.LaserConteudo.ready.then(function () { renderVagas(); });
+    }
 
     const modal = document.getElementById('vaga-modal');
     document.getElementById('vaga-modal-close').addEventListener('click', closeModal);
