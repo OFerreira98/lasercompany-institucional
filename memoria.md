@@ -125,11 +125,11 @@ Fase 2 do backend (spec no PDF `1780540080493_Laser-Co-Backend-Fase2-DEV.pdf`, n
      Playfair Display) em h2/h3/h6 + Montserrat corpo/h5**, **header sempre fixo**,
      rodapé vinho com tokens re-mapeados, títulos sobre foto continuam creme.
      Token novo: `--color-heading`. Tema antigo vira opção "Vinho & Dourado".
-   - **IMPORTANTE: cores PENDEM DE APROVAÇÃO do Will antes de ir pra produção**
-     (combinado na reunião). Preview público pra ele:
-     **https://lasercompany-preview.vercel.app** (projeto Vercel `lasercompany-preview`
-     na conta lasercompanyia-web; o preview normal da Vercel exige login, por isso o
-     projeto separado). NÃO dar push na main até aprovar (push redeploya a prod antiga).
+   - **PUBLICADO EM PRODUÇÃO em 10/06 à noite** (o usuário mandou publicar sem
+     esperar o OK do Will; push 05daf97 + deploy). O preview público
+     **https://lasercompany-preview.vercel.app** continua existindo pra mostrar
+     mudanças futuras antes de subir (projeto Vercel `lasercompany-preview`, mesmas
+     envs; o preview nativo da Vercel exige login, por isso o projeto separado).
    - **FASE 2 FEITA (commit local, validada e2e no preview):** CMS no painel, menu
      **"Edição do site"** (só franqueador) com 4 telas: Banners da home (upload da arte
      INTEIRA, dica 1920x1080, reordenar/remover/voltar padrão; hero vira banner-only com
