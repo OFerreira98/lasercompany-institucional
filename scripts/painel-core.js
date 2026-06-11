@@ -50,6 +50,7 @@ window.LaserPainel = (function () {
     recrutamento: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2"/><path d="M3 12.5h18"/></svg>',
     aparencia: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 100 18c1.2 0 2-.9 2-2 0-.6-.2-1-.5-1.4-.3-.4-.5-.8-.5-1.4 0-1.1.9-2 2-2h2.3A4.7 4.7 0 0021 9.8C20 5.9 16.3 3 12 3z"/><circle cx="7.5" cy="11" r="1" fill="currentColor"/><circle cx="10.5" cy="7.5" r="1" fill="currentColor"/><circle cx="15" cy="7.5" r="1" fill="currentColor"/></svg>',
     config: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h10M18 8h2M4 16h2M10 16h10"/><circle cx="16" cy="8" r="2.2"/><circle cx="8" cy="16" r="2.2"/></svg>',
+    edicao: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>',
   };
   const MENU_FRANQUEADOR = [
     { id: 'visao-geral', ico: 'home', label: 'Visão Geral' },
@@ -79,6 +80,12 @@ window.LaserPainel = (function () {
     { ico: 'recrutamento', label: 'Recrutamento', children: [
       { id: 'recrut-vagas', label: 'Vagas abertas' },
       { id: 'recrut-candidatos', label: 'Candidatos' },
+    ] },
+    { ico: 'edicao', label: 'Edição do site', children: [
+      { id: 'edicao-banners', label: 'Banners da home' },
+      { id: 'edicao-popup', label: 'Pop-up do brinde' },
+      { id: 'edicao-sobre', label: 'Bloco Sobre' },
+      { id: 'edicao-menu', label: 'Faixa do menu' },
     ] },
     { ico: 'aparencia', label: 'Aparência do site', children: [
       { id: 'aparencia-tema', label: 'Tema do site' },
@@ -122,6 +129,8 @@ window.LaserPainel = (function () {
     'promo-desempenho': 'Desempenho por promoção', 'recrut-vagas': 'Vagas abertas',
     'recrut-candidatos': 'Candidatos', 'aparencia-tema': 'Tema do site',
     'aparencia-sazonais': 'Temas sazonais', 'config-usuarios': 'Usuários e permissões',
+    'edicao-banners': 'Banners da home', 'edicao-popup': 'Pop-up do brinde',
+    'edicao-sobre': 'Bloco Sobre', 'edicao-menu': 'Faixa do menu',
     'config-conta': 'Minha conta', 'desemp-procedimento': 'Desempenho por procedimento',
     'desemp-periodo': 'Desempenho por período', 'desemp-rede': 'Comparação com a rede',
     'equipe-logins': 'Logins de funcionário',
@@ -994,6 +1003,178 @@ window.LaserPainel = (function () {
   function viewAparenciaTema() { setView(card('Tema base do site', 'aparência do site público', '<div class="theme-grid big">' + THEMES_BASE.map(function (t) { return themeOpt(t, 'base'); }).join('') + '</div>', true) + '<p class="painel-sub" style="margin-top:var(--sp-4)">A troca afeta só o site público. Os painéis seguem sempre vinho/dourado. O acento sazonal se mantém sobre a base escolhida.</p>'); bindThemes(); }
   function viewAparenciaSazonais() { setView(card('Acento sazonal', 'combina com a base atual (clara ou escura)', '<div class="theme-grid">' + THEMES_SAZ.map(function (t) { return themeOpt(t, 'accent'); }).join('') + '</div>', true) + '<div style="margin-top:var(--sp-4)"><button type="button" class="painel-export" id="t-reset">Remover acento sazonal</button></div>'); bindThemes(); var r = document.getElementById('t-reset'); if (r) r.addEventListener('click', function () { persistTheme(siteBase(), ''); router(); }); }
 
+  /* ---------------- EDIÇÃO DO SITE (CMS, reunião Will 09/06) ----------------
+     Salva em /api/conteudo (site_config 'conteudo'); o site público aplica
+     os overrides via scripts/conteudo.js. Mandar null = voltar ao padrão. */
+  function cmsGuard() {
+    if (state.session && state.session.user && state.session.user.role === 'franqueador') return true;
+    setView('<div class="painel-empty">Só o franqueador edita o conteúdo do site.</div>');
+    return false;
+  }
+  async function cmsSalvar(patch, msgEl, btn) {
+    if (btn) { btn.disabled = true; }
+    try {
+      const r = await window.LaserAPI.saveConteudo(state.session, patch);
+      if (msgEl) msgEl.textContent = 'Salvo. O site já reflete a mudança (até 1 min de cache).';
+      return r;
+    } catch (e) {
+      if (e.status === 401) { logout(); return null; }
+      if (msgEl) msgEl.textContent = e.status === 403 ? 'Só o franqueador pode salvar.' : 'Não foi possível salvar. Tente de novo.';
+      return null;
+    } finally { if (btn) btn.disabled = false; }
+  }
+  function cmsDica(texto) { return '<p class="painel-sub" style="margin:var(--sp-2) 0 0">' + texto + '</p>'; }
+
+  function viewEdicaoPopup() {
+    if (!cmsGuard()) return;
+    setView('<div class="painel-empty">Carregando...</div>');
+    window.LaserAPI.getConteudo().then(function (c) {
+      setView(card('Pop-up do brinde', 'edita o procedimento do trecho dourado do pop-up',
+        '<div style="display:grid;gap:var(--sp-4);max-width:560px">' +
+        '<div class="det-field"><label>Procedimento do brinde</label><input id="cms-popup-proc" class="painel-input" style="width:100%" maxlength="60" value="' + esc(c.popupProcedimento || '') + '" placeholder="Rejuvenescimento Facial (padrão)"></div>' +
+        '<div>O pop-up mostra: "Uma sessão de <strong style="color:var(--color-accent-pale)">SEU TEXTO</strong> GRÁTIS." O mesmo texto vai no lead e na mensagem de WhatsApp.</div>' +
+        '<div class="det-actions"><button class="btn btn-primary" id="cms-popup-save" type="button">Salvar</button>' +
+        '<button class="btn btn-outline" id="cms-popup-reset" type="button">Voltar ao padrão</button>' +
+        '<span id="cms-popup-msg" style="font-size:var(--fs-sm)"></span></div></div>', true));
+      document.getElementById('cms-popup-save').addEventListener('click', function () {
+        var v = document.getElementById('cms-popup-proc').value.trim();
+        cmsSalvar({ popupProcedimento: v || null }, document.getElementById('cms-popup-msg'), this);
+      });
+      document.getElementById('cms-popup-reset').addEventListener('click', function () {
+        document.getElementById('cms-popup-proc').value = '';
+        cmsSalvar({ popupProcedimento: null }, document.getElementById('cms-popup-msg'), this);
+      });
+    });
+  }
+
+  function viewEdicaoBanners() {
+    if (!cmsGuard()) return;
+    setView('<div class="painel-empty">Carregando banners...</div>');
+    window.LaserAPI.getConteudo().then(function (c) {
+      var banners = Array.isArray(c.heroBanners) ? c.heroBanners.slice() : [];
+      function render() {
+        var lista = banners.map(function (b, i) {
+          return '<div class="painel-chart-card flush" style="display:flex;gap:var(--sp-4);align-items:center">' +
+            '<img src="' + esc(b.img) + '" alt="banner ' + (i + 1) + '" style="width:180px;height:84px;object-fit:cover;border-radius:8px;flex-shrink:0">' +
+            '<div style="flex:1">Banner ' + (i + 1) + '</div>' +
+            '<div style="display:flex;gap:6px">' +
+            (i > 0 ? '<button class="painel-act" type="button" data-b-up="' + i + '">▲ subir</button>' : '') +
+            '<button class="painel-act" type="button" data-b-del="' + i + '">Remover</button></div></div>';
+        }).join('');
+        setView(card('Banners da home', banners.length ? banners.length + ' banner(s) enviados, substituem os slides padrão' : 'sem banners enviados, o site mostra os slides padrão',
+          (lista || '<div class="painel-empty">Nenhum banner enviado.</div>') +
+          '<div style="margin-top:var(--sp-4);display:grid;gap:var(--sp-3);max-width:560px">' +
+          '<label class="btn btn-outline" style="justify-content:center">+ Enviar banner<input type="file" id="cms-banner-file" accept="image/jpeg,image/png,image/webp" hidden></label>' +
+          cmsDica('A arte é o banner INTEIRO (com seu texto e marcação); por cima só ficam os 2 botões fixos do site. <strong>Tamanho ideal: 1920 x 1080px (paisagem), JPG ou PNG, até 4MB.</strong> Vários banners giram em carrossel.') +
+          '<div class="det-actions"><button class="btn btn-outline" id="cms-banner-reset" type="button">Voltar aos slides padrão</button>' +
+          '<span id="cms-banner-msg" style="font-size:var(--fs-sm)"></span></div></div>', true));
+        document.getElementById('cms-banner-file').addEventListener('change', async function () {
+          var f = this.files && this.files[0]; if (!f) return;
+          var msg = document.getElementById('cms-banner-msg');
+          if (f.size > 4 * 1024 * 1024) { msg.textContent = 'Arquivo acima de 4MB.'; return; }
+          msg.textContent = 'Enviando imagem...';
+          try {
+            var url = await window.LaserAPI.uploadMidia(state.session, f);
+            banners.push({ img: url });
+            await cmsSalvar({ heroBanners: banners }, msg);
+            render();
+          } catch (e) {
+            if (e.status === 401) return logout();
+            msg.textContent = 'Falha no envio. Tente de novo.';
+          }
+        });
+        document.querySelectorAll('[data-b-del]').forEach(function (b) {
+          b.addEventListener('click', async function () {
+            banners.splice(Number(b.dataset.bDel), 1);
+            await cmsSalvar({ heroBanners: banners.length ? banners : null }, document.getElementById('cms-banner-msg'));
+            render();
+          });
+        });
+        document.querySelectorAll('[data-b-up]').forEach(function (b) {
+          b.addEventListener('click', async function () {
+            var i = Number(b.dataset.bUp);
+            var tmp = banners[i - 1]; banners[i - 1] = banners[i]; banners[i] = tmp;
+            await cmsSalvar({ heroBanners: banners }, document.getElementById('cms-banner-msg'));
+            render();
+          });
+        });
+        document.getElementById('cms-banner-reset').addEventListener('click', async function () {
+          banners = [];
+          await cmsSalvar({ heroBanners: null }, document.getElementById('cms-banner-msg'), this);
+          render();
+        });
+      }
+      render();
+    });
+  }
+
+  function viewEdicaoSobre() {
+    if (!cmsGuard()) return;
+    setView('<div class="painel-empty">Carregando...</div>');
+    window.LaserAPI.getConteudo().then(function (c) {
+      var s = c.sobre || {};
+      setView(card('Bloco "Sobre a Laser & Co" (home)', 'texto oficial + imagem no lugar dos números',
+        '<div style="display:grid;gap:var(--sp-4);max-width:640px">' +
+        '<div class="det-field"><label>Título</label><input id="cms-sobre-titulo" class="painel-input" style="width:100%" maxlength="80" value="' + esc(s.titulo || '') + '" placeholder="Uma nova era da beleza. (padrão)"></div>' +
+        '<div class="det-field"><label>Parágrafo principal</label><textarea id="cms-sobre-lead" class="painel-textarea" rows="3" style="width:100%">' + esc(s.lead || '') + '</textarea></div>' +
+        '<div class="det-field"><label>Parágrafo complementar</label><textarea id="cms-sobre-texto" class="painel-textarea" rows="3" style="width:100%">' + esc(s.texto || '') + '</textarea></div>' +
+        '<div class="det-field"><label>Imagem ao lado do texto (substitui os cards de números)</label>' +
+        (s.imagem ? '<img src="' + esc(s.imagem) + '" style="width:100%;max-width:320px;border-radius:8px;margin-bottom:8px">' : '') +
+        '<label class="btn btn-outline" style="justify-content:center;max-width:280px">' + (s.imagem ? 'Trocar imagem' : '+ Enviar imagem') + '<input type="file" id="cms-sobre-img" accept="image/jpeg,image/png,image/webp" hidden></label>' +
+        cmsDica('<strong>Tamanho ideal: 900 x 700px, JPG, até 4MB.</strong> Ex.: foto da fachada ou da equipe.') + '</div>' +
+        '<label class="perm-item" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="cms-sobre-esconder"' + (s.esconderNumeros ? ' checked' : '') + '> Esconder os cards de números (70 unidades / 15 estados...)</label>' +
+        '<div class="det-actions"><button class="btn btn-primary" id="cms-sobre-save" type="button">Salvar</button>' +
+        '<button class="btn btn-outline" id="cms-sobre-reset" type="button">Voltar ao padrão</button>' +
+        '<span id="cms-sobre-msg" style="font-size:var(--fs-sm)"></span></div></div>', true));
+      var imgNova = undefined;
+      document.getElementById('cms-sobre-img').addEventListener('change', async function () {
+        var f = this.files && this.files[0]; if (!f) return;
+        var msg = document.getElementById('cms-sobre-msg');
+        if (f.size > 4 * 1024 * 1024) { msg.textContent = 'Arquivo acima de 4MB.'; return; }
+        msg.textContent = 'Enviando imagem...';
+        try { imgNova = await window.LaserAPI.uploadMidia(state.session, f); msg.textContent = 'Imagem pronta. Clique em Salvar.'; }
+        catch (e) { if (e.status === 401) return logout(); msg.textContent = 'Falha no envio.'; }
+      });
+      document.getElementById('cms-sobre-save').addEventListener('click', function () {
+        var novo = {
+          titulo: document.getElementById('cms-sobre-titulo').value.trim(),
+          lead: document.getElementById('cms-sobre-lead').value.trim(),
+          texto: document.getElementById('cms-sobre-texto').value.trim(),
+          imagem: imgNova !== undefined ? imgNova : (s.imagem || ''),
+          esconderNumeros: document.getElementById('cms-sobre-esconder').checked,
+        };
+        cmsSalvar({ sobre: novo }, document.getElementById('cms-sobre-msg'), this);
+      });
+      document.getElementById('cms-sobre-reset').addEventListener('click', function () {
+        cmsSalvar({ sobre: null }, document.getElementById('cms-sobre-msg'), this).then(function () { router(); });
+      });
+    });
+  }
+
+  function viewEdicaoMenu() {
+    if (!cmsGuard()) return;
+    setView('<div class="painel-empty">Carregando...</div>');
+    window.LaserAPI.getConteudo().then(function (c) {
+      var atual = c.menuCor || '';
+      var OPCOES = [
+        { v: '', label: 'Padrão', desc: 'transparente sobre as fotos, branco ao rolar' },
+        { v: 'branco', label: 'Branco fixo', desc: 'faixa branca sempre' },
+        { v: 'vinho', label: 'Vinho fixo', desc: 'faixa vinho sempre' },
+      ];
+      setView(card('Faixa do menu (cabeçalho)', 'cor de fundo do menu em todas as páginas',
+        '<div style="display:grid;gap:var(--sp-3);max-width:520px">' +
+        OPCOES.map(function (o) {
+          return '<label class="perm-item" style="display:flex;gap:10px;align-items:center"><input type="radio" name="cms-menu" value="' + o.v + '"' + (atual === o.v ? ' checked' : '') + '> <strong>' + o.label + '</strong>&nbsp;· ' + o.desc + '</label>';
+        }).join('') +
+        '<div class="det-actions"><button class="btn btn-primary" id="cms-menu-save" type="button">Salvar</button>' +
+        '<span id="cms-menu-msg" style="font-size:var(--fs-sm)"></span></div></div>', true));
+      document.getElementById('cms-menu-save').addEventListener('click', function () {
+        var sel = document.querySelector('input[name="cms-menu"]:checked');
+        cmsSalvar({ menuCor: sel && sel.value ? sel.value : null }, document.getElementById('cms-menu-msg'), this);
+      });
+    });
+  }
+
   const VIEWS = {
     'visao-geral': viewVisaoGeral,
     'leads-todos': function () { viewLeads({}); },
@@ -1021,6 +1202,10 @@ window.LaserPainel = (function () {
     'equipe-logins': viewEquipeLogins,
     'aparencia-tema': viewAparenciaTema,
     'aparencia-sazonais': viewAparenciaSazonais,
+    'edicao-banners': viewEdicaoBanners,
+    'edicao-popup': viewEdicaoPopup,
+    'edicao-sobre': viewEdicaoSobre,
+    'edicao-menu': viewEdicaoMenu,
   };
 
   /* ---------------- sidebar + roteador ---------------- */

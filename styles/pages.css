@@ -4314,3 +4314,48 @@ body.page-franqueado-lp { background: #F5EFE2; }
 :root[data-theme="clean"] [class*="-photo-card"] h4 {
   color: #F5EFE2;
 }
+
+/* ============================================================
+   CMS (Edição do site), estilos dos overrides
+   ============================================================ */
+
+/* Faixa do menu editável (presets seguros, regra 10) */
+body .site-header-clean[data-menu-cor="branco"] {
+  background: #FFFFFF !important;
+  box-shadow: 0 2px 14px rgba(43, 38, 34, 0.08);
+}
+body.page-has-dark-hero .site-header-clean[data-menu-cor="branco"]:not(.scrolled) .nav-link,
+body .site-header-clean[data-menu-cor="branco"] .nav-link { color: #1F0B0A !important; }
+body .site-header-clean[data-menu-cor="vinho"] {
+  background: #481712 !important;
+  box-shadow: 0 2px 14px rgba(43, 38, 34, 0.18);
+}
+body .site-header-clean[data-menu-cor="vinho"] .nav-link,
+body.page-has-dark-hero .site-header-clean[data-menu-cor="vinho"].scrolled .nav-link { color: #F5EFE2 !important; }
+
+/* Bloco Sobre com imagem no lugar dos números */
+.sobre-figura { margin: 0; height: 100%; display: flex; align-items: center; }
+.sobre-figura img {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  object-fit: cover;
+  max-height: 420px;
+}
+
+/* Hero com banner-arte (imagem única do cliente, sem texto do site) */
+.hero-slide-banner-only .hero-slide-bg { background-size: cover; background-position: center; }
+.hero-slide-banner-only .hero-slide-overlay { background: linear-gradient(180deg, rgba(0,0,0,0.05), rgba(0,0,0,0.18)); }
+.hero-banner-actions {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: clamp(2.2rem, 6vh, 4rem);
+  display: flex;
+  justify-content: center;
+  gap: var(--sp-4);
+  z-index: 3;
+}
+@media (max-width: 700px) {
+  .hero-banner-actions { flex-direction: column; align-items: center; padding-inline: var(--sp-5); }
+  .hero-banner-actions .btn { width: 100%; max-width: 340px; }
+}

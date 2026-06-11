@@ -123,14 +123,35 @@
     return first ? [first, ...rest] : rest;
   }
 
+  /* CMS: banners enviados pelo painel (arte inteira do cliente).
+     Substituem os slides padrão; só os botões fixos permanecem. */
+  function renderBannerOnly(slidesEl, banners) {
+    slidesEl.innerHTML = banners.map((b, i) => `
+      <article class="hero-slide hero-slide-banner-only${i === 0 ? ' is-active' : ''}" data-slide="banner-${i}" aria-roledescription="slide" aria-hidden="${i === 0 ? 'false' : 'true'}">
+        <div class="hero-slide-bg" style="background-image:url('${b.img}');"></div>
+        <div class="hero-slide-overlay" aria-hidden="true"></div>
+      </article>
+    `).join('') + `
+      <div class="hero-banner-actions">
+        <a href="agendamento.html" class="btn btn-primary btn-lg btn-arrow">Agendar avaliação grátis</a>
+        <a href="unidades.html" class="btn btn-ghost btn-lg">Conhecer a rede</a>
+      </div>`;
+  }
+
   function renderHero() {
     const slidesEl = document.getElementById('hero-slides');
     const dotsEl   = document.getElementById('hero-dots');
     if (!slidesEl || !window.LaserData.hero) return;
 
-    const slides = shuffleSlides(window.LaserData.hero);
+    // CMS: se o painel tem banners enviados, eles substituem os padrões.
+    const cms = (window.LaserConteudo && window.LaserConteudo.get()) || {};
+    const banners = Array.isArray(cms.heroBanners) ? cms.heroBanners.filter((b) => b && b.img) : [];
+    const usaBanners = banners.length > 0;
 
-    slidesEl.innerHTML = slides.map((s, i) => `
+    const slides = usaBanners ? banners : shuffleSlides(window.LaserData.hero);
+    if (usaBanners) renderBannerOnly(slidesEl, slides);
+
+    if (!usaBanners) slidesEl.innerHTML = slides.map((s, i) => `
       <article class="hero-slide${i === 0 ? ' is-active' : ''}" data-slide="${s.id}" aria-roledescription="slide" aria-hidden="${i === 0 ? 'false' : 'true'}">
         <div class="hero-slide-bg" style="background-image:url('${s.img}');${s.pos ? `background-position:${s.pos};` : ''}"></div>
         <div class="hero-slide-overlay" aria-hidden="true"></div>
@@ -418,7 +439,13 @@
   }
 
   function init() {
-    renderHero();
+    // espera o conteúdo do CMS (máx ~1.2s) pra decidir entre slides padrão
+    // e banners enviados pelo painel; o resto da página não espera
+    if (window.LaserConteudo && window.LaserConteudo.ready) {
+      window.LaserConteudo.ready.then(renderHero);
+    } else {
+      renderHero();
+    }
     renderMarqueePopulares();
     renderPassos();
     renderSocial();

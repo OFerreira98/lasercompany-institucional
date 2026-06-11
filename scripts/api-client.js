@@ -196,6 +196,33 @@ window.LaserAPI = (function () {
   function createUsuario(session, u) { return authSend(session, '/usuarios', 'POST', u); }
   function updateUsuario(session, u) { return authSend(session, '/usuarios', 'PATCH', u); }
   function deleteUsuario(session, email) { return authSend(session, '/usuarios?email=' + encodeURIComponent(email), 'DELETE'); }
+  /* ---------- CMS: conteúdo editável do site ---------- */
+  async function getConteudo() {
+    try { return (await tryFetch('/conteudo')).conteudo || {}; }
+    catch (e) { return {}; }
+  }
+  function saveConteudo(session, patch) {
+    return authSend(session, '/conteudo', 'PUT', { conteudo: patch });
+  }
+  function uploadMidia(session, file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error('leitura'));
+      reader.onload = async () => {
+        try {
+          const base64 = String(reader.result).split(',')[1] || '';
+          const j = await tryFetch('/midia', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + session.token },
+            body: JSON.stringify({ nome: file.name, mime: file.type, base64: base64 }),
+          });
+          resolve(j.url);
+        } catch (e) { reject(e); }
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
   async function getConta(session) {
     return (await authGet(session, '/conta')).conta || {};
   }
@@ -218,6 +245,7 @@ window.LaserAPI = (function () {
     updateUsuario: updateUsuario, deleteUsuario: deleteUsuario,
     getEquipe: getEquipe, saveEquipe: saveEquipe,
     getConta: getConta, saveConta: saveConta,
+    getConteudo: getConteudo, saveConteudo: saveConteudo, uploadMidia: uploadMidia,
     DEMO_USERS: DEMO_USERS,
   };
 })();

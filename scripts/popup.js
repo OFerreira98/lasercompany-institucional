@@ -53,6 +53,16 @@
   }
 
   /* ---------- HTML ---------- */
+  /* CMS: procedimento do brinde editável no painel (reunião Will 09/06).
+     Fallback: o padrão de sempre. Sanitiza pra entrar em HTML. */
+  function procedimentoBrinde() {
+    try {
+      const c = (window.LaserConteudo && window.LaserConteudo.get()) || {};
+      const p = String(c.popupProcedimento || '').replace(/[<>]/g, '').trim();
+      return p || 'Rejuvenescimento Facial';
+    } catch (e) { return 'Rejuvenescimento Facial'; }
+  }
+
   function buildPopupHTML() {
     return `
 <div class="popup-overlay" id="popup-captacao" role="dialog" aria-modal="true" aria-labelledby="popup-title">
@@ -74,7 +84,7 @@
       </div>
 
       <h2 class="popup-title" id="popup-title">
-        Uma sessão de <span class="italic">Rejuvenescimento Facial</span> <strong class="popup-title-strong">GRÁTIS</strong>.
+        Uma sessão de <span class="italic">${procedimentoBrinde()}</span> <strong class="popup-title-strong">GRÁTIS</strong>.
       </h2>
       <p class="popup-sub">Selecione sua unidade e resgate em poucos segundos.</p>
 
@@ -285,7 +295,7 @@
       unidadeId: unidade ? unidade.id : null,
       unidadeNome: unidade ? unidade.nome : null,
       hasUnidade: !!unidade,
-      brinde: 'Sessão de Rejuvenescimento Facial',
+      brinde: 'Sessão de ' + procedimentoBrinde(),
     });
 
     markSubmitted({ nome, whatsapp, uf, cidade, unidadeId: unidade ? unidade.id : null });
@@ -309,7 +319,7 @@
           <div class="popup-unit-meta">${unidade.horario || ''}</div>
         </div>
       `;
-      const msg = `Olá ${unidade.nome}! Sou ${nome}, vim pelo site da Laser & Co e quero resgatar meu brinde de uma sessão de Rejuvenescimento Facial.`;
+      const msg = `Olá ${unidade.nome}! Sou ${nome}, vim pelo site da Laser & Co e quero resgatar meu brinde de uma sessão de ${procedimentoBrinde()}.`;
       const num = (unidade.whatsapp || '').replace(/\D/g, '');
       waBtn.href = num ? `https://wa.me/${num}?text=${encodeURIComponent(msg)}` : '#';
     } else {
@@ -328,6 +338,14 @@
     if (!shouldShow()) return; // já dispensado nessa visita ou em cooldown
 
     document.body.insertAdjacentHTML('beforeend', buildPopupHTML());
+    // CMS: o conteúdo pode resolver DEPOIS do HTML montado; atualiza o
+    // trecho do procedimento quando chegar (o popup só abre aos 6s).
+    if (window.LaserConteudo && window.LaserConteudo.ready) {
+      window.LaserConteudo.ready.then(function () {
+        var span = document.querySelector('#popup-title .italic');
+        if (span) span.textContent = procedimentoBrinde();
+      });
+    }
     const overlay = document.getElementById('popup-captacao');
     overlayEl = overlay;
     const form     = overlay.querySelector('#popup-form');
