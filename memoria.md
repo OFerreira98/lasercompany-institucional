@@ -130,17 +130,26 @@ Fase 2 do backend (spec no PDF `1780540080493_Laser-Co-Backend-Fase2-DEV.pdf`, n
      **https://lasercompany-preview.vercel.app** (projeto Vercel `lasercompany-preview`
      na conta lasercompanyia-web; o preview normal da Vercel exige login, por isso o
      projeto separado). NÃO dar push na main até aprovar (push redeploya a prod antiga).
-   - **PRÓXIMAS FASES (ver MUDANCAS-REUNIAO-WILL.md):** FASE 2 = CMS (/api/conteudo
-     GET público + PUT auth em site_config 'conteudo', bucket site-conteudo p/ imagens,
-     menu "Edição do site" no painel) + editáveis popup/banners-home(upload de arte
-     inteira do Will, botões fixos)/faixa do menu/Sobre(texto+imagem, sem cards número,
-     saiba mais). FASE 3 = lupa busca procedimentos + procedimentos editáveis (foto/
-     vídeo/descrição) + fotos unidades editáveis (TIRAR fotos com Anitta!) + vídeo
-     autoplay ao lado do "Marque sua Avaliação" (upload) + depoimentos carrossel fixo
-     ~4 itens com ESTRELAS estilo Google. FASE 4 = franqueado (header branco, banners
-     editáveis, posicionamento único = texto esq + foto fachada dir, caixas cinza,
-     foto do Rafael na história de sucesso) + vagas (currículo OPCIONAL, botão Banco
-     de Talentos → WhatsApp RH). Todo upload mostra tamanho ideal.
+   - **FASE 2 FEITA (commit local, validada e2e no preview):** CMS no painel, menu
+     **"Edição do site"** (só franqueador) com 4 telas: Banners da home (upload da arte
+     INTEIRA, dica 1920x1080, reordenar/remover/voltar padrão; hero vira banner-only com
+     só os 2 botões fixos), Pop-up do brinde (procedimento editável: título+lead+msg
+     WhatsApp), Bloco Sobre (título/parágrafos/imagem no lugar dos cards de números),
+     Faixa do menu (padrão/branco/vinho). Infra: `/api/conteudo` (GET público cache 60s,
+     PUT franqueador, site_config 'conteudo', null=volta padrão), `/api/midia` (upload
+     p/ bucket PÚBLICO site-conteudo), `scripts/conteudo.js` (aplica overrides, race
+     1.2s, nunca bloqueia a página; popup atualiza via ready.then porque monta antes).
+     Projeto Vercel `lasercompany-preview` agora tem as MESMAS envs da produção
+     (env add precisa de `--value`, stdin não funciona no CLI 54). Dados de teste do
+     CMS APAGADOS depois da validação (site_config 'conteudo' + banner no Storage).
+   - **PRÓXIMAS FASES (ver MUDANCAS-REUNIAO-WILL.md):** FASE 3 = lupa busca
+     procedimentos + procedimentos editáveis (foto/vídeo/descrição) + fotos unidades
+     editáveis (TIRAR fotos com Anitta!) + vídeo autoplay ao lado do "Marque sua
+     Avaliação" (upload; >4MB exige signed upload direto do navegador) + depoimentos
+     carrossel fixo ~4 itens com ESTRELAS estilo Google. FASE 4 = franqueado (header
+     branco, banners editáveis, posicionamento único = texto esq + foto fachada dir,
+     caixas cinza, foto do Rafael na história de sucesso) + vagas (currículo OPCIONAL,
+     botão Banco de Talentos → WhatsApp RH). Todo upload mostra tamanho ideal.
 
 **RESTA da Fase 2 (backend):** item 8 (domínio definitivo: decisão do cliente + acesso ao
 DNS). **Telas que leem do data.js do site (não é mock):** cadastro de unidades e vagas
