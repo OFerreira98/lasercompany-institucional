@@ -8,9 +8,9 @@
    - PUT => { nome?, telefone?, cargo?, obs?, foto?,
               senhaAtual?, senhaNova? }
    ============================================================ */
-const { readBody, sendJson, requireAuth } = require('./_lib/http');
-const { getConfig, setConfig, hasSupabase } = require('./_lib/config');
-const { authenticate, gerarHash, USERS } = require('./_lib/auth');
+const { readBody, sendJson, requireAuth } = require('../_lib/http');
+const { getConfig, setConfig, hasSupabase } = require('../_lib/config');
+const { authenticate, gerarHash, USERS } = require('../_lib/auth');
 
 const FOTO_MAX = 200 * 1024; // ~200KB em data URL
 

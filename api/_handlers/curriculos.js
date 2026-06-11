@@ -9,8 +9,8 @@
    - GET (Bearer): ?path=...  =>  { url } (URL assinada, 1h).
      Currículo é dado pessoal (LGPD): só o painel logado baixa.
    ============================================================ */
-const { readBody, sendJson, requireAuth } = require('./_lib/http');
-const { hasSupabase } = require('./_lib/config');
+const { readBody, sendJson, requireAuth } = require('../_lib/http');
+const { hasSupabase } = require('../_lib/config');
 
 const MAX_BYTES = 4 * 1024 * 1024; // 4MB (limite de payload das functions)
 const MIMES = {

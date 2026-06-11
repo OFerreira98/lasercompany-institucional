@@ -4,8 +4,8 @@
    - GET   (Bearer):  lista leads. Franqueador vê tudo;
                       franqueado vê só os da própria unidade.
    ============================================================ */
-const { readBody, sendJson, requireAuth } = require('./_lib/http');
-const { getStore } = require('./_lib/store');
+const { readBody, sendJson, requireAuth } = require('../_lib/http');
+const { getStore } = require('../_lib/store');
 
 function normalizeIncoming(body) {
   return {

@@ -8,8 +8,8 @@
    Sem Supabase configurado: { ok, numero: null } (modo demo, o
    lead segue indo pro painel via trackLead, como antes).
    ============================================================ */
-const { readBody, sendJson } = require('./_lib/http');
-const { hasSupabase } = require('./_lib/config');
+const { readBody, sendJson } = require('../_lib/http');
+const { hasSupabase } = require('../_lib/config');
 
 const AREAS = { ouvidoria: 'Ouvidoria', elogio: 'Elogio', duvida: 'Dúvida', outros: 'Outros' };
 

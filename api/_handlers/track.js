@@ -6,8 +6,8 @@
    Grava em public.site_pageviews; o painel agrega via RPC
    site_trafego_stats. Sem Supabase configurado: no-op (204).
    ============================================================ */
-const { readBody, sendJson } = require('./_lib/http');
-const { hasSupabase } = require('./_lib/config');
+const { readBody, sendJson } = require('../_lib/http');
+const { hasSupabase } = require('../_lib/config');
 
 function device(ua) {
   if (/iPad|Tablet|Android(?!.*Mobile)/i.test(ua)) return 'Tablet';

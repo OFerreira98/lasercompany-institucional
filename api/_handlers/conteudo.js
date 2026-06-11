@@ -7,9 +7,9 @@
      Mandar uma chave com null remove o override (volta ao padrão).
    Persistência: site_config, chave 'conteudo'.
    ============================================================ */
-const { readBody, sendJson, requireAuth, getToken } = require('./_lib/http');
-const { verifyToken } = require('./_lib/auth');
-const { getConfig, setConfig } = require('./_lib/config');
+const { readBody, sendJson, requireAuth, getToken } = require('../_lib/http');
+const { verifyToken } = require('../_lib/auth');
+const { getConfig, setConfig } = require('../_lib/config');
 
 module.exports = async (req, res) => {
   if (req.method === 'GET') {

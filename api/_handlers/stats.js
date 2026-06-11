@@ -1,6 +1,6 @@
 /* GET /api/stats  (Bearer)  =>  métricas agregadas dos leads */
-const { sendJson, requireAuth } = require('./_lib/http');
-const { getStore } = require('./_lib/store');
+const { sendJson, requireAuth } = require('../_lib/http');
+const { getStore } = require('../_lib/store');
 
 function count(arr, fn) {
   const o = {};

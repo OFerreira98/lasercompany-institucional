@@ -10,9 +10,9 @@
    Na PRIMEIRA escrita, a lista atual (env/demo) vira a base, para
    os logins existentes continuarem funcionando.
    ============================================================ */
-const { readBody, sendJson, requireAuth } = require('./_lib/http');
-const { getConfig, setConfig, hasSupabase } = require('./_lib/config');
-const { gerarHash, USERS } = require('./_lib/auth');
+const { readBody, sendJson, requireAuth } = require('../_lib/http');
+const { getConfig, setConfig, hasSupabase } = require('../_lib/config');
+const { gerarHash, USERS } = require('../_lib/auth');
 
 function publicos(list) {
   return (list || []).map((u) => ({ email: u.email, nome: u.nome, role: u.role, unidadeId: u.unidadeId || null }));

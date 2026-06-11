@@ -4,8 +4,8 @@
    função site_trafego_stats (tabela site_pageviews).
    Sem Supabase: { trafego: null } e o painel mostra estado vazio.
    ============================================================ */
-const { sendJson, requireAuth } = require('./_lib/http');
-const { hasSupabase } = require('./_lib/config');
+const { sendJson, requireAuth } = require('../_lib/http');
+const { hasSupabase } = require('../_lib/config');
 
 module.exports = async (req, res) => {
   const auth = requireAuth(req, res);

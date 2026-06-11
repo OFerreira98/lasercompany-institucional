@@ -6,8 +6,8 @@
    O painel usa isso para esconder o selo "Demonstração" e o
    bloco de acessos de teste quando a produção está ligada.
    ============================================================ */
-const { sendJson } = require('./_lib/http');
-const { getStore } = require('./_lib/store');
+const { sendJson } = require('../_lib/http');
+const { getStore } = require('../_lib/store');
 
 module.exports = async (req, res) => {
   if (req.method !== 'GET') return sendJson(res, 405, { error: 'metodo_nao_permitido' });

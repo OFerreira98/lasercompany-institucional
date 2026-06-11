@@ -7,8 +7,8 @@
    - GET  => { equipe: [...] }
    - PUT  => substitui a lista { equipe: [{nome, email, funcao}] }
    ============================================================ */
-const { readBody, sendJson, requireAuth } = require('./_lib/http');
-const { getConfig, setConfig } = require('./_lib/config');
+const { readBody, sendJson, requireAuth } = require('../_lib/http');
+const { getConfig, setConfig } = require('../_lib/config');
 
 module.exports = async (req, res) => {
   const auth = requireAuth(req, res);

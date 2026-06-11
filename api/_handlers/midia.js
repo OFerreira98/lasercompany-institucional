@@ -6,8 +6,8 @@
    Limite ~4MB (payload das functions). Vídeos maiores: fase 3,
    com URL assinada de upload direto do navegador.
    ============================================================ */
-const { readBody, sendJson, requireAuth } = require('./_lib/http');
-const { hasSupabase } = require('./_lib/config');
+const { readBody, sendJson, requireAuth } = require('../_lib/http');
+const { hasSupabase } = require('../_lib/config');
 
 const MAX_BYTES = 4 * 1024 * 1024;
 const MIMES = {

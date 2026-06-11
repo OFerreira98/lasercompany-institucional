@@ -7,8 +7,8 @@
    Persistência: tabela site_config (key 'promocoes'); em demo
    (sem Supabase) vale só durante a instância.
    ============================================================ */
-const { readBody, sendJson, requireAuth } = require('./_lib/http');
-const { getConfig, setConfig } = require('./_lib/config');
+const { readBody, sendJson, requireAuth } = require('../_lib/http');
+const { getConfig, setConfig } = require('../_lib/config');
 
 module.exports = async (req, res) => {
   const auth = requireAuth(req, res);
