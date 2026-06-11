@@ -162,6 +162,21 @@ Fase 2 do backend (spec no PDF `1780540080493_Laser-Co-Backend-Fase2-DEV.pdf`, n
      viewAjuda) e _manual-admin.html (dev-only, gitignored). Preview ATUALIZADO com
      tudo: https://lasercompany-preview.vercel.app
 
+11. **API CONSOLIDADA EM 1 SERVERLESS FUNCTION (11/06 madrugada, limite do plano Hobby):**
+   o deploy passou a falhar com "No more than 12 Serverless Functions" (tínhamos 16).
+   Solução: **`api/router.js`** (única function) + rewrite no `vercel.json`
+   (`/api/:rota*` → `/api/router`); os handlers viraram módulos em **`api/_handlers/`**
+   (pasta com `_` não vira function). Endpoint novo = módulo em _handlers + 1 linha no
+   mapa ROTAS do router. PEGADINHAS descobertas: catch-all dinâmico (`[...path].js`)
+   NÃO roteia caminhos de 2 níveis em functions puras; o param do rewrite não pode se
+   chamar `path` (colide com `?path=` do GET /api/curriculos → renomeado `:rota`).
+   Smoke de 18 endpoints no preview: 18/18.
+   **EVENTO IMPORTANTE: alguém (provável dashboard do usuário) APAGOU as envs dos DOIS
+   projetos Vercel e os deployments antigos do institucional** — a URL pública padrão
+   virou `-dusky` e a `-six` morreu; recriei as 4 envs nos dois projetos e RE-REGISTREI
+   o domínio `lasercompany-institucional-six.vercel.app` no projeto (voltou a funcionar,
+   links preservados). Produção validada de ponta a ponta após tudo isso.
+
 **RESTA da Fase 2 (backend):** item 8 (domínio definitivo: decisão do cliente + acesso ao
 DNS). **Telas que leem do data.js do site (não é mock):** cadastro de unidades e vagas
 abertas (são o conteúdo real do site). **Segurança:** token do Supabase usado na sessão
