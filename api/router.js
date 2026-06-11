@@ -36,13 +36,13 @@ const leadsId = require('./_handlers/leads-id');
 module.exports = async (req, res) => {
   // Os segmentos podem vir em req.query.path (array OU string "a/b").
   // Fallback robusto: extrai do próprio req.url.
-  let segs = (req.query && req.query.path) || [];
+  let segs = (req.query && req.query.rota) || [];
   if (typeof segs === 'string') segs = segs.split('/').filter(Boolean);
   if (!segs.length) {
     const pathname = String(req.url || '').split('?')[0];
     segs = pathname.replace(/^\/?api\/?/, '').split('/').filter(Boolean).map(decodeURIComponent);
   }
-  if (req.query) delete req.query.path; // não colidir com ?path= dos handlers
+  if (req.query) delete req.query.rota; // param interno do rewrite, não vaza pros handlers
   const rota = segs.join('/');
 
   try {

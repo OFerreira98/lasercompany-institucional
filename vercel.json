@@ -45,7 +45,7 @@
   ],
   "rewrites": [
     {
-      "source": "/api/:path*",
+      "source": "/api/:rota*",
       "destination": "/api/router"
     }
   ]
