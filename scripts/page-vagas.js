@@ -86,12 +86,12 @@
           <textarea id="vg-msg" name="mensagem" class="textarea" rows="4" maxlength="500"></textarea>
         </div>
         <div class="field">
-          <label class="field-label">Currículo (PDF, DOC) <span class="required">*</span></label>
+          <label class="field-label">Currículo (PDF, DOC), opcional</label>
           <div class="file-field">
-            <input type="file" id="vg-cv" name="curriculo" accept=".pdf,.doc,.docx" required>
+            <input type="file" id="vg-cv" name="curriculo" accept=".pdf,.doc,.docx">
             <div class="file-label"><span class="file-link">Clique para enviar</span> ou arraste o arquivo aqui</div>
           </div>
-          <div class="field-error">Anexe seu currículo (PDF ou DOC).</div>
+
         </div>
         <label class="checkbox-field">
           <input type="checkbox" id="vg-consent" required>

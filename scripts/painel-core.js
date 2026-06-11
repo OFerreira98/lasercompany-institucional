@@ -51,6 +51,7 @@ window.LaserPainel = (function () {
     aparencia: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 100 18c1.2 0 2-.9 2-2 0-.6-.2-1-.5-1.4-.3-.4-.5-.8-.5-1.4 0-1.1.9-2 2-2h2.3A4.7 4.7 0 0021 9.8C20 5.9 16.3 3 12 3z"/><circle cx="7.5" cy="11" r="1" fill="currentColor"/><circle cx="10.5" cy="7.5" r="1" fill="currentColor"/><circle cx="15" cy="7.5" r="1" fill="currentColor"/></svg>',
     config: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h10M18 8h2M4 16h2M10 16h10"/><circle cx="16" cy="8" r="2.2"/><circle cx="8" cy="16" r="2.2"/></svg>',
     edicao: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>',
+    ajuda: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.6"/><path d="M5.7 5.7l3.2 3.2M15.1 15.1l3.2 3.2M18.3 5.7l-3.2 3.2M8.9 15.1l-3.2 3.2"/></svg>',
   };
   const MENU_FRANQUEADOR = [
     { id: 'visao-geral', ico: 'home', label: 'Visão Geral' },
@@ -86,6 +87,10 @@ window.LaserPainel = (function () {
       { id: 'edicao-popup', label: 'Pop-up do brinde' },
       { id: 'edicao-sobre', label: 'Bloco Sobre' },
       { id: 'edicao-menu', label: 'Faixa do menu' },
+      { id: 'edicao-video', label: 'Vídeo da avaliação' },
+      { id: 'edicao-procedimentos', label: 'Procedimentos' },
+      { id: 'edicao-unidades', label: 'Fotos das unidades' },
+      { id: 'edicao-franqueado', label: 'Página do franqueado' },
     ] },
     { ico: 'aparencia', label: 'Aparência do site', children: [
       { id: 'aparencia-tema', label: 'Tema do site' },
@@ -95,6 +100,7 @@ window.LaserPainel = (function () {
       { id: 'config-usuarios', label: 'Usuários e permissões' },
       { id: 'config-conta', label: 'Conta' },
     ] },
+    { id: 'ajuda', ico: 'ajuda', label: 'Ajuda e Suporte' },
   ];
   const MENU_FRANQUEADO = [
     { id: 'visao-geral', ico: 'home', label: 'Visão Geral' },
@@ -115,6 +121,7 @@ window.LaserPainel = (function () {
       { id: 'equipe-logins', label: 'Logins de funcionário' },
     ] },
     { id: 'config-conta', ico: 'config', label: 'Minha conta' },
+    { id: 'ajuda', ico: 'ajuda', label: 'Ajuda e Suporte' },
   ];
 
   const VIEW_TITLE = {
@@ -131,9 +138,11 @@ window.LaserPainel = (function () {
     'aparencia-sazonais': 'Temas sazonais', 'config-usuarios': 'Usuários e permissões',
     'edicao-banners': 'Banners da home', 'edicao-popup': 'Pop-up do brinde',
     'edicao-sobre': 'Bloco Sobre', 'edicao-menu': 'Faixa do menu',
+    'edicao-video': 'Vídeo da avaliação', 'edicao-procedimentos': 'Procedimentos (conteúdo)',
+    'edicao-unidades': 'Fotos das unidades', 'edicao-franqueado': 'Página do franqueado',
     'config-conta': 'Minha conta', 'desemp-procedimento': 'Desempenho por procedimento',
     'desemp-periodo': 'Desempenho por período', 'desemp-rede': 'Comparação com a rede',
-    'equipe-logins': 'Logins de funcionário',
+    'equipe-logins': 'Logins de funcionário', 'ajuda': 'Ajuda e Suporte',
   };
   const VIEW_SUB = {
     'visao-geral': 'Panorama da captação de leads.',
@@ -145,6 +154,7 @@ window.LaserPainel = (function () {
     'demo': 'Perfil do público, calculado dos leads reais.',
     'config-usuarios': 'Acessos do painel, salvos no banco e válidos no login.',
     'config-conta': 'Seus dados de acesso e perfil.',
+    'ajuda': 'Abra chamados de suporte direto para a nossa equipe.',
   };
 
   let state = { session: null, mode: 'franqueador', all: [], filtered: [], dataMode: 'demo', presetTipos: null, currentView: 'visao-geral' };
@@ -1175,6 +1185,220 @@ window.LaserPainel = (function () {
     });
   }
 
+  function viewEdicaoVideo() {
+    if (!cmsGuard()) return;
+    setView('<div class="painel-empty">Carregando...</div>');
+    window.LaserAPI.getConteudo().then(function (c) {
+      setView(card('Vídeo da avaliação (home)', 'aparece ao lado do bloco "Marque sua avaliação", com play automático sem som',
+        (c.videoAvaliacao ? '<video src="' + esc(c.videoAvaliacao) + '" controls muted style="width:100%;max-width:420px;border-radius:8px;margin-bottom:var(--sp-4)"></video>' : '<div class="painel-empty">Nenhum vídeo enviado. O bloco fica só com o formulário, como hoje.</div>') +
+        '<div style="display:grid;gap:var(--sp-3);max-width:560px;margin-top:var(--sp-3)">' +
+        '<label class="btn btn-outline" style="justify-content:center">' + (c.videoAvaliacao ? 'Trocar vídeo' : '+ Enviar vídeo') + '<input type="file" id="cms-video-file" accept="video/mp4,video/webm" hidden></label>' +
+        cmsDica('<strong>MP4, vertical ou horizontal, até 50MB.</strong> Ideal: vídeo curto de experiência real de cliente (15 a 60s). Ele roda sem som no site, então precisa funcionar visualmente.') +
+        '<div class="det-actions">' + (c.videoAvaliacao ? '<button class="btn btn-outline" id="cms-video-rm" type="button">Remover vídeo</button>' : '') +
+        '<span id="cms-video-msg" style="font-size:var(--fs-sm)"></span></div></div>', true));
+      document.getElementById('cms-video-file').addEventListener('change', async function () {
+        var f = this.files && this.files[0]; if (!f) return;
+        var msg = document.getElementById('cms-video-msg');
+        if (f.size > 50 * 1024 * 1024) { msg.textContent = 'Vídeo acima de 50MB. Comprima antes de enviar.'; return; }
+        msg.textContent = 'Enviando vídeo (' + Math.round(f.size / 1024 / 1024) + 'MB)... não feche a página.';
+        try {
+          var url = await window.LaserAPI.uploadMidia(state.session, f);
+          await cmsSalvar({ videoAvaliacao: url }, msg);
+          router();
+        } catch (e) { if (e.status === 401) return logout(); msg.textContent = 'Falha no envio. Tente de novo.'; }
+      });
+      var rm = document.getElementById('cms-video-rm');
+      if (rm) rm.addEventListener('click', async function () {
+        await cmsSalvar({ videoAvaliacao: null }, document.getElementById('cms-video-msg'), this);
+        router();
+      });
+    });
+  }
+
+  function viewEdicaoProcedimentos() {
+    if (!cmsGuard()) return;
+    setView('<div class="painel-empty">Carregando procedimentos...</div>');
+    window.LaserAPI.getConteudo().then(function (c) {
+      var overrides = c.procedimentos || {};
+      var CATS = { estetica: 'Estética a Laser', depilacao: 'Depilação a Laser', ultrassom: 'Ultrassom' };
+      var todos = [];
+      Object.keys(CATS).forEach(function (cat) {
+        ((window.LaserData && window.LaserData.procedimentos && window.LaserData.procedimentos[cat]) || []).forEach(function (p) {
+          todos.push({ cat: cat, catLabel: CATS[cat], p: p });
+        });
+      });
+      function listaHTML(filtro) {
+        var f = (filtro || '').toLowerCase();
+        return todos.filter(function (x) { return !f || x.p.nome.toLowerCase().indexOf(f) >= 0; }).map(function (x) {
+          var ov = overrides[x.p.id];
+          return '<div class="painel-chart-card flush" style="display:flex;gap:var(--sp-3);align-items:center">' +
+            '<div style="flex:1"><strong>' + esc(x.p.nome) + '</strong><br><small class="muted">' + x.catLabel + (ov ? ' · editado' : '') + '</small></div>' +
+            '<button class="painel-act det" type="button" data-pe="' + esc(x.p.id) + '">Editar</button></div>';
+        }).join('') || '<div class="painel-empty">Nenhum procedimento com esse nome.</div>';
+      }
+      function tela() {
+        setView('<div class="painel-toolbar"><input id="pe-busca" class="painel-input" style="flex:1;max-width:380px" placeholder="Buscar procedimento..."></div>' +
+          '<div id="pe-form"></div><div id="pe-lista">' + listaHTML('') + '</div>');
+        document.getElementById('pe-busca').addEventListener('input', function () {
+          document.getElementById('pe-lista').innerHTML = listaHTML(this.value);
+          bindEditar();
+        });
+        bindEditar();
+      }
+      function bindEditar() {
+        document.querySelectorAll('[data-pe]').forEach(function (b) {
+          b.addEventListener('click', function () { abrirForm(b.dataset.pe); });
+        });
+      }
+      function abrirForm(id) {
+        var item = todos.filter(function (x) { return x.p.id === id; })[0];
+        if (!item) return;
+        var ov = overrides[id] || {};
+        var box = document.getElementById('pe-form');
+        box.innerHTML = card('Editar: ' + esc(item.p.nome), item.catLabel,
+          '<div style="display:grid;gap:var(--sp-4);max-width:640px">' +
+          '<div class="det-field"><label>Descrição curta (card)</label><textarea id="pe-sub" class="painel-textarea" rows="2" style="width:100%" placeholder="' + esc(item.p.sub || '') + '">' + esc(ov.sub || '') + '</textarea></div>' +
+          '<div class="det-field"><label>Foto</label>' + (ov.img || item.p.img ? '<img src="' + esc(ov.img || item.p.img) + '" style="width:200px;border-radius:8px;margin-bottom:6px">' : '') +
+          '<label class="btn btn-outline" style="justify-content:center;max-width:240px">Trocar foto<input type="file" id="pe-img" accept="image/jpeg,image/png,image/webp" hidden></label>' +
+          cmsDica('<strong>Ideal: 800 x 600px, JPG.</strong>') + '</div>' +
+          '<div class="det-field"><label>Vídeo do card (autoplay sem som)</label>' +
+          '<label class="btn btn-outline" style="justify-content:center;max-width:240px">' + (ov.video || item.p.video ? 'Trocar vídeo' : '+ Enviar vídeo') + '<input type="file" id="pe-video" accept="video/mp4,video/webm" hidden></label>' +
+          '<label class="perm-item" style="display:flex;gap:8px;align-items:center;margin-top:6px"><input type="checkbox" id="pe-sem-video"' + (ov.video === '' ? ' checked' : '') + '> Tirar o vídeo deste procedimento</label>' +
+          cmsDica('<strong>MP4 até 50MB.</strong> Curto (10 a 30s).') + '</div>' +
+          '<div class="det-actions"><button class="btn btn-primary" id="pe-save" type="button">Salvar</button>' +
+          '<button class="btn btn-outline" id="pe-reset" type="button">Voltar ao padrão</button>' +
+          '<button class="btn btn-outline" id="pe-cancel" type="button">Fechar</button>' +
+          '<span id="pe-msg" style="font-size:var(--fs-sm)"></span></div></div>', true);
+        box.scrollIntoView({ behavior: 'smooth' });
+        var imgNova, videoNovo;
+        document.getElementById('pe-img').addEventListener('change', async function () {
+          var f = this.files && this.files[0]; if (!f) return;
+          var msg = document.getElementById('pe-msg'); msg.textContent = 'Enviando foto...';
+          try { imgNova = await window.LaserAPI.uploadMidia(state.session, f); msg.textContent = 'Foto pronta. Clique em Salvar.'; }
+          catch (e) { if (e.status === 401) return logout(); msg.textContent = 'Falha no envio da foto.'; }
+        });
+        document.getElementById('pe-video').addEventListener('change', async function () {
+          var f = this.files && this.files[0]; if (!f) return;
+          var msg = document.getElementById('pe-msg');
+          if (f.size > 50 * 1024 * 1024) { msg.textContent = 'Vídeo acima de 50MB.'; return; }
+          msg.textContent = 'Enviando vídeo (' + Math.round(f.size / 1024 / 1024) + 'MB)...';
+          try { videoNovo = await window.LaserAPI.uploadMidia(state.session, f); msg.textContent = 'Vídeo pronto. Clique em Salvar.'; }
+          catch (e) { if (e.status === 401) return logout(); msg.textContent = 'Falha no envio do vídeo.'; }
+        });
+        document.getElementById('pe-cancel').addEventListener('click', function () { box.innerHTML = ''; });
+        document.getElementById('pe-reset').addEventListener('click', async function () {
+          delete overrides[id];
+          await cmsSalvar({ procedimentos: overrides }, document.getElementById('pe-msg'), this);
+          tela();
+        });
+        document.getElementById('pe-save').addEventListener('click', async function () {
+          var novo = {};
+          var sub = document.getElementById('pe-sub').value.trim();
+          if (sub) novo.sub = sub;
+          if (imgNova) novo.img = imgNova; else if (ov.img) novo.img = ov.img;
+          if (document.getElementById('pe-sem-video').checked) novo.video = '';
+          else if (videoNovo) novo.video = videoNovo; else if (ov.video) novo.video = ov.video;
+          if (Object.keys(novo).length) overrides[id] = novo; else delete overrides[id];
+          await cmsSalvar({ procedimentos: overrides }, document.getElementById('pe-msg'), this);
+          tela();
+        });
+      }
+      tela();
+    });
+  }
+
+  function viewEdicaoUnidades() {
+    if (!cmsGuard()) return;
+    setView('<div class="painel-empty">Carregando unidades...</div>');
+    window.LaserAPI.getConteudo().then(function (c) {
+      var fotos = c.unidadesFotos || {};
+      var us = ((window.LaserData && window.LaserData.unidades) || []).slice().sort(function (a, b) { return a.nome.localeCompare(b.nome); });
+      function listaHTML(filtro) {
+        var f = (filtro || '').toLowerCase();
+        return us.filter(function (u) { return !f || (u.nome + ' ' + u.cidade + ' ' + u.uf).toLowerCase().indexOf(f) >= 0; }).map(function (u) {
+          var foto = fotos[u.id] !== undefined ? fotos[u.id] : (u.foto || '');
+          return '<div class="painel-chart-card flush" style="display:flex;gap:var(--sp-3);align-items:center">' +
+            (foto ? '<img src="' + esc(foto) + '" style="width:110px;height:62px;object-fit:cover;border-radius:6px;flex-shrink:0">' : '<div style="width:110px;height:62px;border-radius:6px;background:var(--color-surface);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0">sem foto</div>') +
+            '<div style="flex:1"><strong>' + esc(u.nome) + '</strong><br><small class="muted">' + esc(u.cidade) + '/' + esc(u.uf) + (fotos[u.id] !== undefined ? ' · editada' : '') + '</small></div>' +
+            '<label class="painel-act det" style="cursor:pointer">Trocar foto<input type="file" data-uf="' + esc(u.id) + '" accept="image/jpeg,image/png,image/webp" hidden></label>' +
+            (fotos[u.id] !== undefined ? '<button class="painel-act" type="button" data-uf-reset="' + esc(u.id) + '">Padrão</button>' : '') +
+            '</div>';
+        }).join('');
+      }
+      function tela() {
+        setView('<div class="painel-toolbar"><input id="uf-busca" class="painel-input" style="flex:1;max-width:380px" placeholder="Buscar unidade..."><span id="uf-msg" style="font-size:var(--fs-sm)"></span></div>' +
+          cmsDica('<strong>Foto da fachada REAL da unidade (regra da marca: nunca imagem genérica). Ideal: 1200 x 800px, JPG, até 4MB.</strong>') +
+          '<div id="uf-lista" style="margin-top:var(--sp-3)">' + listaHTML('') + '</div>');
+        document.getElementById('uf-busca').addEventListener('input', function () {
+          document.getElementById('uf-lista').innerHTML = listaHTML(this.value);
+          bind();
+        });
+        bind();
+      }
+      function bind() {
+        document.querySelectorAll('input[data-uf]').forEach(function (inp) {
+          inp.addEventListener('change', async function () {
+            var f = inp.files && inp.files[0]; if (!f) return;
+            var msg = document.getElementById('uf-msg'); msg.textContent = 'Enviando foto...';
+            try {
+              var url = await window.LaserAPI.uploadMidia(state.session, f);
+              fotos[inp.dataset.uf] = url;
+              await cmsSalvar({ unidadesFotos: fotos }, msg);
+              tela();
+            } catch (e) { if (e.status === 401) return logout(); msg.textContent = 'Falha no envio.'; }
+          });
+        });
+        document.querySelectorAll('[data-uf-reset]').forEach(function (b) {
+          b.addEventListener('click', async function () {
+            delete fotos[b.dataset.ufReset];
+            await cmsSalvar({ unidadesFotos: fotos }, document.getElementById('uf-msg'), this);
+            tela();
+          });
+        });
+      }
+      tela();
+    });
+  }
+
+  /* ---------------- AJUDA E SUPORTE ----------------
+     Embute o widget de chamados do nosso sistema de suporte (SupraDesk).
+     O cliente abre ticket sem sair do painel. */
+  var SUPORTE_EMBED = 'https://supradesk.vercel.app/embed/support/751b2d91-d709-452c-a5cc-31c4e59a10c5';
+  function viewAjuda() {
+    state.presetTipos = null;
+    setView(card('Ajuda e suporte', 'abra um chamado direto para a nossa equipe',
+      '<p class="painel-sub" style="margin:0 0 var(--sp-4)">Precisa de ajuda, encontrou um problema ou quer sugerir algo? Use o formulário abaixo para abrir um chamado. Nossa equipe recebe na hora e responde por aqui.</p>' +
+      '<iframe src="' + SUPORTE_EMBED + '" title="Suporte" loading="lazy" style="width:100%;height:72vh;min-height:640px;border:0;border-radius:12px;background:#FFFFFF"></iframe>', true));
+  }
+
+  function viewEdicaoFranqueado() {
+    if (!cmsGuard()) return;
+    setView('<div class="painel-empty">Carregando...</div>');
+    window.LaserAPI.getConteudo().then(function (c) {
+      setView(card('Foto da fachada (Posicionamento único)', 'imagem à direita do bloco "A única rede com 3 frentes"',
+        '<img src="' + esc(c.franqueadoFachada || 'assets/img/unidades/botafogo-praia-shopping-rio-de-janeiro-rj.jpg') + '" style="width:100%;max-width:380px;border-radius:8px;margin-bottom:var(--sp-3)">' +
+        '<div style="display:grid;gap:var(--sp-3);max-width:560px">' +
+        '<label class="btn btn-outline" style="justify-content:center;max-width:280px">Trocar foto<input type="file" id="cms-fr-fachada" accept="image/jpeg,image/png,image/webp" hidden></label>' +
+        cmsDica('<strong>Foto REAL de fachada (regra da marca). Ideal: 1200 x 900px, JPG, até 4MB.</strong>') +
+        '<div class="det-actions">' + (c.franqueadoFachada ? '<button class="btn btn-outline" id="cms-fr-reset" type="button">Voltar ao padrão</button>' : '') +
+        '<span id="cms-fr-msg" style="font-size:var(--fs-sm)"></span></div></div>', true));
+      document.getElementById('cms-fr-fachada').addEventListener('change', async function () {
+        var f = this.files && this.files[0]; if (!f) return;
+        var msg = document.getElementById('cms-fr-msg'); msg.textContent = 'Enviando foto...';
+        try {
+          var url = await window.LaserAPI.uploadMidia(state.session, f);
+          await cmsSalvar({ franqueadoFachada: url }, msg);
+          router();
+        } catch (e) { if (e.status === 401) return logout(); msg.textContent = 'Falha no envio.'; }
+      });
+      var rs = document.getElementById('cms-fr-reset');
+      if (rs) rs.addEventListener('click', async function () {
+        await cmsSalvar({ franqueadoFachada: null }, document.getElementById('cms-fr-msg'), this);
+        router();
+      });
+    });
+  }
+
   const VIEWS = {
     'visao-geral': viewVisaoGeral,
     'leads-todos': function () { viewLeads({}); },
@@ -1206,6 +1430,11 @@ window.LaserPainel = (function () {
     'edicao-popup': viewEdicaoPopup,
     'edicao-sobre': viewEdicaoSobre,
     'edicao-menu': viewEdicaoMenu,
+    'edicao-video': viewEdicaoVideo,
+    'edicao-procedimentos': viewEdicaoProcedimentos,
+    'edicao-unidades': viewEdicaoUnidades,
+    'edicao-franqueado': viewEdicaoFranqueado,
+    'ajuda': viewAjuda,
   };
 
   /* ---------------- sidebar + roteador ---------------- */

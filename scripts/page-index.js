@@ -88,16 +88,22 @@
     }
   }
 
+  /* Depoimentos em CARROSSEL com estrelas estilo avaliação do Google
+     (reunião Will 09/06): bloco fixo, ~4 visíveis no desktop, navegação
+     por setas + avanço automático. */
   function renderDepoimentos() {
     const grid = document.getElementById('depoimentos-grid');
     if (!grid) return;
-    grid.innerHTML = window.LaserData.depoimentos.map(d => {
+    const estrelas = '<div class="depoimento-estrelas" aria-label="5 de 5 estrelas">' +
+      '<span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>';
+    const cards = window.LaserData.depoimentos.map(d => {
       const initials = d.nome.split(' ').map(w => w[0]).slice(0, 2).join('');
       const avatar = d.foto
         ? `<div class="depoimento-avatar depoimento-avatar-photo" style="background-image:url('${d.foto}'); background-position:${d.fotoPos || 'center 30%'};" aria-hidden="true"></div>`
         : `<div class="depoimento-avatar" aria-hidden="true">${initials}</div>`;
       return `
         <article class="depoimento-card">
+          ${estrelas}
           <p class="depoimento-texto">${d.texto}</p>
           <div class="depoimento-autor">
             ${avatar}
@@ -109,6 +115,35 @@
         </article>
       `;
     }).join('');
+
+    grid.classList.remove('grid', 'grid-2');
+    grid.classList.add('depo-carrossel');
+    grid.innerHTML =
+      `<button class="depo-seta depo-seta-prev" type="button" aria-label="Depoimento anterior">‹</button>` +
+      `<div class="depo-viewport"><div class="depo-track">${cards}</div></div>` +
+      `<button class="depo-seta depo-seta-next" type="button" aria-label="Próximo depoimento">›</button>`;
+
+    const track = grid.querySelector('.depo-track');
+    const total = window.LaserData.depoimentos.length;
+    let idx = 0;
+    let auto = null;
+    function porTela() { return window.innerWidth <= 700 ? 1 : (window.innerWidth <= 1024 ? 2 : 4); }
+    function go(to) {
+      const max = Math.max(0, total - porTela());
+      idx = (to < 0) ? max : (to > max ? 0 : to);
+      const card = track.children[0];
+      if (!card) return;
+      const step = card.getBoundingClientRect().width + parseFloat(getComputedStyle(track).gap || 16);
+      track.style.transform = 'translateX(' + (-idx * step) + 'px)';
+    }
+    function restartAuto() {
+      if (auto) clearInterval(auto);
+      auto = setInterval(() => go(idx + 1), 5000);
+    }
+    grid.querySelector('.depo-seta-prev').addEventListener('click', () => { go(idx - 1); restartAuto(); });
+    grid.querySelector('.depo-seta-next').addEventListener('click', () => { go(idx + 1); restartAuto(); });
+    window.addEventListener('resize', () => go(idx));
+    restartAuto();
   }
 
   /* ---------- HERO CARROSSEL ---------- */

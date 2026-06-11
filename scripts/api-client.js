@@ -204,23 +204,21 @@ window.LaserAPI = (function () {
   function saveConteudo(session, patch) {
     return authSend(session, '/conteudo', 'PUT', { conteudo: patch });
   }
-  function uploadMidia(session, file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onerror = () => reject(new Error('leitura'));
-      reader.onload = async () => {
-        try {
-          const base64 = String(reader.result).split(',')[1] || '';
-          const j = await tryFetch('/midia', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + session.token },
-            body: JSON.stringify({ nome: file.name, mime: file.type, base64: base64 }),
-          });
-          resolve(j.url);
-        } catch (e) { reject(e); }
-      };
-      reader.readAsDataURL(file);
+  /* Upload de mídia: pede URL assinada ao backend e sobe DIRETO no
+     Storage (vale pra imagem e vídeo, até 50MB, sem limite da function). */
+  async function uploadMidia(session, file) {
+    const sign = await tryFetch('/midia', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + session.token },
+      body: JSON.stringify({ nome: file.name, mime: file.type, sign: true }),
     });
+    const up = await fetch(sign.uploadUrl, {
+      method: 'PUT',
+      headers: { 'Content-Type': file.type, 'x-upsert': 'false' },
+      body: file,
+    });
+    if (!up.ok) { const err = new Error('upload_' + up.status); err.status = up.status; throw err; }
+    return sign.url;
   }
 
   async function getConta(session) {

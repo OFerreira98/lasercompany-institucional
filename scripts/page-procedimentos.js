@@ -266,11 +266,42 @@
     `).join('');
   }
 
+  /* Lupa de busca (reunião Will): filtra os cards das 3 frentes ao
+     mesmo tempo, sem depender de rolagem nem da aba ativa. */
+  function bindBusca() {
+    const input = document.getElementById('proc-busca-input');
+    const vazio = document.getElementById('proc-busca-vazio');
+    if (!input) return;
+    const norm = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    input.addEventListener('input', () => {
+      const q = norm(input.value.trim());
+      const panels = document.querySelectorAll('.tab-panel');
+      if (!q) {
+        panels.forEach((p) => p.classList.remove('busca-mostrar'));
+        document.querySelectorAll('.procedimento-card').forEach((c) => { c.style.display = ''; });
+        if (vazio) vazio.hidden = true;
+        return;
+      }
+      let achados = 0;
+      panels.forEach((p) => {
+        if (!p.querySelector('.procedimento-card')) return; // painel de tecnologia etc.
+        p.classList.add('busca-mostrar');
+        p.querySelectorAll('.procedimento-card').forEach((c) => {
+          const hit = norm(c.textContent).indexOf(q) >= 0;
+          c.style.display = hit ? '' : 'none';
+          if (hit) achados++;
+        });
+      });
+      if (vazio) vazio.hidden = achados > 0;
+    });
+  }
+
   function init() {
     renderGrid('estetica');
     renderGrid('depilacao');
     renderGrid('ultrassom');
     renderTech();
+    bindBusca();
 
     activateTab(getActiveTabFromURL());
 
@@ -293,9 +324,16 @@
     }
   }
 
+  // CMS: espera o conteúdo editado (máx ~1.2s) antes de renderizar,
+  // pra fotos/vídeos/descrições do painel já entrarem na primeira pintura.
+  function initComConteudo() {
+    if (window.LaserConteudo && window.LaserConteudo.ready) window.LaserConteudo.ready.then(init);
+    else init();
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', initComConteudo);
   } else {
-    init();
+    initComConteudo();
   }
 })();

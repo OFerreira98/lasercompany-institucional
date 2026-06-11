@@ -29,9 +29,50 @@ window.LaserConteudo = (function () {
 
   function get() { return _data || {}; }
 
+  /* Merge nos DADOS (data.js), independente de DOM: procedimentos
+     (descrição/foto/vídeo) e fotos de unidades editados no painel. */
+  function aplicarDados() {
+    const c = get();
+    const pmap = c.procedimentos || {};
+    if (window.LaserData && window.LaserData.procedimentos) {
+      Object.keys(window.LaserData.procedimentos).forEach(function (cat) {
+        (window.LaserData.procedimentos[cat] || []).forEach(function (p) {
+          const o = pmap[p.id];
+          if (!o) return;
+          if (o.sub) p.sub = o.sub;
+          if (o.img) p.img = o.img;
+          if (o.video) p.video = o.video;
+          if (o.video === '') delete p.video; // '' = tirar o vídeo
+        });
+      });
+    }
+    const umap = c.unidadesFotos || {};
+    if (window.LaserData && Array.isArray(window.LaserData.unidades)) {
+      window.LaserData.unidades.forEach(function (u) {
+        if (umap[u.id]) u.foto = umap[u.id];
+        if (umap[u.id] === '') delete u.foto; // '' = voltar ao placeholder
+      });
+    }
+  }
+
   /* Aplica os overrides que não dependem de página específica. */
   function aplicarGlobais() {
     const c = get();
+    // Vídeo ao lado do "Marque sua Avaliação" (home), autoplay sem som
+    if (c.videoAvaliacao) {
+      const cardAg = document.querySelector('#agendamento-curto .agendamento-curto-card');
+      if (cardAg && !cardAg.querySelector('.ag-video')) {
+        const wrap = document.createElement('div');
+        wrap.className = 'ag-conteudo';
+        while (cardAg.firstChild) wrap.appendChild(cardAg.firstChild);
+        const vid = document.createElement('div');
+        vid.className = 'ag-video';
+        vid.innerHTML = '<video src="' + c.videoAvaliacao + '" autoplay muted loop playsinline preload="metadata"></video>';
+        cardAg.appendChild(vid);
+        cardAg.appendChild(wrap);
+        cardAg.classList.add('com-video');
+      }
+    }
     // Cor da faixa do menu (presets seguros pela regra 10)
     if (c.menuCor === 'branco' || c.menuCor === 'vinho') {
       const aplica = () => {
@@ -40,6 +81,11 @@ window.LaserConteudo = (function () {
         else setTimeout(aplica, 150);
       };
       aplica();
+    }
+    // Foto da fachada no "Posicionamento único" (página franqueado)
+    if (c.franqueadoFachada) {
+      const fimg = document.getElementById('frlp-fachada-img');
+      if (fimg) fimg.src = c.franqueadoFachada;
     }
     // Bloco Sobre da home
     const sobre = c.sobre || {};
@@ -70,6 +116,7 @@ window.LaserConteudo = (function () {
   }
 
   ready.then(() => {
+    aplicarDados();
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', aplicarGlobais);
     } else {

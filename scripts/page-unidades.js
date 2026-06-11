@@ -280,9 +280,16 @@
     document.getElementById('cidade-filter').addEventListener('change', applyFilters);
   }
 
+  // CMS: espera o conteúdo editado (máx ~1.2s) antes de renderizar,
+  // pra fotos/vídeos/descrições do painel já entrarem na primeira pintura.
+  function initComConteudo() {
+    if (window.LaserConteudo && window.LaserConteudo.ready) window.LaserConteudo.ready.then(init);
+    else init();
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', initComConteudo);
   } else {
-    init();
+    initComConteudo();
   }
 })();
