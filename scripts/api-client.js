@@ -198,7 +198,8 @@ window.LaserAPI = (function () {
   function deleteUsuario(session, email) { return authSend(session, '/usuarios?email=' + encodeURIComponent(email), 'DELETE'); }
   /* ---------- CMS: conteúdo editável do site ---------- */
   async function getConteudo() {
-    try { return (await tryFetch('/conteudo')).conteudo || {}; }
+    // cache-buster: garante leitura fresca logo após salvar
+    try { return (await tryFetch('/conteudo?t=' + Date.now())).conteudo || {}; }
     catch (e) { return {}; }
   }
   function saveConteudo(session, patch) {

@@ -15,11 +15,9 @@ module.exports = async (req, res) => {
   if (req.method === 'GET') {
     try {
       const conteudo = (await getConfig('conteudo')) || {};
-      // cache curtinho: o conteúdo muda pouco, mas edição precisa refletir rápido
-      res.setHeader('Cache-Control', 'public, max-age=60, must-revalidate');
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'application/json; charset=utf-8');
-      return res.end(JSON.stringify({ conteudo: conteudo }));
+      // SEM cache: edição no painel precisa refletir na hora (cache de 60s
+      // fazia o painel reler versão velha e parecer que nada salvava).
+      return sendJson(res, 200, { conteudo: conteudo });
     } catch (e) {
       console.error('[conteudo] erro ao ler:', e && e.message);
       return sendJson(res, 200, { conteudo: {} }); // site nunca quebra por causa do CMS
