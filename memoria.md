@@ -142,14 +142,25 @@ Fase 2 do backend (spec no PDF `1780540080493_Laser-Co-Backend-Fase2-DEV.pdf`, n
      Projeto Vercel `lasercompany-preview` agora tem as MESMAS envs da produção
      (env add precisa de `--value`, stdin não funciona no CLI 54). Dados de teste do
      CMS APAGADOS depois da validação (site_config 'conteudo' + banner no Storage).
-   - **PRÓXIMAS FASES (ver MUDANCAS-REUNIAO-WILL.md):** FASE 3 = lupa busca
-     procedimentos + procedimentos editáveis (foto/vídeo/descrição) + fotos unidades
-     editáveis (TIRAR fotos com Anitta!) + vídeo autoplay ao lado do "Marque sua
-     Avaliação" (upload; >4MB exige signed upload direto do navegador) + depoimentos
-     carrossel fixo ~4 itens com ESTRELAS estilo Google. FASE 4 = franqueado (header
-     branco, banners editáveis, posicionamento único = texto esq + foto fachada dir,
-     caixas cinza, foto do Rafael na história de sucesso) + vagas (currículo OPCIONAL,
-     botão Banco de Talentos → WhatsApp RH). Todo upload mostra tamanho ideal.
+   - **FASES 3 e 4 TAMBÉM FEITAS (entraram no commit 925602d, junto com o trabalho
+     paralelo do Mateus de Ajuda/SupraDesk):**
+     FASE 3: lupa de busca em Procedimentos (filtra as 3 frentes, validada por DOM:
+     melasma → 1 card, inexistente → vazio, limpar → 49); depoimentos em CARROSSEL
+     (4/2/1 por viewport) com ESTRELAS douradas estilo Google + setas + auto 5s;
+     vídeo da avaliação editável (autoplay sem som ao lado do CTA, tela no painel);
+     UPLOAD POR URL ASSINADA (até 50MB direto do navegador; bucket site-conteudo
+     subiu pra 50MB; api/midia modo sign); procedimentos editáveis (sub/foto/vídeo
+     por id em conteudo.procedimentos, telas com busca no painel); fotos de unidades
+     editáveis (conteudo.unidadesFotos; Will troca as que têm Anitta).
+     FASE 4: vagas com currículo OPCIONAL; franqueado com header BRANCO (frlp-header,
+     que é header próprio da LP, não o site-header!), posicionamento único = texto +
+     cards em escada à esquerda e foto REAL de fachada à direita (editável,
+     conteudo.franqueadoFachada, tela "Página do franqueado"), caixas de números do
+     hero clean no tema novo, história de sucesso com foto SOLO do Rafael
+     (rafael-estevez.jpg no lugar do casal).
+     OBS: sessão paralela do Mateus adicionou painel "Ajuda e Suporte" (SupraDesk,
+     viewAjuda) e _manual-admin.html (dev-only, gitignored). Preview ATUALIZADO com
+     tudo: https://lasercompany-preview.vercel.app
 
 **RESTA da Fase 2 (backend):** item 8 (domínio definitivo: decisão do cliente + acesso ao
 DNS). **Telas que leem do data.js do site (não é mock):** cadastro de unidades e vagas
