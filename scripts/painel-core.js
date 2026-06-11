@@ -1419,24 +1419,170 @@ window.LaserPainel = (function () {
     });
   }
 
-  /* ---------------- TOUR GUIADO (JS puro, sem dependencia) ----------------
-     Spotlight (anel fixo com box-shadow gigante) + balao com Proximo/Voltar.
-     Os passos miram elementos que sempre existem (menu, topo, conteudo).
-     Roda nos dois paineis: os passos de menu casam por texto do rotulo. */
-  var TOUR_KEY = 'laserco_tour_done';
-  var _tour = { i: 0, steps: [], ring: null, pop: null, onMove: null };
-  function tourSteps() {
+  /* ---------------- TOUR GUIADO, TELA POR TELA (JS puro) ----------------
+     Cada tela tem o SEU tour, que destaca os elementos daquela tela.
+     Abre sozinho na 1a visita aquela tela (obrigatorio, sem X) e fica no
+     botao flutuante "Tour desta tela" para refazer (voluntario, com X).
+     Spotlight = anel fixo com box-shadow gigante; balao Proximo/Voltar.
+     Passos cujo elemento-alvo nao existe na hora sao pulados. */
+  var TOUR_PREFIX = 'laserco_tour_v_';
+  var _tour = { i: 0, steps: [], ring: null, pop: null, onMove: null, mandatory: false, tourId: null };
+
+  /* ---- catalogo de passos por tela (selectors dentro de #painel-view) ---- */
+  function leadsTour() {
     return [
-      { title: 'Bem-vindo ao seu painel', body: 'Vou te mostrar, em 1 minuto, onde fica cada coisa. Pode avançar com <strong>Próximo</strong> ou fechar no X a qualquer momento.' },
-      { sel: '#painel-nav', openSidebar: true, title: 'Menu lateral', body: 'Tudo começa por aqui. Cada item abre uma tela. Os que têm uma setinha <strong>▸</strong> abrem mais opções embaixo ao clicar.' },
-      { selLabel: 'Leads', openSidebar: true, title: 'Leads, o seu dia a dia', body: 'É a tela mais importante: a lista de contatos que o site captou. Daqui você liga no WhatsApp, muda o status e fecha negócio.' },
-      { sel: '[data-view="visao-geral"]', openSidebar: true, title: 'Visão Geral', body: 'O resumo da rede: números do mês, gráficos e os últimos contatos. Bom para bater o olho de manhã.' },
-      { sel: '#painel-view', title: 'Área de conteúdo', body: 'É aqui no centro que a tela escolhida aparece, com os números, gráficos, tabelas e formulários.' },
-      { sel: '#painel-logout', title: 'Sua conta e sair', body: 'No topo ficam o seu nome e o botão <strong>Sair</strong>. Sempre saia ao usar um computador que não é só seu.' },
-      { selLabel: 'Ajuda', openSidebar: true, title: 'Ajuda quando precisar', body: 'Volte sempre nesta tela para <strong>refazer este tour</strong>, ler o <strong>manual completo</strong> ou <strong>abrir um chamado</strong> com o nosso suporte.' },
-      { title: 'Pronto! Bom trabalho', body: 'Você já sabe se virar no painel. Qualquer dúvida, o manual e o suporte estão aqui na tela de Ajuda.' },
+      { intro: true, title: 'Seus leads', body: 'Esta é a lista dos contatos que o site capturou. Aqui é onde você trabalha todo dia. Vou mostrar cada parte.' },
+      { sel: '#painel-view .painel-kpis', title: 'Os números do topo', body: 'Um resumo rápido: total de contatos, recebidos hoje, quentes, agendamentos, candidaturas e convertidos.' },
+      { sel: '#painel-filtros', title: 'Filtros', body: 'Ache quem você quer: busque por nome/WhatsApp/cidade e filtre por tipo, status, unidade e período. Pode combinar vários.' },
+      { sel: '#painel-export', title: 'Exportar para planilha', body: 'Baixa em CSV (Excel) exatamente o que está filtrado na tela.' },
+      { sel: '#painel-view .painel-table thead', title: 'A tabela de contatos', body: 'Cada linha é um contato. Na coluna <strong>Status</strong> você muda a etapa; nas ações tem o <strong>WhatsApp</strong> (mensagem já pronta) e <strong>Detalhes</strong> (a ficha completa).' },
     ];
   }
+  function trafegoTour(titulo, descr) {
+    return function () {
+      return [
+        { intro: true, title: titulo, body: descr },
+        { sel: '#painel-view .painel-kpis', title: 'Os números', body: 'Estes quadradinhos vêm das visitas reais do site. Se o movimento for baixo, os números vêm baixos, é normal.' },
+        { sel: '#painel-view .painel-chart-card', title: 'Os detalhes', body: 'Logo abaixo, os gráficos e listas detalham essas informações.' },
+      ];
+    };
+  }
+  function edicaoTour(titulo, oque) {
+    return function () {
+      return [
+        { intro: true, title: titulo, body: 'Aqui você edita ' + oque + '. <strong>Isto muda o site de verdade</strong>, que o público vê.' },
+        { sel: '#painel-view .painel-chart-card', title: 'O que dá para mudar', body: 'Preencha os campos / envie as imagens deste bloco.' },
+        { sel: '#painel-view .det-actions', title: 'Salvar', body: 'Clique em <strong>Salvar</strong> para aplicar (o site reflete em até 1 minuto). <strong>Voltar ao padrão</strong> desfaz.' },
+      ];
+    };
+  }
+  var VIEW_TOURS = {
+    'visao-geral': function () {
+      return [
+        { intro: true, title: 'Visão Geral', body: 'Esta é a tela de abertura: o resumo da sua rede. Boa para bater o olho de manhã. Vou mostrar cada parte.' },
+        { sel: '#painel-view .painel-kpis', title: 'Os números do mês', body: 'Leads no mês (com a setinha de subiu/caiu vs. o mês passado), recebidos hoje, agendamentos e a taxa de conversão.' },
+        { sel: '#vg-line', title: 'Leads por dia', body: 'A linha mostra quantos contatos chegaram em cada dia dos últimos 30 dias. Subindo é bom.' },
+        { sel: '#vg-ranking', title: 'Ranking de unidades', body: 'As franquias que mais receberam contato no período.' },
+        { sel: '#vg-activity', title: 'Atividade recente', body: 'Os últimos contatos que chegaram, com nome, cidade, tipo e status.' },
+        { sel: '#vg-tipo', title: 'Gráficos de resumo', body: 'Leads por tipo, procedimentos mais procurados e de onde veio o público.' },
+      ];
+    },
+    'leads-todos': leadsTour, 'leads-popup': leadsTour, 'leads-agendamento': leadsTour,
+    'leads-recrutamento': leadsTour, 'recrut-candidatos': leadsTour,
+    'unidades-ranking': function () {
+      return [
+        { intro: true, title: 'Ranking de unidades', body: 'Mostra quais franquias mais recebem contatos, e quem precisa de ajuda.' },
+        { sel: '#painel-view .painel-kpis', title: 'Visão da rede', body: 'Leads na rede, quantas unidades já têm contato, média por unidade e cobertura (% da rede).' },
+        { sel: '#u-bar', title: 'Top 10', body: 'As 10 unidades campeãs em barras. Ao lado, o ranking completo.' },
+      ];
+    },
+    'unidades-mapa': function () {
+      return [
+        { intro: true, title: 'Mapa da rede', body: 'O Brasil com um pino em cada unidade.' },
+        { sel: '#painel-mapa', title: 'Os pinos', body: 'Quanto maior o pino, mais contatos a unidade teve. Clique num pino para ver o nome e o total.' },
+        { sel: '#uf-bar', title: 'Leads por estado', body: 'A distribuição dos contatos por estado.' },
+      ];
+    },
+    'unidades-cadastro': function () {
+      return [
+        { intro: true, title: 'Cadastro de unidades', body: 'A lista de todas as franquias da rede, para consulta.' },
+        { sel: '#painel-view .painel-table thead', title: 'A tabela', body: 'Nome, cidade, endereço e contato de cada unidade. É só leitura nesta versão.' },
+      ];
+    },
+    'trafego-tempo-real': trafegoTour('Tráfego em tempo real', 'O movimento de agora: quem está online, visitantes dos últimos minutos e leads da última hora.'),
+    'trafego-origem': trafegoTour('Origem dos visitantes', 'De onde as pessoas chegaram (Google, Instagram, link direto...).'),
+    'trafego-paginas': trafegoTour('Páginas mais visitadas', 'Quais páginas do site tiveram mais visitas.'),
+    'trafego-dispositivos': trafegoTour('Dispositivos', 'Quanto do público usa celular, computador ou tablet.'),
+    'demo': function () {
+      return [
+        { intro: true, title: 'Demográfico', body: 'O perfil do público, calculado dos contatos reais. Lembre: o gênero é uma <strong>estimativa pelo primeiro nome</strong>, não um dado exato.' },
+        { sel: '#painel-view .painel-kpis', title: 'Resumo', body: '% de público feminino estimado, horário de pico e quantos leads foram analisados.' },
+        { sel: '#demo-gen-don', title: 'Gênero e horários', body: 'Os gráficos detalham gênero, horário de contato e dia da semana com mais movimento.' },
+      ];
+    },
+    'promo-ativas': function () {
+      return [
+        { intro: true, title: 'Promoções ativas', body: 'As promoções que estão valendo agora no site.' },
+        { sel: '#painel-view .painel-grid-3', title: 'Os cartões', body: 'Cada cartão tem título, preço, validade e o botão <strong>Encerrar</strong> para tirar a promoção do ar.' },
+      ];
+    },
+    'promo-cadastrar': function () {
+      return [
+        { intro: true, title: 'Cadastrar promoção', body: 'Crie uma promoção nova que aparece para toda a rede.' },
+        { sel: '#promo-titulo', title: 'Preencha os dados', body: 'Título (obrigatório), preço promocional, preço original (riscado) e até quando vale.' },
+        { sel: '#promo-salvar', title: 'Salvar', body: 'Ao salvar, ela já aparece em "Promoções ativas" e no site.' },
+      ];
+    },
+    'promo-desempenho': function () {
+      return [
+        { intro: true, title: 'Desempenho por promoção', body: 'Mostra quantos contatos cada promoção gerou e qual foi a campeã. Aparece quando houver resgates.' },
+      ];
+    },
+    'recrut-vagas': function () {
+      return [
+        { intro: true, title: 'Vagas abertas', body: 'As vagas de emprego publicadas no site.' },
+        { sel: '#painel-view .painel-table thead', title: 'A tabela', body: 'Função, cidade, regime e se a vaga está em destaque. É só consulta.' },
+      ];
+    },
+    'config-usuarios': function () {
+      return [
+        { intro: true, title: 'Usuários e permissões', body: 'Aqui você controla quem pode entrar no painel.' },
+        { sel: '#u-novo', title: 'Convidar usuário', body: 'Crie um acesso novo: nome, e-mail (login), perfil (franqueador/franqueado), unidade e senha.' },
+        { sel: '#painel-view .painel-table thead', title: 'A lista de acessos', body: 'Cada linha tem <strong>Editar</strong> (troca dados/senha) e <strong>Remover</strong> (tira o acesso).' },
+      ];
+    },
+    'config-conta': function () {
+      return [
+        { intro: true, title: 'Minha conta', body: 'Seus dados de acesso.' },
+        { sel: '#painel-view .acct-head', title: 'Perfil e foto', body: 'Edite nome, telefone, cargo e coloque sua foto.' },
+        { sel: '#ac-s-save', title: 'Trocar a senha', body: 'Digite a senha atual e a nova (mínimo 8 caracteres) para trocar.' },
+      ];
+    },
+    'aparencia-tema': function () {
+      return [
+        { intro: true, title: 'Tema do site', body: 'Muda a cor base do <strong>site público</strong> (o painel continua sempre vinho/dourado).' },
+        { sel: '#painel-view .theme-grid', title: 'Escolha a cor', body: 'Clique num tema. Ele aplica na hora e marca "Ativo".' },
+      ];
+    },
+    'aparencia-sazonais': function () {
+      return [
+        { intro: true, title: 'Temas sazonais', body: 'Um toque de cor por data comemorativa (Dia das Mães, Outubro Rosa...) por cima da cor base.' },
+        { sel: '#painel-view .theme-grid', title: 'Escolha o acento', body: 'Clique para ativar. Use "Remover acento sazonal" para tirar.' },
+      ];
+    },
+    'edicao-banners': edicaoTour('Banners da home', 'os banners grandes do topo da página inicial'),
+    'edicao-popup': edicaoTour('Pop-up do brinde', 'o procedimento que aparece em destaque no pop-up'),
+    'edicao-sobre': edicaoTour('Bloco Sobre', 'o texto e a imagem do bloco "Sobre a Laser & Co" na home'),
+    'edicao-menu': edicaoTour('Faixa do menu', 'a cor da barra de menu em todas as páginas'),
+    'edicao-video': edicaoTour('Vídeo da avaliação', 'o vídeo que aparece na página de agendamento'),
+    'edicao-procedimentos': edicaoTour('Procedimentos', 'os textos e dados dos procedimentos'),
+    'edicao-unidades': edicaoTour('Fotos das unidades', 'as fotos de fachada de cada unidade'),
+    'desemp-procedimento': function () {
+      return [
+        { intro: true, title: 'Por procedimento', body: 'Seus leads agrupados pelo procedimento desejado.' },
+        { sel: '#painel-view .painel-chart-card', title: 'O gráfico', body: 'Os procedimentos mais procurados na sua unidade.' },
+      ];
+    },
+    'desemp-periodo': function () {
+      return [
+        { intro: true, title: 'Por período', body: 'Seus leads por dia nos últimos 30 dias.' },
+        { sel: '#painel-view .painel-chart-card', title: 'A linha', body: 'Acompanhe se a sua captação está subindo ou caindo.' },
+      ];
+    },
+    'desemp-rede': function () {
+      return [
+        { intro: true, title: 'Comparação com a rede', body: 'Compara os seus leads com a média por unidade da rede.' },
+        { sel: '#painel-view .painel-chart-card', title: 'As duas linhas', body: 'A cheia é a sua unidade; a pontilhada é a média da rede. Veja se está acima ou abaixo.' },
+      ];
+    },
+    'equipe-logins': function () {
+      return [
+        { intro: true, title: 'Equipe', body: 'Registre as pessoas da sua unidade.' },
+        { sel: '#painel-view .painel-form', title: 'Adicionar pessoa', body: 'Preencha nome, e-mail e função e clique em Adicionar. Dá para remover depois.' },
+      ];
+    },
+  };
+
   function tourTargetEl(step) {
     if (step.sel) return document.querySelector(step.sel);
     if (step.selLabel) {
@@ -1471,19 +1617,17 @@ window.LaserPainel = (function () {
   }
   function tourRender() {
     var step = _tour.steps[_tour.i], n = _tour.steps.length;
-    if (step.openSidebar && window.innerWidth <= 900) document.body.classList.add('sidebar-open');
-    else document.body.classList.remove('sidebar-open');
     var el = tourTargetEl(step);
     if (el && el.scrollIntoView) { try { el.scrollIntoView({ block: 'center', inline: 'nearest' }); } catch (e) {} }
     var dots = ''; for (var d = 0; d < n; d++) dots += '<span class="tour-dot' + (d === _tour.i ? ' on' : '') + '"></span>';
     _tour.pop.innerHTML =
-      '<button class="tour-x" type="button" aria-label="Fechar">&times;</button>' +
+      (_tour.mandatory ? '' : '<button class="tour-x" type="button" aria-label="Fechar">&times;</button>') +
       '<h4>' + esc(step.title) + '</h4><p>' + step.body + '</p>' +
       '<div class="tour-pop-foot"><div class="tour-dots">' + dots + '</div><div class="tour-btns">' +
       (_tour.i > 0 ? '<button class="tour-btn" data-tour-prev type="button">Voltar</button>' : '') +
       '<button class="tour-btn primary" data-tour-next type="button">' + (_tour.i + 1 === n ? 'Concluir' : 'Próximo') + '</button>' +
       '</div></div>';
-    _tour.pop.querySelector('.tour-x').onclick = tourEnd;
+    var x = _tour.pop.querySelector('.tour-x'); if (x) x.onclick = tourEnd;
     var nx = _tour.pop.querySelector('[data-tour-next]');
     if (nx) nx.onclick = function () { if (_tour.i + 1 === n) tourEnd(); else { _tour.i++; tourRender(); } };
     var pv = _tour.pop.querySelector('[data-tour-prev]');
@@ -1492,21 +1636,9 @@ window.LaserPainel = (function () {
     setTimeout(tourPosition, 240);
   }
   function tourKeyHandler(e) {
-    if (e.key === 'Escape') tourEnd();
+    if (e.key === 'Escape') { if (!_tour.mandatory) tourEnd(); }
     else if (e.key === 'ArrowRight') { if (_tour.i + 1 < _tour.steps.length) { _tour.i++; tourRender(); } }
     else if (e.key === 'ArrowLeft') { if (_tour.i > 0) { _tour.i--; tourRender(); } }
-  }
-  function startTour() {
-    if (_tour.ring) tourEnd();
-    _tour.steps = tourSteps(); _tour.i = 0;
-    _tour.ring = document.createElement('div'); _tour.ring.className = 'tour-ring hidden';
-    _tour.pop = document.createElement('div'); _tour.pop.className = 'tour-pop tour-pop-center';
-    document.body.appendChild(_tour.ring); document.body.appendChild(_tour.pop);
-    _tour.onMove = function () { tourPosition(); };
-    window.addEventListener('resize', _tour.onMove, true);
-    window.addEventListener('scroll', _tour.onMove, true);
-    document.addEventListener('keydown', tourKeyHandler);
-    tourRender();
   }
   function tourEnd() {
     if (_tour.ring) { _tour.ring.remove(); _tour.ring = null; }
@@ -1514,14 +1646,54 @@ window.LaserPainel = (function () {
     window.removeEventListener('resize', _tour.onMove, true);
     window.removeEventListener('scroll', _tour.onMove, true);
     document.removeEventListener('keydown', tourKeyHandler);
-    document.body.classList.remove('sidebar-open');
-    try { localStorage.setItem(TOUR_KEY, '1'); } catch (e) {}
+    if (_tour.tourId) { try { localStorage.setItem(TOUR_PREFIX + _tour.tourId, '1'); } catch (e) {} }
+    _tour.tourId = null; _tour.mandatory = false;
+    updateTourFab();
+  }
+  function startTour(steps, opts) {
+    opts = opts || {};
+    if (_tour.ring) tourEnd();
+    var list = (steps || []).filter(function (s) { return s.intro || (!s.sel && !s.selLabel) || tourTargetEl(s); });
+    if (!list.length) return false;
+    _tour.steps = list; _tour.i = 0; _tour.mandatory = !!opts.mandatory; _tour.tourId = opts.tourId || null;
+    _tour.ring = document.createElement('div'); _tour.ring.className = 'tour-ring hidden';
+    _tour.pop = document.createElement('div'); _tour.pop.className = 'tour-pop tour-pop-center';
+    document.body.appendChild(_tour.ring); document.body.appendChild(_tour.pop);
+    _tour.onMove = function () { tourPosition(); };
+    window.addEventListener('resize', _tour.onMove, true);
+    window.addEventListener('scroll', _tour.onMove, true);
+    document.addEventListener('keydown', tourKeyHandler);
+    updateTourFab();
+    tourRender();
+    return true;
+  }
+  function startViewTour(viewId, mandatory) {
+    var gen = VIEW_TOURS[viewId]; if (!gen) return false;
+    return startTour(gen(), { mandatory: !!mandatory, tourId: viewId });
+  }
+  function maybeAutoTour(viewId) {
+    if (!VIEW_TOURS[viewId]) return;
+    try { if (localStorage.getItem(TOUR_PREFIX + viewId)) return; } catch (e) { return; }
+    setTimeout(function () { if (state.currentView === viewId && !_tour.ring) startViewTour(viewId, true); }, 850);
+  }
+  /* botao flutuante "Tour desta tela" (re-run voluntario) */
+  function ensureTourFab() {
+    if (document.getElementById('painel-tour-fab')) return;
+    var b = document.createElement('button');
+    b.id = 'painel-tour-fab'; b.type = 'button'; b.className = 'painel-tour-fab'; b.style.display = 'none';
+    b.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg><span>Tour desta tela</span>';
+    b.addEventListener('click', function () { startViewTour(state.currentView, false); });
+    document.body.appendChild(b);
+  }
+  function updateTourFab() {
+    var b = document.getElementById('painel-tour-fab'); if (!b) return;
+    b.style.display = (VIEW_TOURS[state.currentView] && !_tour.ring) ? 'inline-flex' : 'none';
   }
 
   /* ---------------- AJUDA E SUPORTE ----------------
-     Junta numa tela: o tour guiado, o manual em PDF (ver/baixar) e o widget
-     de chamados do nosso sistema de suporte (SupraDesk). O manual completo
-     em PDF e do painel do ADMIN, entao so aparece para o franqueador. */
+     Junta numa tela: refazer os tours, o manual em PDF (ver/baixar) e o
+     widget de chamados do suporte (SupraDesk). O manual completo em PDF e
+     do painel do ADMIN, entao so aparece para o franqueador. */
   var SUPORTE_EMBED = 'https://supradesk.vercel.app/embed/support/751b2d91-d709-452c-a5cc-31c4e59a10c5';
   var MANUAL_PDF = 'Manual-Painel-Admin-Laser-Co.pdf';
   function viewAjuda() {
@@ -1534,15 +1706,21 @@ window.LaserPainel = (function () {
           '<iframe src="' + MANUAL_PDF + '#view=FitH" title="Manual do painel" style="width:100%;height:60vh;min-height:520px;border:0;border-radius:12px;background:#FFFFFF"></iframe>', true)
       : '';
     setView(
-      card('Tour guiado do painel', 'um passeio rápido pelas principais áreas',
-        '<p class="painel-sub" style="margin:0 0 var(--sp-4)">Um tour interativo destaca cada parte do painel e explica para que serve. Dá para refazer quando quiser.</p>' +
-        '<button class="btn btn-primary" id="tour-start" type="button">Iniciar tour guiado</button>', true) +
+      card('Tour guiado, tela por tela', 'cada tela tem o seu próprio tour',
+        '<p class="painel-sub" style="margin:0 0 var(--sp-4)">Cada tela do painel tem um tour que destaca os elementos dela. Ele abre sozinho na primeira vez que você entra na tela. Para refazer a qualquer momento, use o botão <strong>"Tour desta tela"</strong> no canto inferior direito. Quer rever tudo desde o começo? Use o botão abaixo.</p>' +
+        '<button class="btn btn-primary" id="tour-reset" type="button">Refazer os tours de todas as telas</button>' +
+        '<span id="tour-reset-msg" class="muted" style="margin-left:10px;font-size:var(--fs-sm)"></span>', true) +
       manualCard +
       card('Abrir um chamado', 'fale direto com a nossa equipe de suporte',
         '<p class="painel-sub" style="margin:0 0 var(--sp-4)">Encontrou um problema ou quer sugerir algo? Abra um chamado abaixo. Nossa equipe recebe na hora e responde por aqui.</p>' +
         '<iframe src="' + SUPORTE_EMBED + '" title="Suporte" loading="lazy" style="width:100%;height:64vh;min-height:560px;border:0;border-radius:12px;background:#FFFFFF"></iframe>', true)
     );
-    var b = document.getElementById('tour-start'); if (b) b.onclick = startTour;
+    var rb = document.getElementById('tour-reset');
+    if (rb) rb.onclick = function () {
+      try { Object.keys(localStorage).forEach(function (k) { if (k.indexOf(TOUR_PREFIX) === 0) localStorage.removeItem(k); }); } catch (e) {}
+      var m = document.getElementById('tour-reset-msg'); if (m) m.textContent = 'Pronto! Os tours vão reaparecer conforme você navega.';
+      location.hash = '#visao-geral';
+    };
   }
 
   function viewEdicaoFranqueado() {
@@ -1662,6 +1840,8 @@ window.LaserPainel = (function () {
     const t = document.getElementById('painel-view-title'); if (t) t.textContent = VIEW_TITLE[id] || id;
     const s = document.getElementById('painel-view-sub'); if (s) s.textContent = VIEW_SUB[id] || '';
     (VIEWS[id] || function () { viewStub(id); })();
+    updateTourFab();
+    maybeAutoTour(id);
   }
 
   /* ---------------- carregamento + init ---------------- */
@@ -1707,13 +1887,12 @@ window.LaserPainel = (function () {
     state.session = session;
     fillUser();
     bindShell();
+    ensureTourFab();
     renderSidebar();
     await carregar();
     window.addEventListener('hashchange', router);
     router();
-    // Primeira visita: dispara o tour guiado uma vez (depois fica em Ajuda).
-    try { if (!localStorage.getItem(TOUR_KEY)) setTimeout(startTour, 900); } catch (e) {}
   }
 
-  return { init: init, getSession: getSession, setSession: setSession, logout: logout, startTour: startTour };
+  return { init: init, getSession: getSession, setSession: setSession, logout: logout, startViewTour: startViewTour };
 })();

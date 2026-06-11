@@ -611,3 +611,19 @@
   color: #C8A064; font-size: 20px; line-height: 1; padding: 0;
 }
 .tour-x:hover { color: #E8C088; }
+
+/* botao flutuante "Tour desta tela" */
+.painel-tour-fab {
+  position: fixed; bottom: 22px; right: 22px; z-index: 9000;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 16px; border-radius: 30px; cursor: pointer;
+  background: #481712; color: #F5EFE2; border: 1px solid #C8A064;
+  font-family: inherit; font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 22px rgba(20, 4, 4, 0.4);
+}
+.painel-tour-fab:hover { background: #5E211B; }
+.painel-tour-fab svg { color: #E8C088; flex-shrink: 0; }
+@media (max-width: 640px) {
+  .painel-tour-fab span { display: none; }
+  .painel-tour-fab { padding: 12px; border-radius: 50%; }
+}
