@@ -116,11 +116,37 @@ Fase 2 do backend (spec no PDF `1780540080493_Laser-Co-Backend-Fase2-DEV.pdf`, n
      webhook em `src/app/api/webhooks/uazapi/route.ts`, migrações em
      `/home/jvneto/ProjetosLMK/Laser/RH/supabase/migrations/` (012, 036, 039, 041).
 
-**RESTA da Fase 2:** item 8 (domínio definitivo: decisão do cliente + acesso ao DNS; apontar
-pro deploy novo OU setar as envs na conta Vercel antiga do OFerreira98). **Telas que leem do
-data.js do site (não é mock):** cadastro de unidades e vagas abertas (são o conteúdo real do
-site). **Segurança:** token do Supabase usado na sessão deve ser ROTACIONADO (foi colado em
-chat); o remote do git tem um token do GitHub embutido na URL (avisar o dono).
+10. **REUNIÕES COM O WILL (09/06) = NOVO ESCOPO GRANDE.** Demandas completas em
+   **`MUDANCAS-REUNIAO-WILL.md`** (li as 2 transcrições inteiras; o arquivo é o checklist).
+   Tema: tornar o site EDITÁVEL pelo painel (CMS) + repaginação visual.
+   - **FASE 1 FEITA (commit local `e0b51c5` aprox., NÃO PUSHADO):** tema **clean
+     (Cinza & Dourado) como padrão** (#FAFAFA+bege, dourado leve, vinho SÓ em títulos/
+     rodapé/CTA final da home #agendamento-curto), tipografia **Didot Bold (fallback
+     Playfair Display) em h2/h3/h6 + Montserrat corpo/h5**, **header sempre fixo**,
+     rodapé vinho com tokens re-mapeados, títulos sobre foto continuam creme.
+     Token novo: `--color-heading`. Tema antigo vira opção "Vinho & Dourado".
+   - **IMPORTANTE: cores PENDEM DE APROVAÇÃO do Will antes de ir pra produção**
+     (combinado na reunião). Preview público pra ele:
+     **https://lasercompany-preview.vercel.app** (projeto Vercel `lasercompany-preview`
+     na conta lasercompanyia-web; o preview normal da Vercel exige login, por isso o
+     projeto separado). NÃO dar push na main até aprovar (push redeploya a prod antiga).
+   - **PRÓXIMAS FASES (ver MUDANCAS-REUNIAO-WILL.md):** FASE 2 = CMS (/api/conteudo
+     GET público + PUT auth em site_config 'conteudo', bucket site-conteudo p/ imagens,
+     menu "Edição do site" no painel) + editáveis popup/banners-home(upload de arte
+     inteira do Will, botões fixos)/faixa do menu/Sobre(texto+imagem, sem cards número,
+     saiba mais). FASE 3 = lupa busca procedimentos + procedimentos editáveis (foto/
+     vídeo/descrição) + fotos unidades editáveis (TIRAR fotos com Anitta!) + vídeo
+     autoplay ao lado do "Marque sua Avaliação" (upload) + depoimentos carrossel fixo
+     ~4 itens com ESTRELAS estilo Google. FASE 4 = franqueado (header branco, banners
+     editáveis, posicionamento único = texto esq + foto fachada dir, caixas cinza,
+     foto do Rafael na história de sucesso) + vagas (currículo OPCIONAL, botão Banco
+     de Talentos → WhatsApp RH). Todo upload mostra tamanho ideal.
+
+**RESTA da Fase 2 (backend):** item 8 (domínio definitivo: decisão do cliente + acesso ao
+DNS). **Telas que leem do data.js do site (não é mock):** cadastro de unidades e vagas
+abertas (são o conteúdo real do site). **Segurança:** token do Supabase usado na sessão
+deve ser ROTACIONADO (foi colado em chat 3x); o remote do git tem um token do GitHub
+embutido na URL (avisar o dono).
 
 ### ÚLTIMA SESSÃO (2026-06-01, com o Ferreira): agendamento, avatar do chat, rodapé 6 matérias
 
